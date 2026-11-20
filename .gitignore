@@ -1,0 +1,14 @@
+# Bases de datos y estado local
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.log
+
+# Secretos y entorno
+.env
+.env.*
+
+# Sistema y dependencias
+.DS_Store
+node_modules/

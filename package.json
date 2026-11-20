@@ -1,0 +1,14 @@
+{
+  "name": "pui-hoteles-asociacion",
+  "version": "1.0.0",
+  "description": "Plataforma Multi-Hotel de Interconexión con la Plataforma Única de Identidad (PUI - SEGOB) para la Asociación de Hoteles",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/pui.test.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

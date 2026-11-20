@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Argus ID — Hospitality Identity &amp; Gov Alerts</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- PANTALLA DE INICIO DE SESIÓN RBAC -->
+    <div id="auth-screen" class="auth-screen" hidden>
+      <section class="auth-card" aria-labelledby="auth-title">
+        <div class="auth-brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <circle cx="12" cy="11.5" r="2.25" />
+              <path d="M7.5 11.5s1.8-3 4.5-3 4.5 3 4.5 3-1.8 3-4.5 3-4.5-3-4.5-3z" />
+            </svg>
+          </div>
+          <div>
+            <h1 id="auth-title">Argus ID</h1>
+            <p class="auth-sub">Hospitality Identity &amp; Gov Alerts · Acceso con Control de Roles (RBAC)</p>
+          </div>
+        </div>
+
+        <form id="form-login" class="auth-form" novalidate>
+          <div class="field">
+            <label for="login-email">Correo institucional</label>
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              spellcheck="false"
+              enterkeyhint="next"
+              required
+              data-error="login-email-error"
+              placeholder="usuario@hotel.mx"
+            />
+            <div id="login-email-error" class="error-msg">
+              Error: ingresa un correo electrónico válido.
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="login-password">Contraseña</label>
+            <div class="password-row">
+              <input
+                id="login-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                enterkeyhint="done"
+                required
+                data-error="login-password-error"
+                placeholder="••••••••••••"
+              />
+              <button type="button" id="btn-toggle-login-pass" class="btn-secondary btn-pass-toggle">
+                Mostrar
+              </button>
+            </div>
+            <div id="login-password-error" class="error-msg">
+              Error: ingresa tu contraseña.
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="btn-login-submit">
+              Iniciar sesión en Argus ID
+            </button>
+          </div>
+
+          <div id="login-feedback" class="inline-feedback" aria-live="polite"></div>
+        </form>
+
+        <div id="demo-roles-box" class="demo-roles-box" hidden>
+          <h2>Accesos rápidos para prueba de roles (Entorno Demo)</h2>
+          <p class="panel-desc">
+            Entra con distintos perfiles para verificar el aislamiento real por RFC y el sigilo en mostrador.
+          </p>
+          <div id="demo-roles-list" class="demo-roles-grid"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL AUTENTICADA -->
+    <div class="app-shell" id="app-shell" hidden>
+      <aside class="sidebar" aria-label="Navegación principal">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <circle cx="12" cy="11.5" r="2.25" />
+              <path d="M7.5 11.5s1.8-3 4.5-3 4.5 3 4.5 3-1.8 3-4.5 3-4.5-3-4.5-3z" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">Argus ID</div>
+            <div class="brand-sub">Hospitality Identity &amp; Gov Alerts</div>
+          </div>
+        </div>
+
+        <nav class="nav-list" id="main-nav" aria-label="Secciones de la plataforma">
+          <button type="button" class="nav-btn" data-view="resumen" data-roles="ASOCIACION_ADMIN" aria-current="page">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="9" rx="1" />
+              <rect x="14" y="3" width="7" height="5" rx="1" />
+              <rect x="14" y="12" width="7" height="9" rx="1" />
+              <rect x="3" y="16" width="7" height="5" rx="1" />
+            </svg>
+            <span>Resumen y Retorno (ROI)</span>
+          </button>
+
+          <button type="button" class="nav-btn" data-view="simulacion" data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12h16" />
+              <path d="M14 6l6 6-6 6" />
+              <path d="M10 18l-6-6 6-6" />
+            </svg>
+            <span>Simulación SEGOB ↔ PMS</span>
+          </button>
+
+          <button type="button" class="nav-btn" data-view="recepcion" data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN,RECEPCION">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>Modo Recepción (Sigilo)</span>
+          </button>
+
+          <button type="button" class="nav-btn" data-view="conectores" data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span>Conectores PMS y CSV</span>
+          </button>
+
+          <button type="button" class="nav-btn" data-view="hoteles" data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 21h18" />
+              <path d="M5 21V7l8-4v18" />
+              <path d="M19 21V11l-6-4" />
+              <path d="M9 9v.01M9 13v.01M9 17v.01" />
+            </svg>
+            <span>Hoteles y Constancias</span>
+          </button>
+
+          <button type="button" class="nav-btn" data-view="tecnico" data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            <span>DOF, SEGOB y Outbox</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="session-box">
+            <div class="session-name" id="session-user-name">Sesión activa</div>
+            <div class="session-role" id="session-user-role">RBAC</div>
+            <button type="button" id="btn-logout" class="btn-ghost-dark">
+              Cambiar rol / Cerrar sesión
+            </button>
+          </div>
+          <div class="status-pill">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="sidebar-chain-status">SQLite ACID · SHA-256 íntegro</span>
+          </div>
+          <button type="button" id="btn-reset-demo" class="btn-ghost-dark" hidden>
+            Restablecer datos demo
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <h1 id="page-title">Argus ID — Resumen Ejecutivo y Retorno para la Asociación</h1>
+            <p id="page-subtitle" class="subtitle">
+              Identidad hotelera, validación CURP y alertas gubernamentales PUI (SEGOB / RENAPO) sobre base relacional ACID con aislamiento RBAC.
+            </p>
+          </div>
+          <div class="topbar-actions">
+            <button type="button" class="btn-secondary" id="btn-quick-demo">
+              Simulación en vivo
+            </button>
+            <button type="button" class="btn-primary" id="btn-open-add-hotel">
+              Alta de hotel afiliado
+            </button>
+          </div>
+        </header>
+
+        <!-- VISTA 1: RESUMEN Y ROI -->
+        <section id="view-resumen" class="view-section">
+          <div class="kpi-strip" aria-label="Indicadores operativos de la red">
+            <div class="kpi-item">
+              <span class="kpi-label">Hoteles en Argus ID</span>
+              <strong class="kpi-value" id="kpi-hotels-count">5</strong>
+              <span class="kpi-meta">Piloto Crowne Plaza MTY + Grupo Safi</span>
+            </div>
+            <div class="kpi-item">
+              <span class="kpi-label">Alertas PUI activas (Fase 3)</span>
+              <strong class="kpi-value" id="kpi-alerts-count">0</strong>
+              <span class="kpi-meta">Bóveda cifrada AES-256-GCM por RFC</span>
+            </div>
+            <div class="kpi-item">
+              <span class="kpi-label">Entregas confirmadas SEGOB</span>
+              <strong class="kpi-value" id="kpi-outbox-count">0</strong>
+              <span class="kpi-meta">Cola Outbox con reintento automático</span>
+            </div>
+            <div class="kpi-item">
+              <span class="kpi-label">Eventos auditados</span>
+              <strong class="kpi-value" id="kpi-audit-count">1</strong>
+              <span class="kpi-meta" id="kpi-chain-meta">Cadena SHA-256 verificada</span>
+            </div>
+          </div>
+
+          <div class="panel roi-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Calculadora de Retorno de Inversión (Asociación vs. Proveedores de Renta)</h2>
+                <p class="panel-desc">
+                  Ajusta el número de hoteles afiliados y la cuota de recuperación para mostrar el ahorro gremial y el financiamiento sin desembolso.
+                </p>
+              </div>
+              <span class="tag-neutral">SEGOB cobra $0 por conexión</span>
+            </div>
+
+            <div class="roi-grid">
+              <div class="roi-controls">
+                <div class="range-group">
+                  <div class="range-head">
+                    <label for="roi-hotels">Hoteles afiliados conectados</label>
+                    <output id="roi-hotels-out" for="roi-hotels">136 hoteles</output>
+                  </div>
+                  <input type="range" id="roi-hotels" min="10" max="250" step="2" value="136" />
+                </div>
+
+                <div class="range-group">
+                  <div class="range-head">
+                    <label for="roi-external">Renta mensual proveedor externo (por hotel)</label>
+                    <output id="roi-external-out" for="roi-external">$1,000 MXN</output>
+                  </div>
+                  <input type="range" id="roi-external" min="700" max="2000" step="50" value="1000" />
+                </div>
+
+                <div class="range-group">
+                  <div class="range-head">
+                    <label for="roi-assoc-fee">Cuota simbólica Asociación (por hotel/mes)</label>
+                    <output id="roi-assoc-fee-out" for="roi-assoc-fee">$250 MXN</output>
+                  </div>
+                  <input type="range" id="roi-assoc-fee" min="0" max="500" step="25" value="250" />
+                </div>
+
+                <div class="roi-footnote">
+                  Incluye estimación de servidor compartido AWS en producción (24/7, alta disponibilidad y respaldos) de $6,000 MXN/mes en total para toda la red.
+                </div>
+              </div>
+
+              <div class="roi-results">
+                <div class="roi-metric-row">
+                  <span>Gasto total con terceros (Año 1 con arranque)</span>
+                  <strong id="roi-ext-y1" class="text-danger">$2,244,000 MXN</strong>
+                </div>
+                <div class="roi-metric-row">
+                  <span>Gasto acumulado con terceros (3 años)</span>
+                  <strong id="roi-ext-y3" class="text-danger">$5,508,000 MXN</strong>
+                </div>
+                <div class="roi-metric-row">
+                  <span>Costo real de nube compartida por hotel/mes</span>
+                  <strong id="roi-cloud-per-hotel">$44 MXN</strong>
+                </div>
+                <div class="roi-metric-row highlight">
+                  <span>Ahorro neto de los hoteles afiliados (3 años)</span>
+                  <strong id="roi-hotels-savings">$4,284,000 MXN</strong>
+                </div>
+                <div class="roi-metric-row highlight-alt">
+                  <span>Ingreso neto anual para la Asociación (tras nube)</span>
+                  <strong id="roi-assoc-net">$336,000 MXN / año</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="founders-box">
+              <div class="founders-header">
+                <div>
+                  <h3>Esquema Alternativo: Financiamiento con Hoteles Socios Fundadores ($0 de caja de la Asociación)</h3>
+                  <p class="panel-desc">
+                    Si la Asociación prefiere no desembolsar de su tesorería, un grupo de hoteles fundadores (ej. Crowne Plaza + Safi + cadenas líderes) financia el pago único y queda exento de cuota por 3 años.
+                  </p>
+                </div>
+              </div>
+
+              <div class="founders-grid">
+                <div class="range-group">
+                  <div class="range-head">
+                    <label for="roi-dev-cost">Inversión única de desarrollo Argus ID</label>
+                    <output id="roi-dev-cost-out" for="roi-dev-cost">$350,000 MXN</output>
+                  </div>
+                  <input type="range" id="roi-dev-cost" min="150000" max="900000" step="10000" value="350000" />
+                </div>
+
+                <div class="range-group">
+                  <div class="range-head">
+                    <label for="roi-founders">Número de hoteles fundadores</label>
+                    <output id="roi-founders-out" for="roi-founders">10 hoteles</output>
+                  </div>
+                  <input type="range" id="roi-founders" min="4" max="25" step="1" value="10" />
+                </div>
+
+                <div class="founders-summary">
+                  <div>
+                    <span class="kpi-label">Aportación única por fundador</span>
+                    <strong id="roi-per-founder">$35,000 MXN</strong>
+                  </div>
+                  <div>
+                    <span class="kpi-label">Desembolso Asociación</span>
+                    <strong class="text-accent">$0 MXN</strong>
+                  </div>
+                  <div>
+                    <span class="kpi-label">Payback directo Asociación</span>
+                    <strong id="roi-payback-months">13 meses</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="two-col-grid">
+            <div class="panel">
+              <h2>Hoja de Ruta de Implementación (4–6 semanas)</h2>
+              <ol class="roadmap-list">
+                <li>
+                  <div class="roadmap-head">
+                    <strong>Fase 1 — Piloto Fundador: Crowne Plaza Monterrey</strong>
+                    <span class="badge badge-active">Semanas 1–4</span>
+                  </div>
+                  <p>
+                    Despliegue en cuenta AWS de la Asociación, integración con Oracle OPERA (OHIP o Agente Local de carpetas CSV) y certificación Sandbox con SEGOB.
+                  </p>
+                </li>
+                <li>
+                  <div class="roadmap-head">
+                    <strong>Fase 2 — Segundo Grupo Estratégico: Hoteles Safi</strong>
+                    <span class="badge badge-pending">Semana 5</span>
+                  </div>
+                  <p>
+                    Alta de Safi Royal Luxury Centro, Metropolitan y Valle bajo aislamiento estricto por RFC y usuarios RBAC independientes.
+                  </p>
+                </li>
+                <li>
+                  <div class="roadmap-head">
+                    <strong>Fase 3 — Despliegue Masivo a la Asociación</strong>
+                    <span class="badge badge-neutral">Semana 6+</span>
+                  </div>
+                  <p>
+                    Onboarding ágil del resto de hoteles afiliados mediante API PMS, agente local sincronizado o portal web CSV con constancias PDF inmediatas.
+                  </p>
+                </li>
+              </ol>
+            </div>
+
+            <div class="panel">
+              <h2>Ingeniería de Producción Incluida</h2>
+              <ul class="check-list">
+                <li>
+                  <strong>Base relacional ACID cifrada:</strong> SQLite en modo WAL embebido localmente y esquema PostgreSQL 16 (<code>sql/schema.postgres.sql</code>) listo para AWS RDS. CURPs cifradas con <strong>AES-256-GCM</strong> en reposo.
+                </li>
+                <li>
+                  <strong>Control de acceso real (RBAC + scrypt):</strong> Roles separados para Consejo Asociación, Gerencia TI de cada hotel y Recepción (sin acceso a alertas SEGOB ni a otros hoteles).
+                </li>
+                <li>
+                  <strong>Cola Outbox con reintento exponencial:</strong> Ninguna alerta a SEGOB se pierde si el servidor gubernamental presenta intermitencia.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA 2: SIMULACIÓN EN VIVO -->
+        <section id="view-simulacion" class="view-section" hidden>
+          <div class="sim-toolbar">
+            <div class="sim-select-group">
+              <label for="sim-hotel-select">Hotel activo</label>
+              <select id="sim-hotel-select"></select>
+            </div>
+            <div class="scenario-buttons" aria-label="Escenarios rápidos de demostración">
+              <button type="button" class="btn-secondary" id="btn-scenario-menor">
+                Caso 1: Menor con alerta (Fase 3)
+              </button>
+              <button type="button" class="btn-secondary" id="btn-scenario-historico">
+                Caso 2: Coincidencia histórica (F1 y F2)
+              </button>
+              <button type="button" class="btn-secondary" id="btn-scenario-normal">
+                Caso 3: Huésped sin alerta
+              </button>
+            </div>
+          </div>
+
+          <div class="sim-grid">
+            <!-- COLUMNA 1: SIMULADOR SEGOB -->
+            <div class="panel sim-col">
+              <div class="panel-header compact">
+                <div>
+                  <h2>1. Simulador SEGOB / PUI</h2>
+                  <p class="panel-desc">Emite alertas autenticadas con JWT hacia el hotel seleccionado.</p>
+                </div>
+                <span class="badge badge-danger">Autoridad</span>
+              </div>
+
+              <form id="form-segob-alert" novalidate>
+                <div class="field">
+                  <label for="segob-reporte-id">Folio Único de Búsqueda (id)</label>
+                  <span id="segob-id-hint" class="hint">Ejemplo: FUB-NL-2026-04182</span>
+                  <input
+                    id="segob-reporte-id"
+                    name="id"
+                    type="text"
+                    required
+                    minlength="4"
+                    aria-describedby="segob-id-hint"
+                    data-error="segob-id-error"
+                    placeholder="FUB-NL-2026-04182"
+                  />
+                  <div id="segob-id-error" class="error-msg">
+                    Error: ingresa el folio del reporte de búsqueda.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="segob-curp">CURP de la persona reportada</label>
+                  <span id="segob-curp-hint" class="hint">18 caracteres con dígito verificador RENAPO válido</span>
+                  <input
+                    id="segob-curp"
+                    name="curp"
+                    type="text"
+                    required
+                    minlength="18"
+                    maxlength="18"
+                    pattern="^[A-Za-z][AEIOUXaeioux][A-Za-z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMXhmx][A-Za-z]{5}[0-9A-Za-z]\d$"
+                    aria-describedby="segob-curp-hint"
+                    data-error="segob-curp-error"
+                    placeholder="18 caracteres"
+                    class="mono-input"
+                  />
+                  <div id="segob-curp-error" class="error-msg">
+                    Error: captura una CURP válida de 18 caracteres.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="segob-tipo">Clasificación del reporte</label>
+                  <select id="segob-tipo" name="tipo_alerta">
+                    <option value="Alerta AMBER / PUI Menor">Alerta AMBER / PUI Menor</option>
+                    <option value="Reporte PUI Adulto">Reporte PUI Adulto</option>
+                    <option value="Protocolo Alba / PUI">Protocolo Alba / PUI</option>
+                  </select>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-danger" id="btn-activar-alerta">
+                    Enviar POST /activar-reporte
+                  </button>
+                </div>
+                <div id="segob-feedback" class="inline-feedback" aria-live="polite"></div>
+              </form>
+
+              <div class="sub-block">
+                <h3>Alertas activas en bóveda cifrada (Fase 3)</h3>
+                <div id="active-alerts-list" class="alerts-list"></div>
+              </div>
+            </div>
+
+            <!-- COLUMNA 2: RECEPCIÓN / PMS DEL HOTEL -->
+            <div class="panel sim-col">
+              <div class="panel-header compact">
+                <div>
+                  <h2 id="pms-panel-title">2. Recepción PMS — Crowne Plaza Monterrey</h2>
+                  <p class="panel-desc">Registro normal de huésped. Nunca exhibe alertas PUI en pantalla.</p>
+                </div>
+                <span class="badge badge-active">Sigilo activo</span>
+              </div>
+
+              <form id="form-pms-checkin" novalidate>
+                <div class="field">
+                  <label for="pms-nombre">Nombre completo del huésped</label>
+                  <span id="pms-nombre-hint" class="hint">Tal como aparece en INE, pasaporte o acta</span>
+                  <input
+                    id="pms-nombre"
+                    name="nombre"
+                    type="text"
+                    required
+                    minlength="3"
+                    aria-describedby="pms-nombre-hint"
+                    data-error="pms-nombre-error"
+                    placeholder="Nombre y apellidos"
+                  />
+                  <div id="pms-nombre-error" class="error-msg">
+                    Error: captura el nombre completo del huésped.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="pms-curp">CURP capturada en recepción</label>
+                  <span id="pms-curp-hint" class="hint">Validación gratuita de estructura, entidad y dígito verificador</span>
+                  <input
+                    id="pms-curp"
+                    name="curp"
+                    type="text"
+                    required
+                    minlength="18"
+                    maxlength="18"
+                    pattern="^[A-Za-z][AEIOUXaeioux][A-Za-z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMXhmx][A-Za-z]{5}[0-9A-Za-z]\d$"
+                    aria-describedby="pms-curp-hint"
+                    data-error="pms-curp-error"
+                    placeholder="18 caracteres"
+                    class="mono-input"
+                  />
+                  <div id="pms-curp-error" class="error-msg">
+                    Error: verifica los 18 caracteres de la CURP.
+                  </div>
+                  <div id="pms-curp-live" class="curp-meta"></div>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="pms-habitacion">Habitación</label>
+                    <input id="pms-habitacion" name="habitacion" type="text" placeholder="1408" />
+                  </div>
+                  <div class="field">
+                    <label for="pms-acompanante">Acompañante (si aplica)</label>
+                    <input
+                      id="pms-acompanante"
+                      name="acompanante"
+                      type="text"
+                      placeholder="Nombre o parentesco"
+                    />
+                  </div>
+                </div>
+
+                <div class="minor-box" id="pms-minor-box" hidden>
+                  <strong>Verificación obligatoria de menor (Ley General de Turismo)</strong>
+                  <div class="field" style="margin-bottom: 0;">
+                    <label for="pms-parentesco">Documento que acredita parentesco o tutela</label>
+                    <select id="pms-parentesco" name="parentescoDocumento">
+                      <option value="">Selecciona resultado de verificación…</option>
+                      <option value="ACTA_NACIMIENTO">Acta de nacimiento verificada</option>
+                      <option value="INE_PADRE_MADRE">Identificación oficial de padre/madre coincidente</option>
+                      <option value="CARTA_NOTARIADA">Carta poder / autorización notariada</option>
+                      <option value="NO_ACREDITO">No acreditó parentesco (activar protocolo LGT)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" id="btn-submit-checkin">
+                    Registrar Check-in en PMS
+                  </button>
+                </div>
+
+                <div id="pms-feedback" class="inline-feedback" aria-live="polite"></div>
+              </form>
+
+              <div class="sub-block">
+                <h3>Registros recientes en este hotel</h3>
+                <div id="hotel-guests-list" class="guests-list"></div>
+              </div>
+            </div>
+
+            <!-- COLUMNA 3: CANAL SILENCIOSO Y AUDITORÍA SEGOB -->
+            <div class="panel sim-col">
+              <div class="panel-header compact">
+                <div>
+                  <h2>3. Canal Silencioso a SEGOB</h2>
+                  <p class="panel-desc">Notificaciones cifradas, Fases 1–3 y evidencia auditable SHA-256.</p>
+                </div>
+                <span class="badge badge-neutral">Tiempo real</span>
+              </div>
+              <div id="audit-feed" class="audit-feed" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA 3: MODO RECEPCIÓN PURO (SIGILO EN MOSTRADOR) -->
+        <section id="view-recepcion" class="view-section" hidden>
+          <div class="two-col-grid reception-layout">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2 id="desk-hotel-title">Terminal de Mostrador — Crowne Plaza Monterrey</h2>
+                  <p class="panel-desc">
+                    Esta es la única vista a la que tiene acceso el personal de recepción. No muestra alertas de SEGOB ni registros de otros hoteles.
+                  </p>
+                </div>
+                <span class="badge badge-active">Operación discreta</span>
+              </div>
+
+              <div class="desk-scan-bar">
+                <div class="sim-select-group" style="flex: 1 1 220px;">
+                  <label for="desk-hotel-select">Propiedad en turno</label>
+                  <select id="desk-hotel-select"></select>
+                </div>
+                <div class="desk-scan-actions">
+                  <button type="button" class="btn-secondary" id="btn-scan-ine">
+                    Simular lectura INE / QR
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-scan-minor">
+                    Simular registro con menor
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-desk-checkin" novalidate style="margin-top: 1.15rem;">
+                <div class="field">
+                  <label for="desk-nombre">Nombre completo del huésped</label>
+                  <span id="desk-nombre-hint" class="hint">Autocompletado por escáner de INE/pasaporte o captura manual</span>
+                  <input
+                    id="desk-nombre"
+                    name="nombre"
+                    type="text"
+                    required
+                    minlength="3"
+                    aria-describedby="desk-nombre-hint"
+                    data-error="desk-nombre-error"
+                    placeholder="Nombre y apellidos"
+                  />
+                  <div id="desk-nombre-error" class="error-msg">
+                    Error: captura el nombre completo del huésped.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="desk-curp">CURP del huésped</label>
+                  <span id="desk-curp-hint" class="hint">Valida automáticamente entidad federativa, edad y dígito verificador RENAPO</span>
+                  <input
+                    id="desk-curp"
+                    name="curp"
+                    type="text"
+                    required
+                    minlength="18"
+                    maxlength="18"
+                    pattern="^[A-Za-z][AEIOUXaeioux][A-Za-z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMXhmx][A-Za-z]{5}[0-9A-Za-z]\d$"
+                    aria-describedby="desk-curp-hint"
+                    data-error="desk-curp-error"
+                    placeholder="18 caracteres"
+                    class="mono-input"
+                  />
+                  <div id="desk-curp-error" class="error-msg">
+                    Error: ingresa una CURP válida de 18 caracteres.
+                  </div>
+                  <div id="desk-curp-live" class="curp-meta"></div>
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="desk-habitacion">Habitación asignada</label>
+                    <input id="desk-habitacion" name="habitacion" type="text" placeholder="1014" />
+                  </div>
+                  <div class="field">
+                    <label for="desk-acompanante">Acompañante / Adulto responsable</label>
+                    <input id="desk-acompanante" name="acompanante" type="text" placeholder="Opcional" />
+                  </div>
+                </div>
+
+                <div class="minor-box" id="desk-minor-box" hidden>
+                  <strong>Protocolo Ley General de Turismo — Huésped menor de edad detectado</strong>
+                  <p class="panel-desc" style="margin-bottom: 0.65rem;">
+                    Antes de entregar llaves, verifica la documentación que acredita el vínculo legal del adulto acompañante.
+                  </p>
+                  <div class="field" style="margin-bottom: 0;">
+                    <label for="desk-parentesco">Acreditación de parentesco o tutela</label>
+                    <select id="desk-parentesco" name="parentescoDocumento">
+                      <option value="">Selecciona resultado de verificación…</option>
+                      <option value="ACTA_NACIMIENTO">Acta de nacimiento verificada</option>
+                      <option value="INE_PADRE_MADRE">Identificación oficial de padre/madre coincidente</option>
+                      <option value="CARTA_NOTARIADA">Carta poder / autorización notariada</option>
+                      <option value="NO_ACREDITO">No acreditó parentesco (negar servicio y avisar a gerencia)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" id="btn-desk-submit">
+                    Confirmar Check-in y Sincronizar Argus ID
+                  </button>
+                </div>
+
+                <div id="desk-feedback" class="inline-feedback" aria-live="polite"></div>
+              </form>
+            </div>
+
+            <div class="panel">
+              <h2>Cómo protege Argus ID al personal de recepción</h2>
+              <ul class="check-list">
+                <li>
+                  <strong>Aislamiento RBAC real en servidor:</strong> Cuando el recepcionista inicia sesión, el servidor le bloquea con <code>HTTP 403</code> cualquier acceso a alertas SEGOB, bitácoras de auditoría u otros hoteles.
+                </li>
+                <li>
+                  <strong>Cero exposición a riesgos físicos:</strong> Si el huésped o menor tiene un reporte activo en SEGOB, esta pantalla <strong>no muestra alarmas rojas</strong>; la notificación viaja en segundo plano a la cola Outbox hacia SEGOB.
+                </li>
+                <li>
+                  <strong>Cumplimiento automático con menores:</strong> En cuanto la CURP indica menos de 18 años, Argus ID despliega el control obligatorio de la Ley General de Turismo y deja constancia auditable.
+                </li>
+              </ul>
+
+              <div class="sub-block">
+                <h3>Últimos registros del turno actual</h3>
+                <div id="desk-guests-list" class="guests-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA 4: CONECTORES PMS Y CARGA MASIVA CSV -->
+        <section id="view-conectores" class="view-section" hidden>
+          <div class="sim-toolbar">
+            <div class="sim-select-group">
+              <label for="conn-hotel-select">Hotel a configurar / importar</label>
+              <select id="conn-hotel-select"></select>
+            </div>
+            <div class="scenario-buttons">
+              <a class="btn-secondary link-btn" id="btn-download-csv-template" href="/api/pms/crowne-plaza-monterrey/csv-template">
+                Descargar plantilla CSV (OPERA / Excel)
+              </a>
+              <button type="button" class="btn-primary" id="btn-import-demo-batch">
+                Probar lote demo (6 huéspedes con validación)
+              </button>
+            </div>
+          </div>
+
+          <div class="two-col-grid">
+            <div class="panel">
+              <h2>Importación Masiva CSV (Histórico Fase 2 y Hoteles sin API)</h2>
+              <p class="panel-desc">
+                Permite cargar exportaciones de Oracle OPERA, Zeus o Excel en segundos. Argus ID valida cada CURP contra el algoritmo oficial RENAPO, cifra los datos en AES-256-GCM y corre Fase 3 silenciosa automáticamente.
+              </p>
+
+              <form id="form-csv-import" style="margin-top: 1rem;">
+                <div class="field">
+                  <label for="csv-file-input">Seleccionar archivo .csv del hotel</label>
+                  <span id="csv-file-hint" class="hint">Columnas mínimas: nombre, curp (opcional: habitacion, fecha_registro, telefono, correo, acompanante)</span>
+                  <input
+                    id="csv-file-input"
+                    type="file"
+                    accept=".csv,text/csv"
+                    aria-describedby="csv-file-hint"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="csv-raw-text">O pega el contenido CSV directamente</label>
+                  <textarea
+                    id="csv-raw-text"
+                    rows="5"
+                    class="mono-input"
+                    placeholder="nombre,curp,habitacion,fecha_registro"
+                  ></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" id="btn-submit-csv">
+                    Validar e Importar Padrón CSV
+                  </button>
+                </div>
+              </form>
+
+              <div id="csv-feedback" class="inline-feedback" aria-live="polite"></div>
+              <div id="csv-errors-box" class="sub-block" hidden>
+                <h3>Registros rechazados por validación RENAPO</h3>
+                <div id="csv-errors-list" class="alerts-list"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Conector Directo API y Agente Local OPERA On-Premise</h2>
+              <p class="panel-desc">
+                Cada hotel opera con su llave aislada por RFC. Si el PMS está en servidor local (OPERA 5 / Zeus), ejecuta nuestro agente ligero <code>agent/pms-sync-agent.js</code> sin abrir puertos ni tocar Oracle.
+              </p>
+
+              <div class="key-box">
+                <div class="key-head">
+                  <span class="kpi-label">Llave privada del hotel (<code>X-Argus-PMS-Key</code>)</span>
+                  <span class="badge badge-active" id="conn-hotel-rfc">RFC</span>
+                </div>
+                <code class="key-value" id="conn-api-key">argus_pms_••••••••••••</code>
+                <div class="key-actions">
+                  <button type="button" class="btn-secondary" id="btn-toggle-key">Mostrar llave</button>
+                  <button type="button" class="btn-secondary" id="btn-copy-key">Copiar</button>
+                  <button type="button" class="btn-secondary" id="btn-rotate-key">Rotar llave</button>
+                </div>
+              </div>
+
+              <div class="sub-block">
+                <h3>1. Agente Local de Sincronización (OPERA 5 / Carpetas CSV)</h3>
+                <pre class="code-block" id="pms-agent-snippet"></pre>
+              </div>
+
+              <div class="sub-block">
+                <h3>2. Webhook directo API REST (OPERA Cloud OHIP / Cloudbeds)</h3>
+                <pre class="code-block" id="pms-webhook-snippet"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA 5: HOTELES AFILIADOS Y CONSTANCIAS -->
+        <section id="view-hoteles" class="view-section" hidden>
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Padrón de Hoteles Afiliados y Constancias de Cumplimiento</h2>
+                <p class="panel-desc">
+                  Cada razón social cuenta con aislamiento por RFC y puede emitir su Constancia Técnica PDF verificable con sello SHA-256 en cualquier momento.
+                </p>
+              </div>
+              <button type="button" class="btn-primary" id="btn-add-hotel-table">
+                Dar de alta hotel
+              </button>
+            </div>
+
+            <div tabindex="0" role="region" aria-labelledby="hotels-table-caption" class="table-wrapper">
+              <table id="hotels-table">
+                <caption id="hotels-table-caption" class="visually-hidden">
+                  Hoteles afiliados conectados a Argus ID
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Hotel</th>
+                    <th scope="col">Grupo / RFC</th>
+                    <th scope="col">Hab.</th>
+                    <th scope="col">PMS / Conector</th>
+                    <th scope="col">Modo SEGOB</th>
+                    <th scope="col">Estatus</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="hotels-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA 6: ESPECIFICACIÓN DOF, CONFIG SEGOB Y COLA OUTBOX -->
+        <section id="view-tecnico" class="view-section" hidden>
+          <div class="two-col-grid">
+            <div class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <h2>Conexión Saliente a SEGOB (Sandbox / Producción)</h2>
+                  <p class="panel-desc">
+                    Cuando el hotel reciba credenciales oficiales con su Llave MX, cambia el modo aquí sin tocar código. Las credenciales se guardan cifradas en AES-256-GCM.
+                  </p>
+                </div>
+              </div>
+
+              <form id="form-segob-config" novalidate>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="cfg-segob-mode">Modo de envío hacia SEGOB</label>
+                    <select id="cfg-segob-mode" name="segobMode">
+                      <option value="SANDBOX_SIMULADO">SANDBOX_SIMULADO (Pruebas locales)</option>
+                      <option value="SEGOB_SANDBOX">SEGOB_SANDBOX (Entorno pruebas DOF)</option>
+                      <option value="SEGOB_PRODUCCION">SEGOB_PRODUCCION (Enlace oficial)</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="cfg-llave-mx">Estatus Llave MX (Persona Moral)</label>
+                    <select id="cfg-llave-mx" name="llaveMxStatus">
+                      <option value="Pendiente">Pendiente</option>
+                      <option value="En Trámite">En Trámite</option>
+                      <option value="Certificado Sandbox">Certificado Sandbox</option>
+                      <option value="Producción Autorizada">Producción Autorizada</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="cfg-segob-url">URL Base API PUI de SEGOB</label>
+                  <span id="cfg-url-hint" class="hint">Opcional en modo simulado. En Sandbox/Producción usar URL HTTPS oficial asignada por RENAPO.</span>
+                  <input
+                    id="cfg-segob-url"
+                    name="segobBaseUrl"
+                    type="url"
+                    aria-describedby="cfg-url-hint"
+                    placeholder="https://pui-sandbox.segob.gob.mx/api/v1"
+                  />
+                </div>
+
+                <div class="field-row">
+                  <div class="field">
+                    <label for="cfg-segob-user">Usuario API SEGOB</label>
+                    <input id="cfg-segob-user" name="segobUsuario" type="text" placeholder="inst_rfc_hotel" />
+                  </div>
+                  <div class="field">
+                    <label for="cfg-segob-pass">Clave API SEGOB (se cifra AES-256)</label>
+                    <input id="cfg-segob-pass" name="segobClave" type="password" placeholder="Dejar vacío para conservar" />
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" id="btn-save-segob-cfg">
+                    Guardar configuración SEGOB del hotel
+                  </button>
+                </div>
+                <div id="segob-cfg-feedback" class="inline-feedback" aria-live="polite"></div>
+              </form>
+
+              <div class="sub-block">
+                <h3>Endpoints entrantes DOF activos para este hotel</h3>
+                <div class="endpoint-list" id="dof-endpoints-list"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <h2>Cola de Entregas a SEGOB (Outbox con Reintentos)</h2>
+                  <p class="panel-desc">
+                    Registro persistente de cada <code>/notificar-coincidencia</code> y <code>/busqueda-finalizada</code> con backoff exponencial automático.
+                  </p>
+                </div>
+                <button type="button" class="btn-secondary btn-sm" id="btn-retry-outbox">
+                  Reintentar pendientes
+                </button>
+              </div>
+              <div id="outbox-feed" class="audit-feed"></div>
+
+              <div class="sub-block">
+                <h3>Prueba directa por terminal (cURL DOF)</h3>
+                <pre class="code-block" id="curl-snippet"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- DIÁLOGO NATIVO: ALTA DE HOTEL AFILIADO -->
+    <dialog id="add-hotel-dialog" closedby="any" aria-labelledby="add-hotel-title">
+      <div class="dialog-inner">
+        <div class="dialog-header">
+          <h2 id="add-hotel-title">Dar de alta nuevo hotel en Argus ID</h2>
+          <form method="dialog">
+            <button type="submit" value="cancel" class="icon-close" aria-label="Cerrar ventana">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <form id="form-add-hotel" novalidate>
+          <div class="field">
+            <label for="new-hotel-nombre">Nombre del hotel</label>
+            <span id="new-hotel-nombre-hint" class="hint">Ejemplo: Holiday Inn Parque Fundidora</span>
+            <input
+              id="new-hotel-nombre"
+              name="nombre"
+              type="text"
+              required
+              minlength="3"
+              autofocus
+              aria-describedby="new-hotel-nombre-hint"
+              data-error="new-hotel-nombre-error"
+            />
+            <div id="new-hotel-nombre-error" class="error-msg">
+              Error: ingresa el nombre comercial del hotel.
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="new-hotel-rfc">RFC (Persona Moral)</label>
+              <span id="new-hotel-rfc-hint" class="hint">12 caracteres (SAT)</span>
+              <input
+                id="new-hotel-rfc"
+                name="rfc"
+                type="text"
+                required
+                pattern="^[A-Za-zÑñ&]{3,4}\d{6}[A-Za-z0-9]{3}$"
+                aria-describedby="new-hotel-rfc-hint"
+                data-error="new-hotel-rfc-error"
+                placeholder="HMO010203NL4"
+                class="mono-input"
+              />
+              <div id="new-hotel-rfc-error" class="error-msg">
+                Error: captura un RFC válido de 12 o 13 caracteres.
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="new-hotel-hab">Habitaciones</label>
+              <span id="new-hotel-hab-hint" class="hint">Número aproximado</span>
+              <input
+                id="new-hotel-hab"
+                name="habitaciones"
+                type="number"
+                min="1"
+                max="3000"
+                value="140"
+                aria-describedby="new-hotel-hab-hint"
+              />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="new-hotel-grupo">Grupo hotelero</label>
+              <input id="new-hotel-grupo" name="grupo" type="text" placeholder="Ej. Hotel Independiente / Cadena" />
+            </div>
+            <div class="field">
+              <label for="new-hotel-ciudad">Ciudad</label>
+              <input id="new-hotel-ciudad" name="ciudad" type="text" value="Monterrey, N.L." />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="new-hotel-pms">Sistema PMS del hotel</label>
+            <select id="new-hotel-pms" name="pms">
+              <option value="Oracle OPERA Cloud (OHIP)">Oracle OPERA Cloud (OHIP)</option>
+              <option value="Oracle OPERA 5 (Agente Local)">Oracle OPERA 5 (Agente Local)</option>
+              <option value="Cloudbeds (API REST)">Cloudbeds (API REST)</option>
+              <option value="Mews / PMS Moderno (Webhook)">Mews / PMS Moderno (Webhook)</option>
+              <option value="Zeus / Frontdesk (Agente Local)">Zeus / Frontdesk (Agente Local)</option>
+              <option value="Sin API (Portal Web / CSV)">Sin API (Portal Web / CSV)</option>
+            </select>
+          </div>
+
+          <div id="add-hotel-feedback" class="inline-feedback" aria-live="polite"></div>
+
+          <div class="dialog-actions">
+            <button type="button" class="btn-secondary" id="btn-cancel-add-hotel">Cancelar</button>
+            <button type="submit" class="btn-primary">Crear espacio aislado por RFC</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

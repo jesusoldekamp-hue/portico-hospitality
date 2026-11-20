@@ -1,0 +1,16 @@
+services:
+  pui-hoteles:
+    build: .
+    container_name: pui-hoteles-asociacion
+    restart: unless-stopped
+    ports:
+      - "3080:3080"
+    environment:
+      - PORT=3080
+      - PUI_JWT_SECRET=${PUI_JWT_SECRET:-cambia-esta-clave-jwt-en-aws}
+      - PUI_VAULT_KEY=${PUI_VAULT_KEY:-cambia-esta-clave-aes256-en-aws}
+    volumes:
+      - pui_data:/app/data
+
+volumes:
+  pui_data:
