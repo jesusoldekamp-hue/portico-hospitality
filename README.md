@@ -1,4 +1,4 @@
-# Argus ID — Hospitality Identity & Gov Alerts
+# Argus Hospitality ID — Hospitality Identity & Gov Alerts
 
 Plataforma multi-hotel para el cumplimiento federal de la **Plataforma Única de Identidad (PUI — SEGOB / RENAPO)** conforme al **Manual Técnico de Instituciones Diversas (DOF, 23 de enero de 2026)** y el protocolo de protección de menores de la **Ley General de Turismo**.
 

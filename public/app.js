@@ -1,5 +1,5 @@
 /**
- * Argus ID — Hospitality Identity & Gov Alerts
+ * Argus Hospitality ID — Hospitality Identity & Gov Alerts
  * Frontend con autenticación RBAC real, terminal de recepción discreta,
  * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
  * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en GitHub Pages.
@@ -31,7 +31,7 @@ const ROLE_LABELS = {
 
 const VIEW_META = {
   resumen: {
-    title: 'Argus ID — Resumen Ejecutivo y Retorno para la Asociación',
+    title: 'Argus Hospitality ID — Resumen Ejecutivo y Retorno para la Asociación',
     subtitle:
       'Identidad hotelera, validación CURP y alertas gubernamentales PUI (SEGOB / RENAPO) sobre arquitectura multi-RFC con aislamiento RBAC.'
   },
@@ -487,7 +487,7 @@ node agent/pms-sync-agent.js \\
   --key "${shownKey}" \\
   --url "${origin}"`;
 
-  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Argus ID
+  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Argus Hospitality ID
 curl -s -X POST "${origin}/api/pms/${hotel.slug}/checkin" \\
   -H "Content-Type: application/json" \\
   -H "X-Argus-PMS-Key: ${shownKey}" \\

@@ -454,7 +454,7 @@ function seedInitialData(database) {
 
   // Evento génesis de auditoría encadenada SHA-256
   const payload = {
-    plataforma: 'Argus ID — Hospitality Identity & Gov Alerts',
+    plataforma: 'Argus Hospitality ID — Hospitality Identity & Gov Alerts',
     motor_bd: 'SQLite ACID (WAL) · Compatible AWS RDS PostgreSQL',
     estandar: 'Manual Técnico PUI — Instituciones Diversas (DOF 23/01/2026)',
     cifrado: 'AES-256-GCM + scrypt + JWT HS256',
@@ -467,7 +467,7 @@ function seedInitialData(database) {
     direccion: 'SISTEMA',
     endpoint: '/api/health',
     fase: 'INICIO',
-    resumen: 'Núcleo Argus ID inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
+    resumen: 'Núcleo Argus Hospitality ID inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
     estatusHttp: 200,
     critico: false,
     payload

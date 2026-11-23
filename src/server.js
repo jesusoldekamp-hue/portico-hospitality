@@ -1,5 +1,5 @@
 /**
- * Argus ID — Servidor HTTP Producción Multi-Hotel PUI (Manual Técnico DOF)
+ * Argus Hospitality ID — Servidor HTTP Producción Multi-Hotel PUI (Manual Técnico DOF)
  * Persistencia ACID (`node:sqlite`), RBAC con sesiones HttpOnly + scrypt,
  * Rate Limiting y Cola Outbox hacia SEGOB con reintentos exponenciales.
  */
@@ -634,7 +634,7 @@ export function createServer({ enableWorker = true } = {}) {
         const cadena = verifyFullAuditChain();
         return sendJson(res, 200, {
           status: 'ok',
-          servicio: 'Argus ID — Hospitality Identity & Gov Alerts',
+          servicio: 'Argus Hospitality ID — Hospitality Identity & Gov Alerts',
           estandar: 'Manual Técnico DOF (23/01/2026)',
           baseDatos: 'SQLite ACID (WAL)',
           hotelesRegistrados: listHotels().length,
@@ -883,7 +883,7 @@ export function createServer({ enableWorker = true } = {}) {
           direccion: 'ASOCIACIÓN',
           endpoint: '/api/hotels',
           fase: 'ONBOARDING',
-          resumen: `Nuevo hotel dado de alta en Argus ID (multi-RFC): ${nombre} (${rfc}).`,
+          resumen: `Nuevo hotel dado de alta en Argus Hospitality ID (multi-RFC): ${nombre} (${rfc}).`,
           estatusHttp: 201,
           payload: { slug, rfc, pms: result.hotel.pms }
         });
@@ -912,7 +912,7 @@ export function createServer({ enableWorker = true } = {}) {
         );
       }
 
-      // 10. Endpoints oficiales PUI (DOF — Máquina a máquina SEGOB ↔ Argus ID)
+      // 10. Endpoints oficiales PUI (DOF — Máquina a máquina SEGOB ↔ Argus Hospitality ID)
       const puiMatch = pathname.match(
         /^\/api\/pui\/([a-z0-9-]+)\/(login|activar-reporte|activar-reporte-prueba|desactivar-reporte)$/
       );
@@ -1167,7 +1167,7 @@ export function createServer({ enableWorker = true } = {}) {
       if (err.message === 'PAYLOAD_TOO_LARGE') {
         return sendJson(res, 413, { error: 'La petición excede el tamaño máximo permitido.' });
       }
-      console.error('[Argus ID Server Error]', err);
+      console.error('[Argus Hospitality ID Server Error]', err);
       return sendJson(res, 500, { error: 'Error interno del servidor.' });
     }
   });
@@ -1186,6 +1186,6 @@ if (isMain) {
   const HOST = process.env.HOST || '0.0.0.0';
   const server = createServer({ enableWorker: true });
   server.listen(PORT, HOST, () => {
-    console.log(`Argus ID (Producción SQLite + RBAC + Outbox) listo en http://localhost:${PORT}`);
+    console.log(`Argus Hospitality ID (Producción SQLite + RBAC + Outbox) listo en http://localhost:${PORT}`);
   });
 }
