@@ -799,6 +799,90 @@ export function deleteSession(token) {
   getDb().prepare('DELETE FROM sessions WHERE token_hash = ?').run(sha256Hex(token));
 }
 
+export function listUsers({ hotelSlug = null } = {}) {
+  const database = getDb();
+  const rows = hotelSlug
+    ? database
+        .prepare(
+          'SELECT id, email, nombre, rol, hotel_slug, activo, creado_en FROM users WHERE hotel_slug = ? ORDER BY id ASC'
+        )
+        .all(hotelSlug)
+    : database
+        .prepare('SELECT id, email, nombre, rol, hotel_slug, activo, creado_en FROM users ORDER BY id ASC')
+        .all();
+
+  return rows.map((r) => ({
+    id: r.id,
+    email: r.email,
+    nombre: r.nombre,
+    rol: r.rol,
+    hotelSlug: r.hotel_slug,
+    activo: Boolean(r.activo),
+    creadoEn: r.creado_en
+  }));
+}
+
+export function createUser({ email, password, nombre, rol, hotelSlug = null }) {
+  const database = getDb();
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  const exists = database.prepare('SELECT 1 FROM users WHERE email = ?').get(normalizedEmail);
+  if (exists) return { conflict: true };
+
+  const now = new Date().toISOString();
+  const passwordHash = hashPassword(password);
+  const res = database
+    .prepare(
+      `INSERT INTO users (email, password_hash, nombre, rol, hotel_slug, activo, creado_en)
+       VALUES (?, ?, ?, ?, ?, 1, ?)`
+    )
+    .run(normalizedEmail, passwordHash, nombre, rol, rol === 'ASOCIACION_ADMIN' ? null : hotelSlug, now);
+
+  const row = database
+    .prepare('SELECT id, email, nombre, rol, hotel_slug, activo, creado_en FROM users WHERE id = ?')
+    .get(res.lastInsertRowid);
+
+  return {
+    conflict: false,
+    user: {
+      id: row.id,
+      email: row.email,
+      nombre: row.nombre,
+      rol: row.rol,
+      hotelSlug: row.hotel_slug,
+      activo: Boolean(row.activo),
+      creadoEn: row.creado_en
+    }
+  };
+}
+
+export function setUserActive(userId, activo, { allowedHotelSlug = null } = {}) {
+  const database = getDb();
+  const row = database
+    .prepare('SELECT id, email, nombre, rol, hotel_slug, activo, creado_en FROM users WHERE id = ?')
+    .get(userId);
+  if (!row) return { notFound: true };
+  if (allowedHotelSlug && row.hotel_slug !== allowedHotelSlug) {
+    return { forbidden: true };
+  }
+  const flag = activo ? 1 : 0;
+  database.prepare('UPDATE users SET activo = ? WHERE id = ?').run(flag, userId);
+  if (!flag) {
+    database.prepare('DELETE FROM sessions WHERE user_id = ?').run(userId);
+  }
+  return {
+    ok: true,
+    user: {
+      id: row.id,
+      email: row.email,
+      nombre: row.nombre,
+      rol: row.rol,
+      hotelSlug: row.hotel_slug,
+      activo: Boolean(flag),
+      creadoEn: row.creado_en
+    }
+  };
+}
+
 // --- Alertas PUI ---
 export function upsertAlert({
   hotelSlug,

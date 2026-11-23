@@ -164,12 +164,22 @@ const DEMO_ACCOUNTS = [
   }
 ];
 
-const STORAGE_KEY = 'portico_hospitality_pages_state_v1';
-const SESSION_KEY = 'portico_hospitality_pages_user_v1';
+const STORAGE_KEY = 'portico_hospitality_pages_state_v2';
+const SESSION_KEY = 'portico_hospitality_pages_user_v2';
 
 function createInitialLocalState() {
   const now = new Date().toISOString();
   return {
+    users: DEMO_ACCOUNTS.map((a, idx) => ({
+      id: idx + 1,
+      email: a.email,
+      passwordDemo: a.passwordDemo,
+      nombre: a.nombre,
+      rol: a.rol,
+      hotelSlug: a.hotelSlug || null,
+      activo: true,
+      creadoEn: now
+    })),
     hotels: [
       {
         slug: 'crowne-plaza-monterrey',
@@ -470,6 +480,35 @@ export function openConstancia(hotelSlug) {
   window.open(url, '_blank', 'noopener');
 }
 
+export function downloadAuditCsv(hotelSlug = null) {
+  if (getRuntimeMode() === 'server') {
+    const q = hotelSlug ? `?hotel=${encodeURIComponent(hotelSlug)}` : '';
+    window.location.href = `./api/audit/export${q}`;
+    return;
+  }
+  const st = loadLocalState();
+  const user = getLocalUser();
+  const scope = user?.rol === 'HOTEL_ADMIN' ? user.hotelSlug : hotelSlug && hotelSlug !== 'all' ? hotelSlug : null;
+  const rows = scope ? st.auditLog.filter((l) => l.hotelSlug === scope) : st.auditLog;
+  const csvEsc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [
+    'seq,timestamp,hotel_slug,direccion,endpoint,fase,estatus_http,resumen,sha256_hash',
+    ...rows.map((r) =>
+      [r.seq, r.timestamp, r.hotelSlug, r.direccion, r.endpoint, r.fase, r.estatusHttp, r.resumen, r.hash]
+        .map(csvEsc)
+        .join(',')
+    )
+  ];
+  const blobUrl = URL.createObjectURL(new Blob([`\uFEFF${lines.join('\n')}\n`], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = `bitacora_portico_${scope || 'asociacion'}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+}
+
 export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) {
   const mode = await detectRuntimeMode();
   if (mode === 'server') {
@@ -500,11 +539,15 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
   }
 
   if (p === '/api/auth/login' && method === 'POST') {
-    const found = DEMO_ACCOUNTS.find(
-      (a) => a.email === String(body?.email || '').trim().toLowerCase() && body?.password === a.passwordDemo
+    const pool = Array.isArray(st.users) && st.users.length ? st.users : DEMO_ACCOUNTS.map((a, i) => ({ ...a, id: i + 1, activo: true }));
+    const found = pool.find(
+      (a) =>
+        a.activo !== false &&
+        a.email === String(body?.email || '').trim().toLowerCase() &&
+        body?.password === a.passwordDemo
     );
-    if (!found) return { ok: false, status: 401, data: { error: 'Correo o contraseña incorrectos.' } };
-    const u = { email: found.email, nombre: found.nombre, rol: found.rol, hotelSlug: found.hotelSlug || null };
+    if (!found) return { ok: false, status: 401, data: { error: 'Correo o contraseña incorrectos (o cuenta suspendida).' } };
+    const u = { id: found.id, email: found.email, nombre: found.nombre, rol: found.rol, hotelSlug: found.hotelSlug || null };
     setLocalUser(u);
     await addLocalAudit(st, {
       hotelSlug: u.hotelSlug || 'asociacion',
@@ -562,6 +605,83 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
 
   if (p === '/api/outbox/retry' && method === 'POST') {
     return { ok: true, status: 200, data: { ok: true, reencolados: 0, procesados: 0 } };
+  }
+
+  if (p === '/api/users' && method === 'GET') {
+    if (user.rol === 'RECEPCION') {
+      return { ok: false, status: 403, data: { error: 'Solo administradores pueden consultar cuentas.' } };
+    }
+    const list = (st.users || []).filter((u) => (user.rol === 'ASOCIACION_ADMIN' ? true : u.hotelSlug === user.hotelSlug));
+    return {
+      ok: true,
+      status: 200,
+      data: {
+        users: list.map(({ passwordDemo, ...pub }) => pub)
+      }
+    };
+  }
+
+  if (p === '/api/users' && method === 'POST') {
+    if (user.rol === 'RECEPCION') {
+      return { ok: false, status: 403, data: { error: 'Solo administradores pueden crear cuentas.' } };
+    }
+    const nombre = String(body.nombre || '').trim();
+    const email = String(body.email || '').trim().toLowerCase();
+    const password = String(body.password || '');
+    const rol = String(body.rol || '').trim().toUpperCase();
+    let hotelSlug = body.hotelSlug || null;
+    if (user.rol === 'HOTEL_ADMIN') {
+      if (rol === 'ASOCIACION_ADMIN') {
+        return { ok: false, status: 403, data: { error: 'No puedes crear cuentas globales de la Asociación.' } };
+      }
+      hotelSlug = user.hotelSlug;
+    }
+    if (st.users.some((u) => u.email === email)) {
+      return { ok: false, status: 409, data: { error: 'Ya existe una cuenta con ese correo.' } };
+    }
+    const nuevo = {
+      id: (st.users.reduce((m, u) => Math.max(m, u.id || 0), 0) || 0) + 1,
+      email,
+      passwordDemo: password,
+      nombre,
+      rol,
+      hotelSlug: rol === 'ASOCIACION_ADMIN' ? null : hotelSlug,
+      activo: true,
+      creadoEn: new Date().toISOString()
+    };
+    st.users.push(nuevo);
+    await addLocalAudit(st, {
+      hotelSlug: nuevo.hotelSlug || 'asociacion',
+      direccion: 'ACCESO RBAC',
+      endpoint: '/api/users',
+      fase: 'GESTION USUARIOS',
+      resumen: `Nueva cuenta RBAC creada por ${user.nombre}: ${email} (${rol}).`,
+      estatusHttp: 201,
+      payload: { email, rol, hotelSlug: nuevo.hotelSlug }
+    });
+    saveLocalState(st);
+    const { passwordDemo, ...pub } = nuevo;
+    return { ok: true, status: 201, data: { ok: true, user: pub } };
+  }
+
+  const userPatch = p.match(/^\/api\/users\/(\d+)$/);
+  if (userPatch && method === 'PATCH') {
+    if (user.rol === 'RECEPCION') {
+      return { ok: false, status: 403, data: { error: 'Acceso restringido.' } };
+    }
+    const id = Number(userPatch[1]);
+    if (id === user.id) {
+      return { ok: false, status: 400, data: { error: 'No puedes desactivar tu propia sesión activa.' } };
+    }
+    const target = (st.users || []).find((u) => u.id === id);
+    if (!target) return { ok: false, status: 404, data: { error: 'Usuario no encontrado.' } };
+    if (user.rol === 'HOTEL_ADMIN' && target.hotelSlug !== user.hotelSlug) {
+      return { ok: false, status: 403, data: { error: 'Aislamiento multi-hotel.' } };
+    }
+    target.activo = Boolean(body.activo);
+    saveLocalState(st);
+    const { passwordDemo, ...pub } = target;
+    return { ok: true, status: 200, data: { ok: true, user: pub } };
   }
 
   if (p === '/api/hotels' && method === 'POST') {

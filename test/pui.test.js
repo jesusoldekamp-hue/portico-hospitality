@@ -258,4 +258,52 @@ describe('Portico Hospitality Producción — SQLite ACID, RBAC, PUI DOF, Outbox
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
+
+  it('gestiona usuarios RBAC aislados por RFC y exporta bitácora CSV con sello SHA-256', async () => {
+    const crowneCookie = await loginAs(baseUrl, 'ti@crowneplazamty.mx');
+
+    // Intento de crear usuario para otro hotel o admin global debe rechazarse con 403
+    const crossHotelRes = await fetch(`${baseUrl}/api/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: crowneCookie },
+      body: JSON.stringify({
+        nombre: 'Intento Cruzado',
+        email: 'intruso@safihotels.mx',
+        password: 'ClaveSegura#2026',
+        rol: 'RECEPCION',
+        hotelSlug: 'safi-centro'
+      })
+    });
+    assert.equal(crossHotelRes.status, 403);
+
+    // Creación legítima de recepcionista nocturno para Crowne Plaza
+    const createRes = await fetch(`${baseUrl}/api/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: crowneCookie },
+      body: JSON.stringify({
+        nombre: 'Recepción Nocturna Crowne Plaza',
+        email: 'nocturno@crowneplazamty.mx',
+        password: 'ClaveSegura#2026',
+        rol: 'RECEPCION',
+        hotelSlug: 'crowne-plaza-monterrey'
+      })
+    });
+    assert.equal(createRes.status, 201);
+
+    // El nuevo usuario puede autenticarse de inmediato y queda aislado por RBAC
+    const newRecCookie = await loginAs(baseUrl, 'nocturno@crowneplazamty.mx', 'ClaveSegura#2026');
+    const forbiddenExport = await fetch(`${baseUrl}/api/audit/export`, {
+      headers: { Cookie: newRecCookie }
+    });
+    assert.equal(forbiddenExport.status, 403);
+
+    // Exportación auditable CSV con hashes SHA-256 para TI Crowne Plaza
+    const exportRes = await fetch(`${baseUrl}/api/audit/export`, {
+      headers: { Cookie: crowneCookie }
+    });
+    assert.equal(exportRes.status, 200);
+    const csvBody = await exportRes.text();
+    assert.ok(csvBody.includes('seq,timestamp,hotel_slug,direccion,endpoint,fase,estatus_http,resumen,sha256_hash'));
+    assert.ok(csvBody.includes('nocturno@crowneplazamty.mx'));
+  });
 });

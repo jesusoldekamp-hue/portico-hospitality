@@ -8,6 +8,7 @@
 import {
   apiRequest,
   buildDemoCsvBlobUrl,
+  downloadAuditCsv,
   getRuntimeMode,
   openConstancia
 } from './api-client.js';
@@ -20,6 +21,7 @@ const fmtMxn = new Intl.NumberFormat('es-MX', {
 
 let currentUser = null;
 let appState = null;
+let usersList = [];
 let selectedHotelSlug = 'crowne-plaza-monterrey';
 let revealApiKey = false;
 
@@ -394,6 +396,18 @@ function updateRoiCalculator() {
     : 'Membresía incluida';
 }
 
+async function fetchUsers() {
+  if (!currentUser || currentUser.rol === 'RECEPCION') {
+    usersList = [];
+    return;
+  }
+  const { ok, data } = await apiRequest('/api/users');
+  if (ok && Array.isArray(data.users)) {
+    usersList = data.users;
+    renderUsersTable();
+  }
+}
+
 async function fetchState() {
   const { status, data } = await apiRequest('/api/state');
   if (status === 401) {
@@ -406,6 +420,7 @@ async function fetchState() {
     selectedHotelSlug = appState.hotels[0]?.slug || '';
   }
   renderAll();
+  await fetchUsers();
 }
 
 function populateHotelSelect(selectId) {
@@ -443,6 +458,7 @@ function renderAll() {
   populateHotelSelect('sim-hotel-select');
   populateHotelSelect('desk-hotel-select');
   populateHotelSelect('conn-hotel-select');
+  populateHotelSelect('new-user-hotel');
 
   const currentHotel = appState.hotels.find((h) => h.slug === selectedHotelSlug) || appState.hotels[0];
   if (currentHotel) {
@@ -688,6 +704,41 @@ function renderHotelsTable() {
                 CSV / API
               </button>
             </div>
+          </td>
+        </tr>`;
+    })
+    .join('');
+}
+
+function renderUsersTable() {
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody) return;
+  if (!usersList.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="cell-sub">Sin cuentas registradas en este alcance.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = usersList
+    .map((u) => {
+      const hotelObj = appState?.hotels?.find((h) => h.slug === u.hotelSlug);
+      const scopeLabel = u.rol === 'ASOCIACION_ADMIN' ? 'Red completa Asociación' : hotelObj ? hotelObj.nombre : u.hotelSlug || '—';
+      const isSelf = currentUser && u.email === currentUser.email;
+      const roleClass = u.rol === 'RECEPCION' ? 'badge-neutral' : 'badge-active';
+      const statusBadge = u.activo
+        ? '<span class="badge badge-active">Activa</span>'
+        : '<span class="badge badge-danger">Suspendida</span>';
+      return `
+        <tr>
+          <td><strong>${escapeHtml(u.nombre)}</strong></td>
+          <td><code>${escapeHtml(u.email)}</code></td>
+          <td><span class="badge ${roleClass}">${escapeHtml(ROLE_LABELS[u.rol] || u.rol)}</span></td>
+          <td>${escapeHtml(scopeLabel)}</td>
+          <td>${statusBadge}</td>
+          <td>
+            ${
+              isSelf
+                ? '<span class="cell-sub">Sesión actual</span>'
+                : `<button type="button" class="btn-secondary btn-sm" data-toggle-user="${u.id}" data-next-active="${u.activo ? '0' : '1'}">${u.activo ? 'Suspender' : 'Reactivar'}</button>`
+            }
           </td>
         </tr>`;
     })
@@ -1125,6 +1176,85 @@ function bindEvents() {
     }
   });
 
+  document.getElementById('btn-export-audit-sim').addEventListener('click', () => {
+    downloadAuditCsv(selectedHotelSlug);
+  });
+
+  document.getElementById('btn-export-audit-tech').addEventListener('click', () => {
+    downloadAuditCsv(currentUser?.rol === 'ASOCIACION_ADMIN' ? 'all' : selectedHotelSlug);
+  });
+
+  // Gestión de usuarios RBAC
+  const userDialog = document.getElementById('add-user-dialog');
+  const rolSelect = document.getElementById('new-user-rol');
+  const hotelWrap = document.getElementById('new-user-hotel-wrap');
+  const syncUserFormScope = () => {
+    const isHotelAdmin = currentUser?.rol === 'HOTEL_ADMIN';
+    const assocOpt = rolSelect.querySelector('option[value="ASOCIACION_ADMIN"]');
+    if (assocOpt) assocOpt.hidden = isHotelAdmin;
+    if (isHotelAdmin && rolSelect.value === 'ASOCIACION_ADMIN') rolSelect.value = 'RECEPCION';
+    hotelWrap.hidden = rolSelect.value === 'ASOCIACION_ADMIN';
+  };
+  rolSelect.addEventListener('change', syncUserFormScope);
+
+  document.getElementById('btn-toggle-new-user-pass').addEventListener('click', () => {
+    const input = document.getElementById('new-user-password');
+    const btn = document.getElementById('btn-toggle-new-user-pass');
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.textContent = showing ? 'Mostrar' : 'Ocultar';
+  });
+
+  document.getElementById('btn-open-add-user').addEventListener('click', () => {
+    document.getElementById('form-add-user').reset();
+    const fb = document.getElementById('add-user-feedback');
+    fb.textContent = '';
+    fb.className = 'inline-feedback';
+    syncUserFormScope();
+    userDialog.showModal();
+  });
+
+  document.getElementById('btn-cancel-add-user').addEventListener('click', () => userDialog.close('cancel'));
+
+  document.getElementById('form-add-user').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!e.currentTarget.reportValidity()) return;
+    const fb = document.getElementById('add-user-feedback');
+    const rol = rolSelect.value;
+    const { ok, data } = await apiRequest('/api/users', {
+      method: 'POST',
+      body: {
+        nombre: document.getElementById('new-user-nombre').value.trim(),
+        email: document.getElementById('new-user-email').value.trim(),
+        password: document.getElementById('new-user-password').value,
+        rol,
+        hotelSlug: rol === 'ASOCIACION_ADMIN' ? null : document.getElementById('new-user-hotel').value
+      }
+    });
+    if (!ok) {
+      fb.className = 'inline-feedback err';
+      fb.textContent = data.error || 'No se pudo crear la cuenta.';
+      return;
+    }
+    userDialog.close('created');
+    await fetchState();
+  });
+
+  document.getElementById('users-tbody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-toggle-user]');
+    if (!btn) return;
+    btn.disabled = true;
+    try {
+      await apiRequest(`/api/users/${btn.dataset.toggleUser}`, {
+        method: 'PATCH',
+        body: { activo: btn.dataset.nextActive === '1' }
+      });
+      await fetchState();
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
   document.getElementById('hotels-tbody').addEventListener('click', (e) => {
     const certBtn = e.target.closest('[data-open-cert]');
     if (certBtn) {
@@ -1186,11 +1316,12 @@ function bindEvents() {
 
   document.getElementById('btn-reset-demo').addEventListener('click', async () => {
     await apiRequest('/api/demo/reset', { method: 'POST' });
-    syncHotelChange('crowne-plaza-monterrey');
+    selectedHotelSlug = 'crowne-plaza-monterrey';
     document.getElementById('csv-errors-box').hidden = true;
     document.getElementById('csv-raw-text').value = '';
     document.getElementById('pms-minor-box').hidden = true;
     document.getElementById('desk-minor-box').hidden = true;
+    await fetchState();
   });
 }
 

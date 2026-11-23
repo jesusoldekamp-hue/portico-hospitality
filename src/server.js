@@ -30,6 +30,9 @@ import {
   createSession,
   getSessionUser,
   deleteSession,
+  listUsers,
+  createUser,
+  setUserActive,
   upsertAlert,
   listAlerts,
   findActiveMatchingAlerts,
@@ -768,6 +771,146 @@ export function createServer({ enableWorker = true } = {}) {
         const resetCount = resetOutboxForRetry(scope);
         const processed = await procesarColaOutbox();
         return sendJson(res, 200, { ok: true, reencolados: resetCount, procesados: processed });
+      }
+
+      // 5B. Gestión de Usuarios y Roles RBAC (ASOCIACION_ADMIN global; HOTEL_ADMIN aislado a su RFC)
+      if (method === 'GET' && pathname === '/api/users') {
+        if (!currentUser || currentUser.rol === 'RECEPCION') {
+          return sendJson(res, 403, { error: 'Solo administradores pueden consultar cuentas de acceso.' });
+        }
+        const scope = currentUser.rol === 'ASOCIACION_ADMIN' ? null : currentUser.hotelSlug;
+        return sendJson(res, 200, { users: listUsers({ hotelSlug: scope }) });
+      }
+
+      if (method === 'POST' && pathname === '/api/users') {
+        if (!currentUser || currentUser.rol === 'RECEPCION') {
+          return sendJson(res, 403, { error: 'Solo administradores pueden crear usuarios.' });
+        }
+        const body = await readJsonBody(req);
+        const nombre = String(body.nombre || '').trim();
+        const email = String(body.email || '').trim().toLowerCase();
+        const password = String(body.password || '');
+        const rol = String(body.rol || '').trim().toUpperCase();
+        let hotelSlug = body.hotelSlug ? String(body.hotelSlug).trim() : null;
+
+        if (nombre.length < 3) {
+          return sendJson(res, 400, { error: 'Ingresa el nombre completo del colaborador.' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return sendJson(res, 400, { error: 'Ingresa un correo institucional válido.' });
+        }
+        if (password.length < 8) {
+          return sendJson(res, 400, { error: 'La contraseña debe tener al menos 8 caracteres.' });
+        }
+        if (!['ASOCIACION_ADMIN', 'HOTEL_ADMIN', 'RECEPCION'].includes(rol)) {
+          return sendJson(res, 400, { error: 'Rol RBAC no válido.' });
+        }
+
+        if (currentUser.rol === 'HOTEL_ADMIN') {
+          if (rol === 'ASOCIACION_ADMIN') {
+            return sendJson(res, 403, {
+              error: 'Un administrador de hotel no puede crear cuentas globales de la Asociación.'
+            });
+          }
+          if (hotelSlug && hotelSlug !== currentUser.hotelSlug) {
+            return sendJson(res, 403, {
+              error: 'Aislamiento multi-hotel: solo puedes crear cuentas para tu propio hotel.'
+            });
+          }
+          hotelSlug = currentUser.hotelSlug;
+        } else if (rol !== 'ASOCIACION_ADMIN') {
+          if (!hotelSlug || !getHotelBySlug(hotelSlug)) {
+            return sendJson(res, 400, { error: 'Selecciona un hotel afiliado válido para este usuario.' });
+          }
+        } else {
+          hotelSlug = null;
+        }
+
+        const result = createUser({ email, password, nombre, rol, hotelSlug });
+        if (result.conflict) {
+          return sendJson(res, 409, { error: 'Ya existe una cuenta registrada con ese correo.' });
+        }
+
+        appendAudit({
+          hotelSlug: hotelSlug || 'asociacion',
+          direccion: 'ACCESO RBAC',
+          endpoint: '/api/users',
+          fase: 'GESTION USUARIOS',
+          resumen: `Nueva cuenta RBAC creada por ${currentUser.nombre}: ${email} (${rol}).`,
+          estatusHttp: 201,
+          payload: { creado_por: currentUser.email, email, rol, hotelSlug }
+        });
+        return sendJson(res, 201, { ok: true, user: result.user });
+      }
+
+      const userToggleMatch = pathname.match(/^\/api\/users\/(\d+)$/);
+      if (userToggleMatch && method === 'PATCH') {
+        if (!currentUser || currentUser.rol === 'RECEPCION') {
+          return sendJson(res, 403, { error: 'Acceso restringido a administradores.' });
+        }
+        const targetId = Number(userToggleMatch[1]);
+        if (targetId === currentUser.id) {
+          return sendJson(res, 400, { error: 'No puedes desactivar tu propia sesión activa.' });
+        }
+        const body = await readJsonBody(req);
+        const activo = Boolean(body.activo);
+        const allowedHotelSlug = currentUser.rol === 'ASOCIACION_ADMIN' ? null : currentUser.hotelSlug;
+        const resToggle = setUserActive(targetId, activo, { allowedHotelSlug });
+        if (resToggle.notFound) return sendJson(res, 404, { error: 'Usuario no encontrado.' });
+        if (resToggle.forbidden) {
+          return sendJson(res, 403, { error: 'No tienes permiso para modificar cuentas de otro hotel.' });
+        }
+        appendAudit({
+          hotelSlug: resToggle.user.hotelSlug || 'asociacion',
+          direccion: 'ACCESO RBAC',
+          endpoint: `/api/users/${targetId}`,
+          fase: 'GESTION USUARIOS',
+          resumen: `Cuenta ${resToggle.user.email} marcada como ${activo ? 'ACTIVA' : 'SUSPENDIDA'} por ${currentUser.nombre}.`,
+          estatusHttp: 200,
+          payload: { email: resToggle.user.email, activo }
+        });
+        return sendJson(res, 200, { ok: true, user: resToggle.user });
+      }
+
+      // 5C. Exportación CSV de Bitácora Auditable con Cadena SHA-256
+      if (method === 'GET' && pathname === '/api/audit/export') {
+        if (!currentUser || currentUser.rol === 'RECEPCION') {
+          return sendJson(res, 403, { error: 'Acceso restringido a administradores.' });
+        }
+        const requestedHotel = parsedUrl.searchParams.get('hotel') || null;
+        let scope = null;
+        if (currentUser.rol === 'HOTEL_ADMIN') {
+          scope = currentUser.hotelSlug;
+        } else if (requestedHotel && requestedHotel !== 'all') {
+          scope = requestedHotel;
+        }
+        const rows = listAudit({ hotelSlug: scope, limit: 1000 });
+        const csvEsc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+        const lines = [
+          'seq,timestamp,hotel_slug,direccion,endpoint,fase,estatus_http,resumen,sha256_hash',
+          ...rows.map((r) =>
+            [
+              r.seq,
+              r.timestamp,
+              r.hotelSlug,
+              r.direccion,
+              r.endpoint,
+              r.fase,
+              r.estatusHttp,
+              r.resumen,
+              r.hash
+            ]
+              .map(csvEsc)
+              .join(',')
+          )
+        ];
+        setSecurityHeaders(res);
+        res.writeHead(200, {
+          'Content-Type': 'text/csv; charset=utf-8',
+          'Content-Disposition': `attachment; filename="bitacora_portico_${scope || 'asociacion'}.csv"`
+        });
+        res.end(`\uFEFF${lines.join('\n')}\n`);
+        return;
       }
 
       // 6. Constancia Oficial de Cumplimiento PUI (JSON y Vista PDF — protegida por RBAC)

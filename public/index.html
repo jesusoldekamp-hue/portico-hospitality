@@ -164,6 +164,9 @@
             <span class="status-dot" aria-hidden="true"></span>
             <span id="sidebar-chain-status">SQLite ACID · SHA-256 íntegro</span>
           </div>
+          <a class="btn-ghost-dark" href="./presentacion.html" target="_blank" rel="noopener" style="text-align: center; text-decoration: none;">
+            Abrir Presentación Ejecutiva
+          </a>
           <button type="button" id="btn-reset-demo" class="btn-ghost-dark" hidden>
             Restablecer datos demo
           </button>
@@ -576,7 +579,9 @@
                   <h2>3. Canal Silencioso a SEGOB</h2>
                   <p class="panel-desc">Notificaciones cifradas, Fases 1–3 y evidencia auditable SHA-256.</p>
                 </div>
-                <span class="badge badge-neutral">Tiempo real</span>
+                <button type="button" class="btn-secondary btn-sm" id="btn-export-audit-sim">
+                  Exportar CSV
+                </button>
               </div>
               <div id="audit-feed" class="audit-feed" aria-live="polite"></div>
             </div>
@@ -840,6 +845,39 @@
               </table>
             </div>
           </div>
+
+          <div class="panel" style="margin-top: 1.25rem;">
+            <div class="panel-header">
+              <div>
+                <h2>Equipo y Cuentas de Acceso (RBAC por RFC)</h2>
+                <p class="panel-desc">
+                  Cada hotel administra a sus propios recepcionistas y responsables de TI sin ver cuentas ni datos de otros hoteles.
+                </p>
+              </div>
+              <button type="button" class="btn-primary" id="btn-open-add-user">
+                Crear cuenta de acceso
+              </button>
+            </div>
+
+            <div tabindex="0" role="region" aria-labelledby="users-table-caption" class="table-wrapper">
+              <table id="users-table">
+                <caption id="users-table-caption" class="visually-hidden">
+                  Cuentas de acceso RBAC autorizadas en Portico Hospitality
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Colaborador</th>
+                    <th scope="col">Correo institucional</th>
+                    <th scope="col">Rol RBAC</th>
+                    <th scope="col">Alcance / Hotel</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <!-- VISTA 6: ESPECIFICACIÓN DOF, CONFIG SEGOB Y COLA OUTBOX -->
@@ -921,9 +959,14 @@
                     Registro persistente de cada <code>/notificar-coincidencia</code> y <code>/busqueda-finalizada</code> con backoff exponencial automático.
                   </p>
                 </div>
-                <button type="button" class="btn-secondary btn-sm" id="btn-retry-outbox">
-                  Reintentar pendientes
-                </button>
+                <div class="btn-group-inline">
+                  <button type="button" class="btn-secondary btn-sm" id="btn-export-audit-tech">
+                    Exportar Bitácora CSV
+                  </button>
+                  <button type="button" class="btn-secondary btn-sm" id="btn-retry-outbox">
+                    Reintentar pendientes
+                  </button>
+                </div>
               </div>
               <div id="outbox-feed" class="audit-feed"></div>
 
@@ -1034,6 +1077,107 @@
           <div class="dialog-actions">
             <button type="button" class="btn-secondary" id="btn-cancel-add-hotel">Cancelar</button>
             <button type="submit" class="btn-primary">Crear espacio aislado por RFC</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- DIÁLOGO NATIVO: CREAR CUENTA DE ACCESO RBAC -->
+    <dialog id="add-user-dialog" closedby="any" aria-labelledby="add-user-title">
+      <div class="dialog-inner">
+        <div class="dialog-header">
+          <h2 id="add-user-title">Crear cuenta de acceso RBAC</h2>
+          <form method="dialog">
+            <button type="submit" value="cancel" class="icon-close" aria-label="Cerrar ventana">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <form id="form-add-user" novalidate>
+          <div class="field">
+            <label for="new-user-nombre">Nombre completo del colaborador</label>
+            <input
+              id="new-user-nombre"
+              name="full-name"
+              type="text"
+              autocomplete="name"
+              enterkeyhint="next"
+              required
+              minlength="3"
+              data-error="new-user-nombre-error"
+              placeholder="Ej. Ana Lucía Garza — Turno Nocturno"
+            />
+            <div id="new-user-nombre-error" class="error-msg">
+              Error: ingresa el nombre completo (mínimo 3 caracteres).
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="new-user-email">Correo institucional</label>
+            <input
+              id="new-user-email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              spellcheck="false"
+              enterkeyhint="next"
+              required
+              data-error="new-user-email-error"
+              placeholder="recepcion.noche@crowneplazamty.mx"
+            />
+            <div id="new-user-email-error" class="error-msg">
+              Error: ingresa un correo electrónico válido.
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="new-user-rol">Rol de permisos (RBAC)</label>
+              <select id="new-user-rol" name="rol">
+                <option value="RECEPCION">Recepción (Solo mostrador · Sigilo)</option>
+                <option value="HOTEL_ADMIN">Gerencia TI Hotel (Aislado a su RFC)</option>
+                <option value="ASOCIACION_ADMIN">Consejo Asociación (Admin global)</option>
+              </select>
+            </div>
+
+            <div class="field" id="new-user-hotel-wrap">
+              <label for="new-user-hotel">Hotel asignado</label>
+              <select id="new-user-hotel" name="hotelSlug"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="new-user-password">Contraseña inicial (mínimo 8 caracteres)</label>
+            <div class="password-row">
+              <input
+                id="new-user-password"
+                name="new-password"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                enterkeyhint="done"
+                required
+                data-error="new-user-password-error"
+                placeholder="Mínimo 8 caracteres"
+              />
+              <button type="button" id="btn-toggle-new-user-pass" class="btn-secondary btn-pass-toggle">
+                Mostrar
+              </button>
+            </div>
+            <div id="new-user-password-error" class="error-msg">
+              Error: ingresa una contraseña de al menos 8 caracteres.
+            </div>
+          </div>
+
+          <div id="add-user-feedback" class="inline-feedback" aria-live="polite"></div>
+
+          <div class="dialog-actions">
+            <button type="button" class="btn-secondary" id="btn-cancel-add-user">Cancelar</button>
+            <button type="submit" class="btn-primary" id="btn-submit-add-user">Crear cuenta RBAC</button>
           </div>
         </form>
       </div>
