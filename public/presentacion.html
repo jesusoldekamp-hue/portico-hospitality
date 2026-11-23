@@ -1,0 +1,1584 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Argus ID — Presentación Ejecutiva · Asociación de Hoteles</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --navy: #0e1929;
+        --navy-2: #16263d;
+        --navy-3: #1e3350;
+        --stone: #f5f6f3;
+        --white: #ffffff;
+        --ink: #121d2d;
+        --muted: #4b5a6b;
+        --border: #d9e0e7;
+        --emerald: #0f7662;
+        --emerald-bright: #1ca389;
+        --emerald-soft: #e7f5f1;
+        --brass: #b88c4a;
+        --crimson: #b42318;
+        --crimson-soft: #fef2f2;
+        --amber: #9a5209;
+        --amber-soft: #fff8eb;
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #0a121e;
+        color: var(--ink);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      /* Barra de presentación interactiva (oculta en PDF/impresión) */
+      .deck-bar {
+        position: fixed;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 50;
+        height: 54px;
+        background: rgb(10 18 30 / 0.92);
+        border-bottom: 1px solid rgb(255 255 255 / 0.1);
+        color: #e6eef7;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.25rem;
+        gap: 1rem;
+      }
+
+      .deck-bar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .deck-bar-brand img {
+        width: 28px;
+        height: 28px;
+        border-radius: 5px;
+        object-fit: cover;
+      }
+
+      .deck-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .bar-btn {
+        background: rgb(255 255 255 / 0.08);
+        color: #f1f6fb;
+        border: 1px solid rgb(255 255 255 / 0.16);
+        border-radius: 6px;
+        padding: 0.38rem 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 140ms ease;
+      }
+
+      .bar-btn:hover {
+        background: rgb(255 255 255 / 0.16);
+      }
+
+      .bar-btn.primary {
+        background: var(--emerald);
+        border-color: var(--emerald);
+        color: #ffffff;
+      }
+
+      .bar-btn.primary:hover {
+        background: #0b5d4d;
+      }
+
+      .slide-counter {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        color: #a9bad0;
+        min-inline-size: 56px;
+        text-align: center;
+      }
+
+      /* Contenedor principal de diapositivas */
+      .deck-stage {
+        padding: 74px 24px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+      }
+
+      body.present-mode .deck-stage {
+        padding: 54px 0 0;
+        gap: 0;
+        min-block-size: 100dvh;
+        justify-content: center;
+      }
+
+      body.present-mode .slide:not(.active) {
+        display: none;
+      }
+
+      /* Diapositiva fija 16:9 (1280x720 base) */
+      .slide {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        max-width: calc(100vw - 32px);
+        aspect-ratio: 16 / 9;
+        background: var(--stone);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 48px 60px 38px;
+        flex: none;
+      }
+
+      .slide-dark {
+        background: var(--navy);
+        color: #eef3f9;
+      }
+
+      .slide-cover {
+        background: var(--navy);
+        color: #ffffff;
+        padding: 0;
+      }
+
+      .cover-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .cover-scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          92deg,
+          rgb(11 20 34 / 0.94) 0%,
+          rgb(11 20 34 / 0.86) 46%,
+          rgb(11 20 34 / 0.28) 74%,
+          rgb(11 20 34 / 0.14) 100%
+        );
+      }
+
+      .cover-inner {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 54px 64px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .cover-logo-lockup {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .cover-emblem {
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+        object-fit: cover;
+        border: 1px solid rgb(255 255 255 / 0.16);
+        box-shadow: 0 12px 28px rgb(0 0 0 / 0.35);
+      }
+
+      .lockup-name {
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
+      }
+
+      .lockup-tag {
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ed8cb;
+        margin-top: 4px;
+        font-weight: 600;
+      }
+
+      .cover-hero {
+        max-width: 680px;
+      }
+
+      .cover-hero h1 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+      }
+
+      .cover-hero p {
+        margin: 20px 0 0;
+        font-size: 19px;
+        line-height: 1.5;
+        color: #c8d6e6;
+        max-width: 580px;
+      }
+
+      .cover-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-top: 20px;
+        border-top: 1px solid rgb(255 255 255 / 0.16);
+        font-size: 13px;
+        color: #c3d2e2;
+      }
+
+      .cover-pills {
+        display: flex;
+        gap: 10px;
+      }
+
+      .pill-dark {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgb(14 25 41 / 0.72);
+        border: 1px solid rgb(255 255 255 / 0.2);
+        font-size: 12px;
+        font-weight: 600;
+        color: #eaf2fa;
+      }
+
+      /* Cabecera y pie estándar de slides interiores */
+      .slide-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .slide-head h2 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+      }
+
+      .slide-lead {
+        margin: 8px 0 0;
+        font-size: 15.5px;
+        color: var(--muted);
+        max-width: 820px;
+      }
+
+      .slide-dark .slide-lead {
+        color: #a9bbd0;
+      }
+
+      .mini-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: none;
+      }
+
+      .mini-brand img {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        object-fit: cover;
+      }
+
+      .mini-brand span {
+        font-weight: 800;
+        font-size: 15px;
+        letter-spacing: -0.015em;
+      }
+
+      .slide-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 20px 0 14px;
+      }
+
+      .slide-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .slide-dark .slide-foot {
+        border-top-color: rgb(255 255 255 / 0.12);
+        color: #8ea3bc;
+      }
+
+      .page-num {
+        font-family: var(--font-mono);
+        font-weight: 700;
+      }
+
+      .slide code {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+        background: #edf1f5;
+        color: var(--navy);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+
+      /* Retículas de contenido */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .box {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px 26px;
+      }
+
+      .box-dark {
+        background: var(--navy-2);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        border-radius: 10px;
+        padding: 24px 26px;
+      }
+
+      .box-accent {
+        background: var(--emerald-soft);
+        border: 1px solid #b5ddd3;
+        border-radius: 10px;
+        padding: 22px 24px;
+      }
+
+      .box-danger {
+        background: var(--crimson-soft);
+        border: 1px solid #f2c0bc;
+        border-radius: 10px;
+        padding: 24px 26px;
+      }
+
+      .big-stat {
+        font-size: 40px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+        margin: 8px 0;
+      }
+
+      .text-crimson {
+        color: var(--crimson);
+      }
+
+      .text-emerald {
+        color: var(--emerald);
+      }
+
+      .text-mint {
+        color: #5ee3c6;
+      }
+
+      .box h3,
+      .box-dark h3,
+      .box-accent h3,
+      .box-danger h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+      }
+
+      .box p,
+      .box-dark p,
+      .box-accent p,
+      .box-danger p {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      .box-dark p {
+        color: #b7c7da;
+      }
+
+      .clean-list {
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      .slide-dark .clean-list {
+        color: #dde7f2;
+      }
+
+      .clean-list li {
+        position: relative;
+        padding-left: 18px;
+        line-height: 1.48;
+      }
+
+      .clean-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--emerald);
+      }
+
+      .box-danger .clean-list li::before {
+        background: var(--crimson);
+      }
+
+      .slide-dark .clean-list li::before,
+      .box-featured .clean-list li::before {
+        background: #36cfa9;
+      }
+
+      .dot {
+        display: none;
+      }
+
+      .truth-bar {
+        margin-top: 18px;
+        padding: 15px 22px;
+        border-radius: 8px;
+        background: var(--navy);
+        color: #eaf2fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        font-size: 15px;
+      }
+
+      .truth-bar strong {
+        color: #6ee7cc;
+      }
+
+      /* Icon badge */
+      .icon-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--emerald-soft);
+        color: var(--emerald);
+        display: grid;
+        place-items: center;
+        margin-bottom: 14px;
+      }
+
+      .slide-dark .icon-badge {
+        background: rgb(28 163 137 / 0.18);
+        color: #6ee7cc;
+      }
+
+      /* Diagrama de arquitectura (Slide 4) */
+      .arch-wrap {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px 28px;
+      }
+
+      .arch-svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .phase-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .phase-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+      }
+
+      .phase-card strong {
+        display: block;
+        font-size: 14.5px;
+        margin-bottom: 4px;
+        color: var(--ink);
+      }
+
+      .phase-card span {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      /* Badges / Logotipos del ecosistema (Slide 5) */
+      .eco-group {
+        margin-bottom: 16px;
+      }
+
+      .eco-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .eco-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .logo-tile {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .logo-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: -0.02em;
+        flex: none;
+      }
+
+      .mark-gov {
+        background: #691c32;
+        color: #ffffff;
+      }
+
+      .mark-navy {
+        background: var(--navy);
+        color: #ffffff;
+      }
+
+      .mark-ihg {
+        background: #830051;
+        color: #ffffff;
+      }
+
+      .mark-safi {
+        background: #1b2838;
+        color: #e4c687;
+      }
+
+      .mark-oracle {
+        background: #c74634;
+        color: #ffffff;
+      }
+
+      .mark-aws {
+        background: #232f3e;
+        color: #ff9900;
+      }
+
+      .mark-emerald {
+        background: var(--emerald);
+        color: #ffffff;
+      }
+
+      .logo-text strong {
+        display: block;
+        font-size: 14.5px;
+        color: var(--ink);
+      }
+
+      .logo-text span {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* Security strip (Slide 6) */
+      .sec-strip {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .sec-pill {
+        background: rgb(255 255 255 / 0.05);
+        border: 1px solid rgb(255 255 255 / 0.14);
+        border-radius: 7px;
+        padding: 10px 12px;
+        text-align: center;
+      }
+
+      .sec-pill strong {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        color: #6ee7cc;
+      }
+
+      .sec-pill span {
+        display: block;
+        font-size: 11px;
+        color: #a9bbd0;
+        margin-top: 2px;
+      }
+
+      /* Tablas financieras (Slide 7) */
+      .fin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .fin-table th,
+      .fin-table td {
+        padding: 13px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .fin-table th {
+        background: #eef2f5;
+        font-size: 12.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+
+      .fin-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .fin-table tr.row-total td {
+        background: var(--emerald-soft);
+        font-weight: 700;
+        color: #0b4a3e;
+      }
+
+      .bar-compare {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .bar-row label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .bar-track {
+        height: 16px;
+        background: #e5eaef;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        border-radius: 999px;
+      }
+
+      /* Timeline (Slide 8) */
+      .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .step-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 22px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .step-badge {
+        display: inline-block;
+        align-self: flex-start;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--navy);
+        color: #ffffff;
+        font-size: 11.5px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+      }
+
+      .step-badge.emerald {
+        background: var(--emerald);
+      }
+
+      .step-card h3 {
+        margin: 0;
+        font-size: 16.5px;
+      }
+
+      .step-card p {
+        margin: 0;
+        font-size: 13.5px;
+        color: var(--muted);
+        line-height: 1.48;
+      }
+
+      /* Pricing cards (Slide 9) */
+      .price-tag {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        font-variant-numeric: tabular-nums;
+        margin: 10px 0 4px;
+      }
+
+      .price-sub {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .box-featured {
+        background: var(--navy);
+        color: #ffffff;
+        border: 2px solid var(--emerald-bright);
+        border-radius: 10px;
+        padding: 24px 26px;
+      }
+
+      .box-featured .price-tag {
+        color: #6ee7cc;
+      }
+
+      .box-featured .price-sub,
+      .box-featured p {
+        color: #bfd0e2;
+      }
+
+      .box-featured .clean-list {
+        color: #eaf2fa;
+      }
+
+      /* Closing slide (Slide 10) */
+      .closing-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 36px;
+        align-items: center;
+      }
+
+      .closing-crest {
+        width: 110px;
+        height: 110px;
+        border-radius: 18px;
+        object-fit: cover;
+        border: 1px solid rgb(255 255 255 / 0.16);
+        margin-bottom: 20px;
+      }
+
+      .closing-url {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: rgb(28 163 137 / 0.16);
+        border: 1px solid rgb(110 231 204 / 0.4);
+        color: #7df0d6;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      /* Impresión / Exportación a PDF 16:9 exacta */
+      @page {
+        size: 1280px 720px;
+        margin: 0;
+      }
+
+      @media print {
+        html,
+        body {
+          background: #ffffff;
+        }
+        .deck-bar {
+          display: none !important;
+        }
+        .deck-stage {
+          padding: 0 !important;
+          gap: 0 !important;
+          display: block !important;
+        }
+        .slide {
+          display: flex !important;
+          width: 1280px !important;
+          height: 720px !important;
+          max-width: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          page-break-after: always;
+          break-after: page;
+        }
+        .slide:last-child {
+          page-break-after: auto;
+          break-after: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="deck-bar">
+      <div class="deck-bar-brand">
+        <img src="./assets/argus-emblem.jpg" alt="Argus ID" />
+        <span>Argus ID · Presentación Ejecutiva</span>
+      </div>
+      <div class="deck-controls">
+        <button type="button" class="bar-btn" id="btn-prev">← Anterior</button>
+        <span class="slide-counter" id="slide-counter">1 / 10</span>
+        <button type="button" class="bar-btn" id="btn-next">Siguiente →</button>
+        <button type="button" class="bar-btn" id="btn-toggle-mode">Modo Presentación</button>
+        <button type="button" class="bar-btn" id="btn-print-pdf">Guardar PDF 16:9</button>
+        <a class="bar-btn primary" href="./index.html" target="_blank" rel="noopener">Abrir Demo en Vivo</a>
+      </div>
+    </header>
+
+    <main class="deck-stage" id="deck-stage">
+      <!-- SLIDE 1: PORTADA -->
+      <section class="slide slide-cover active" data-slide="1">
+        <img class="cover-bg" src="./assets/cover-monterrey.jpg" alt="Atrio hotelero con vista al Cerro de la Silla en Monterrey" />
+        <div class="cover-scrim" aria-hidden="true"></div>
+        <div class="cover-inner">
+          <div class="cover-logo-lockup">
+            <img class="cover-emblem" src="./assets/argus-emblem.jpg" alt="Emblema oficial Argus ID" />
+            <div>
+              <div class="lockup-name">Argus ID</div>
+              <div class="lockup-tag">Hospitality Identity &amp; Gov Alerts</div>
+            </div>
+          </div>
+
+          <div class="cover-hero">
+            <h1>Infraestructura propia de cumplimiento PUI para la Asociación de Hoteles</h1>
+            <p>
+              Interconexión oficial con SEGOB / RENAPO, validación de CURP y protección automática de menores en una sola plataforma multi-hotel, sin rentas mensuales por propiedad.
+            </p>
+          </div>
+
+          <div class="cover-footer">
+            <div>Propuesta Ejecutiva · Asociación Mexicana de Hoteles de Nuevo León · 2026</div>
+            <div class="cover-pills">
+              <span class="pill-dark">Piloto: Crowne Plaza Monterrey</span>
+              <span class="pill-dark">Escala: Hoteles Safi &amp; Afiliados</span>
+              <span class="pill-dark">DOF 23/01/2026</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: EL RETO ACTUAL -->
+      <section class="slide" data-slide="2">
+        <div class="slide-head">
+          <div>
+            <h2>El dilema actual del hotelero: multas millonarias o rentas eternas</h2>
+            <p class="slide-lead">
+              El Art. 12 Bis de la Ley General en Materia de Desaparición Forzada obliga a todos los hoteles a interconectarse con la Plataforma Única de Identidad (PUI) de SEGOB.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="box-danger">
+              <h3>Riesgo legal inmediato (Art. 43 Bis)</h3>
+              <div class="big-stat text-crimson">$1.17M – $2.35M MXN</div>
+              <p>Multa federal por cada incumplimiento (10,000 a 20,000 UMAs 2026).</p>
+              <ul class="clean-list">
+                <li><span class="dot dot-crimson"></span>Aplica por no interconectarse, no responder alertas o mantener registros desactualizados.</li>
+                <li><span class="dot dot-crimson"></span>Se suma a la obligación de la <strong>Ley General de Turismo</strong> de verificar parentesco en menores de edad.</li>
+                <li><span class="dot dot-crimson"></span>Un solo hotel sancionado impacta el patrimonio y la reputación de todo el gremio.</li>
+              </ul>
+            </div>
+
+            <div class="box">
+              <h3>Fuga silenciosa con proveedores SaaS externos</h3>
+              <div class="big-stat">$5,508,000 MXN</div>
+              <p>Gasto acumulado en 3 años para 136 hoteles pagando ~$1,000/mes + arranque.</p>
+              <ul class="clean-list">
+                <li><span class="dot"></span>Rentas perpetuas por cada propiedad que suben cada año sin generar activo propio.</li>
+                <li><span class="dot"></span>Soluciones genéricas que no se adaptan bien a <strong>Oracle OPERA</strong> y obligan a capturas manuales.</li>
+                <li><span class="dot"></span>Información sensible de huéspedes alojada en servidores de terceros comerciales.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="truth-bar">
+            <span><strong>Dato clave:</strong> SEGOB y RENAPO cobran <strong>$0 pesos</strong> por la interconexión oficial a la PUI.</span>
+            <span>Lo único que hoy cobran los terceros es el puente tecnológico.</span>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Propuesta para la Asociación de Hoteles</span>
+          <span class="page-num">02 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: QUÉ ES ARGUS ID -->
+      <section class="slide" data-slide="3">
+        <div class="slide-head">
+          <div>
+            <h2>Argus ID: doble blindaje legal en una plataforma propiedad de la Asociación</h2>
+            <p class="slide-lead">
+              Diseñada específicamente para la operación real de hoteles 5 estrellas, grupos corporativos y propiedades independientes.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="box">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <h3>Cumplimiento PUI 100% DOF</h3>
+              <p>Ejecuta automáticamente las 3 Fases oficiales ante SEGOB (datos básicos, histórico de 12 años y monitoreo silencioso 24/7 en el check-in).</p>
+              <ul class="clean-list">
+                <li><span class="dot"></span>Endpoints oficiales por RFC con JWT HS256.</li>
+                <li><span class="dot"></span>Cola Outbox con reintento automático para cero pérdida de avisos.</li>
+              </ul>
+            </div>
+
+            <div class="box">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+              <h3>Protección automática a menores</h3>
+              <p>Validador oficial de CURP RENAPO sin costo por consulta que detecta menores de 18 años al instante en mostrador.</p>
+              <ul class="clean-list">
+                <li><span class="dot"></span>Activa verificación obligatoria de parentesco (Ley General de Turismo).</li>
+                <li><span class="dot"></span>Registra evidencia auditable de cada validación.</li>
+              </ul>
+            </div>
+
+            <div class="box-accent">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+              </div>
+              <h3>Escudo de auditoría y activo propio</h3>
+              <p>Cada hotel descarga en un clic su <strong>Constancia Oficial PDF</strong> con sello criptográfico SHA-256 lista para inspecciones.</p>
+              <ul class="clean-list">
+                <li><span class="dot"></span>Inversión única: la plataforma pertenece al gremio.</li>
+                <li><span class="dot"></span>Sin límite de hoteles ni rentas por consulta.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Hospitality Identity &amp; Gov Alerts</span>
+          <span class="page-num">03 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: ARQUITECTURA INVERTIDA Y SIGILO -->
+      <section class="slide" data-slide="4">
+        <div class="slide-head">
+          <div>
+            <h2>Cómo opera realmente: arquitectura invertida y sigilo en recepción</h2>
+            <p class="slide-lead">
+              Por ley y seguridad, los hoteles nunca descargan listas de desaparecidos. SEGOB envía alertas cifradas y Argus ID cruza localmente con sigilo total.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="arch-wrap">
+            <svg class="arch-svg" viewBox="0 0 1100 220" role="img" aria-label="Diagrama de flujo invertido entre SEGOB, Argus ID y los PMS hoteleros">
+              <defs>
+                <marker id="arrow-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f7662" />
+                </marker>
+                <marker id="arrow-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#16263d" />
+                </marker>
+              </defs>
+
+              <!-- Nodo 1: SEGOB -->
+              <rect x="12" y="34" width="224" height="150" rx="12" fill="#691c32" />
+              <text x="124" y="76" text-anchor="middle" fill="#f3d6de" font-size="11.5" font-weight="700" letter-spacing="1.2">AUTORIDAD FEDERAL</text>
+              <text x="124" y="108" text-anchor="middle" fill="#ffffff" font-size="21" font-weight="800">SEGOB / RENAPO</text>
+              <text x="124" y="134" text-anchor="middle" fill="#f3d6de" font-size="13">Plataforma Única de</text>
+              <text x="124" y="152" text-anchor="middle" fill="#f3d6de" font-size="13">Identidad (PUI · CNB)</text>
+
+              <!-- Flecha ida SEGOB -> Argus -->
+              <line x1="244" y1="84" x2="404" y2="84" stroke="#16263d" stroke-width="2.5" marker-end="url(#arrow-navy)" />
+              <text x="324" y="72" text-anchor="middle" fill="#16263d" font-size="11.5" font-weight="700">1. POST /activar-reporte</text>
+              <text x="324" y="102" text-anchor="middle" fill="#4b5a6b" font-size="11">CURP + JWT HS256</text>
+
+              <!-- Flecha vuelta Argus -> SEGOB -->
+              <line x1="404" y1="146" x2="244" y2="146" stroke="#0f7662" stroke-width="2.5" marker-end="url(#arrow-emerald)" />
+              <text x="324" y="136" text-anchor="middle" fill="#0f7662" font-size="11.5" font-weight="700">3. Aviso silencioso</text>
+              <text x="324" y="164" text-anchor="middle" fill="#4b5a6b" font-size="11">/notificar-coincidencia</text>
+
+              <!-- Nodo 2: Argus ID -->
+              <rect x="412" y="20" width="280" height="178" rx="12" fill="#0e1929" stroke="#1ca389" stroke-width="2" />
+              <text x="552" y="54" text-anchor="middle" fill="#6ee7cc" font-size="12" font-weight="700" letter-spacing="1.2">NÚCLEO PROPIO ASOCIACIÓN</text>
+              <text x="552" y="88" text-anchor="middle" fill="#ffffff" font-size="25" font-weight="800">Argus ID</text>
+              <text x="552" y="114" text-anchor="middle" fill="#c7d6e7" font-size="13">Bóveda aislada por RFC</text>
+              <text x="552" y="136" text-anchor="middle" fill="#c7d6e7" font-size="13">Cifrado AES-256-GCM · SHA-256</text>
+              <rect x="444" y="152" width="216" height="28" rx="6" fill="#183247" />
+              <text x="552" y="170" text-anchor="middle" fill="#6ee7cc" font-size="12" font-weight="700">Motor Fases 1, 2 y 3 + Outbox</text>
+
+              <!-- Flecha PMS -> Argus -->
+              <line x1="826" y1="109" x2="700" y2="109" stroke="#0f7662" stroke-width="2.5" marker-end="url(#arrow-emerald)" />
+              <text x="763" y="96" text-anchor="middle" fill="#0f7662" font-size="11.5" font-weight="700">2. Check-in / CSV</text>
+              <text x="763" y="128" text-anchor="middle" fill="#4b5a6b" font-size="11">X-Argus-PMS-Key</text>
+
+              <!-- Nodo 3: Hoteles PMS -->
+              <rect x="834" y="34" width="250" height="150" rx="12" fill="#f4f7fa" stroke="#c5d0dc" stroke-width="1.5" />
+              <text x="959" y="68" text-anchor="middle" fill="#4b5a6b" font-size="11.5" font-weight="700" letter-spacing="1">HOTELES AFILIADOS</text>
+              <text x="959" y="96" text-anchor="middle" fill="#121d2d" font-size="18" font-weight="800">PMS &amp; Recepción</text>
+              <text x="959" y="122" text-anchor="middle" fill="#4b5a6b" font-size="12.5">Oracle OPERA · Cloudbeds</text>
+              <text x="959" y="142" text-anchor="middle" fill="#4b5a6b" font-size="12.5">Agente Local · Portal CSV</text>
+              <text x="959" y="166" text-anchor="middle" fill="#0f7662" font-size="12" font-weight="700">Sigilo total en mostrador</text>
+            </svg>
+          </div>
+
+          <div class="phase-strip">
+            <div class="phase-card">
+              <strong>Fase 1 · Datos básicos</strong>
+              <span>Si la CURP reportada ya existe en el hotel, complementa datos de contacto para la ficha oficial de búsqueda.</span>
+            </div>
+            <div class="phase-card">
+              <strong>Fase 2 · Barrido histórico (12 años)</strong>
+              <span>Revisa estancias previas en la bóveda del hotel, notifica antecedentes y envía el cierre <code>/busqueda-finalizada</code>.</span>
+            </div>
+            <div class="phase-card">
+              <strong>Fase 3 · Vigilancia silenciosa en check-in</strong>
+              <span>Cruza cada nuevo huésped en tiempo real. Si coincide, avisa directo a SEGOB sin alarmar en recepción ni arriesgar al personal.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Manual Técnico de Instituciones Diversas (DOF, 23 de enero de 2026)</span>
+          <span class="page-num">04 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: ECOSISTEMA Y LOGOTIPOS -->
+      <section class="slide" data-slide="5">
+        <div class="slide-head">
+          <div>
+            <h2>Ecosistema diseñado para la hotelería de Nuevo León y todo México</h2>
+            <p class="slide-lead">
+              Un solo núcleo compatible con cadenas internacionales, grupos independientes y hoteles boutique sin importar qué PMS utilicen.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="eco-group">
+            <div class="eco-label">Marco institucional y cumplimiento gubernamental</div>
+            <div class="grid-4">
+              <div class="logo-tile">
+                <div class="logo-mark mark-gov">PUI</div>
+                <div class="logo-text"><strong>SEGOB · PUI</strong><span>Plataforma Única de Identidad</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-gov">CURP</div>
+                <div class="logo-text"><strong>RENAPO</strong><span>Validación oficial y entidad</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-navy">DOF</div>
+                <div class="logo-text"><strong>Manual Técnico</strong><span>Publicado 23/01/2026</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-emerald">LMX</div>
+                <div class="logo-text"><strong>Llave MX</strong><span>Alta por RFC / Persona Moral</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eco-group">
+            <div class="eco-label">Despliegue estratégico en Nuevo León</div>
+            <div class="grid-4">
+              <div class="logo-tile">
+                <div class="logo-mark mark-navy">AMH</div>
+                <div class="logo-text"><strong>Asociación de Hoteles</strong><span>~136 propiedades en N.L.</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-ihg">CP</div>
+                <div class="logo-text"><strong>Crowne Plaza MTY</strong><span>Piloto Fase 1 · IHG / Milenium</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-safi">SAFI</div>
+                <div class="logo-text"><strong>Hoteles Safi</strong><span>Centro · Metropolitan · Valle</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-emerald">+130</div>
+                <div class="logo-text"><strong>Hoteles Afiliados</strong><span>Cadenas e independientes</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eco-group">
+            <div class="eco-label">Compatibilidad universal de sistemas PMS e infraestructura</div>
+            <div class="grid-4">
+              <div class="logo-tile">
+                <div class="logo-mark mark-oracle">OPR</div>
+                <div class="logo-text"><strong>Oracle OPERA Cloud</strong><span>Integración oficial vía OHIP</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-oracle">O5</div>
+                <div class="logo-text"><strong>OPERA 5 / Local</strong><span>Agente CSV sin tocar Oracle</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-navy">PMS</div>
+                <div class="logo-text"><strong>Cloudbeds · Zeus</strong><span>API Webhook o carga CSV</span></div>
+              </div>
+              <div class="logo-tile">
+                <div class="logo-mark mark-aws">AWS</div>
+                <div class="logo-text"><strong>Nube AWS Oficial</strong><span>RDS PostgreSQL · KMS · WAF</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Identificadores institucionales de referencia del ecosistema hotelero y normativo</span>
+          <span class="page-num">05 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: SEGURIDAD Y RBAC (DARK) -->
+      <section class="slide slide-dark" data-slide="6">
+        <div class="slide-head">
+          <div>
+            <h2>Seguridad bancaria, aislamiento por RFC y control de roles (RBAC)</h2>
+            <p class="slide-lead">
+              Ningún hotel puede ver huéspedes ni reportes de otro hotel, y el personal de recepción nunca queda expuesto a información confidencial de SEGOB.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="box-dark">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="9" rx="1" />
+                  <rect x="14" y="3" width="7" height="5" rx="1" />
+                  <rect x="14" y="12" width="7" height="9" rx="1" />
+                  <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+              </div>
+              <h3>Rol 1 · Consejo Asociación</h3>
+              <p>Gobernanza gremial sin acceso a datos personales sensibles.</p>
+              <ul class="clean-list">
+                <li><span class="dot dot-mint"></span>Estatus 24/7 de hoteles afiliados y métricas de ahorro.</li>
+                <li><span class="dot dot-mint"></span>Alta de nuevos hoteles en minutos.</li>
+                <li><span class="dot dot-mint"></span>Emisión de constancias sin exponer CURPs en claro.</li>
+              </ul>
+            </div>
+
+            <div class="box-dark">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <h3>Rol 2 · Gerencia TI del Hotel</h3>
+              <p>Aislamiento estricto al propio RFC (bloqueo HTTP 403 cruzado).</p>
+              <ul class="clean-list">
+                <li><span class="dot dot-mint"></span>Gestión de llave PMS y agente local OPERA.</li>
+                <li><span class="dot dot-mint"></span>Importación CSV y configuración SEGOB Sandbox/Prod.</li>
+                <li><span class="dot dot-mint"></span>Bitácora auditable y Constancia PDF de su propiedad.</li>
+              </ul>
+            </div>
+
+            <div class="box-dark">
+              <div class="icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+              <h3>Rol 3 · Recepción Mostrador</h3>
+              <p>Terminal limpia y discreta enfocada en hospitalidad y sigilo.</p>
+              <ul class="clean-list">
+                <li><span class="dot dot-mint"></span>Check-in ágil con validación CURP / lectura INE.</li>
+                <li><span class="dot dot-mint"></span>Protocolo automático de parentesco en menores.</li>
+                <li><span class="dot dot-mint"></span><strong>Cero visibilidad</strong> de alertas SEGOB o bitácoras.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sec-strip">
+            <div class="sec-pill"><strong>AES-256-GCM</strong><span>CURPs cifradas</span></div>
+            <div class="sec-pill"><strong>JWT HS256</strong><span>Auth DOF por RFC</span></div>
+            <div class="sec-pill"><strong>scrypt</strong><span>Claves hasheadas</span></div>
+            <div class="sec-pill"><strong>SHA-256</strong><span>Cadena inmutable</span></div>
+            <div class="sec-pill"><strong>Outbox 8x</strong><span>Reintento SEGOB</span></div>
+            <div class="sec-pill"><strong>0 deps npm</strong><span>Auditoría SCA limpia</span></div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Preparado para auditorías de seguridad SAST / DAST / SCA</span>
+          <span class="page-num">06 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: RETORNO DE INVERSIÓN (ROI) -->
+      <section class="slide" data-slide="7">
+        <div class="slide-head">
+          <div>
+            <h2>Retorno de Inversión: convertir un gasto en un activo autosustentable</h2>
+            <p class="slide-lead">
+              Comparativa financiera real basada en los <strong>136 hoteles afiliados</strong> a la Asociación Mexicana de Hoteles de Nuevo León.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <table class="fin-table">
+                <thead>
+                  <tr>
+                    <th>Concepto (136 hoteles)</th>
+                    <th>Proveedor Externo</th>
+                    <th>Argus ID Propio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Arranque / Desarrollo</td>
+                    <td>$612,000 MXN</td>
+                    <td>$350,000 MXN (único)</td>
+                  </tr>
+                  <tr>
+                    <td>Costo anual operación</td>
+                    <td>$1,632,000 MXN/año</td>
+                    <td>~$72,000 MXN/año (AWS)</td>
+                  </tr>
+                  <tr>
+                    <td>Costo mensual por hotel</td>
+                    <td class="text-crimson"><strong>$1,000 MXN/mes</strong></td>
+                    <td class="text-emerald"><strong>$44 MXN/mes real</strong></td>
+                  </tr>
+                  <tr class="row-total">
+                    <td>Total acumulado 3 años</td>
+                    <td>$5,508,000 MXN</td>
+                    <td>$566,000 MXN (todo incl.)</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="bar-compare">
+                <div class="bar-row">
+                  <label><span>Proveedor externo SaaS (3 años)</span><span class="text-crimson">$5,508,000 MXN</span></label>
+                  <div class="bar-track"><div class="bar-fill" style="width: 100%; background: #b42318;"></div></div>
+                </div>
+                <div class="bar-row">
+                  <label><span>Argus ID propio desarrollo + nube (3 años)</span><span class="text-emerald">$566,000 MXN (-89%)</span></label>
+                  <div class="bar-track"><div class="bar-fill" style="width: 11%; background: #0f7662;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="box-accent">
+              <h3>Modelo autosustentable para la Asociación</h3>
+              <div class="big-stat text-emerald">+$336,000 MXN / año</div>
+              <p>Ingreso neto anual para la Asociación cobrando solo una cuota simbólica de recuperación de <strong>$250 MXN/mes por hotel</strong>.</p>
+              <ul class="clean-list">
+                <li><span class="dot"></span>Cada hotel afiliado <strong>ahorra 75%</strong> inmediato frente al mercado ($250 vs. $1,000/mes).</li>
+                <li><span class="dot"></span>Ahorro acumulado del gremio en 3 años: <strong>$4,284,000 MXN</strong>.</li>
+                <li><span class="dot"></span>La plataforma queda 100% pagada en pocos meses y puede licenciarse después a asociaciones hoteleras de otros estados.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Cálculo referencial con renta comercial de $1,000 MXN/mes + $4,500 arranque por hotel</span>
+          <span class="page-num">07 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: CRONOGRAMA 4 A 6 SEMANAS -->
+      <section class="slide" data-slide="8">
+        <div class="slide-head">
+          <div>
+            <h2>Hoja de ruta controlada: de piloto insignia a despliegue estatal</h2>
+            <p class="slide-lead">
+              El núcleo funcional de Argus ID ya está programado y probado. La implementación productiva en AWS y piloto se completa en <strong>4 a 6 semanas</strong>.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="timeline-grid">
+            <div class="step-card">
+              <span class="step-badge">SEMANA 1</span>
+              <h3>Diagnóstico TI y AWS</h3>
+              <p>Sesión técnica con <strong>Crowne Plaza Monterrey</strong> para validar versión de OPERA (OHIP o Agente Local), apertura de cuenta AWS oficial de la Asociación y arranque de trámite Llave MX.</p>
+            </div>
+
+            <div class="step-card">
+              <span class="step-badge">SEMANAS 2 – 3</span>
+              <h3>Producción y Conector</h3>
+              <p>Despliegue en AWS con PostgreSQL RDS cifrado (KMS), HTTPS TLS 1.3 + WAF, construcción del conector piloto OPERA y pruebas de seguridad SAST / DAST / SCA.</p>
+            </div>
+
+            <div class="step-card">
+              <span class="step-badge emerald">SEMANA 4</span>
+              <h3>Certificación y Piloto Vivo</h3>
+              <p>Validación en entorno oficial <strong>Sandbox de SEGOB</strong> (<code>/activar-reporte-prueba</code>, Fases 1–3) y salida en producción en <strong>Crowne Plaza Monterrey</strong>.</p>
+            </div>
+
+            <div class="step-card">
+              <span class="step-badge emerald">SEMANAS 5 – 6</span>
+              <h3>Hoteles Safi y Asociación</h3>
+              <p>Alta de <strong>Safi Centro, Metropolitan y Valle</strong>, apertura del registro multi-RFC para los demás hoteles afiliados y capacitación a gerentes y equipos de TI.</p>
+            </div>
+          </div>
+
+          <div class="truth-bar" style="margin-top: 22px;">
+            <span><strong>Plan de continuidad integrado:</strong> si el corporativo de IHG / Oracle tarda en liberar API en Crowne Plaza, el hotel cumple desde Semana 4 vía Agente Local CSV — o se corre en paralelo con Hoteles Safi.</span>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Cronograma técnico sujeto únicamente a tiempos externos de liberación de Llave MX / SEGOB</span>
+          <span class="page-num">08 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: PROPUESTA DE INVERSIÓN -->
+      <section class="slide" data-slide="9">
+        <div class="slide-head">
+          <div>
+            <h2>Propuesta de inversión: pago único y esquema de cero desembolso</h2>
+            <p class="slide-lead">
+              Tres caminos flexibles para que el Consejo apruebe sin riesgo técnico ni presión sobre la caja de la Asociación.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="box-featured">
+              <span class="step-badge emerald" style="margin-bottom: 10px;">RECOMENDADA</span>
+              <h3>Plataforma Completa</h3>
+              <div class="price-tag">$350,000 MXN</div>
+              <div class="price-sub">+ IVA · Inversión única llave en mano</div>
+              <ul class="clean-list">
+                <li><span class="dot dot-mint"></span>Núcleo PUI DOF multi-RFC sin límite de hoteles.</li>
+                <li><span class="dot dot-mint"></span>Piloto Crowne Plaza + alta Hoteles Safi + Agente OPERA + CSV + Constancias PDF.</li>
+                <li><span class="dot dot-mint"></span><strong>Pagos por hitos:</strong> 30% inicio · 40% certificación Sandbox SEGOB · 30% entrega final.</li>
+              </ul>
+            </div>
+
+            <div class="box-accent">
+              <span class="step-badge" style="margin-bottom: 10px;">$0 CAJA ASOCIACIÓN</span>
+              <h3>Socios Fundadores</h3>
+              <div class="price-tag text-emerald">$35,000 MXN</div>
+              <div class="price-sub">Pago único por hotel fundador (10 hoteles)</div>
+              <ul class="clean-list">
+                <li><span class="dot"></span>10 hoteles líderes (ej. Crowne Plaza, Safi y 8 más) financian el desarrollo completo.</li>
+                <li><span class="dot"></span>Los fundadores quedan <strong>exentos de cuota por 3 años</strong>.</li>
+                <li><span class="dot"></span>La Asociación desembolsa <strong>$0 de tesorería</strong> y se queda con la plataforma para todos sus socios.</li>
+              </ul>
+            </div>
+
+            <div class="box">
+              <span class="step-badge" style="margin-bottom: 10px; background: #4b5a6b;">POR ETAPAS</span>
+              <h3>Arranque en 2 Fases</h3>
+              <div class="price-tag">$135,000 MXN</div>
+              <div class="price-sub">+ IVA · Fase 1 Piloto Crowne Plaza</div>
+              <ul class="clean-list">
+                <li><span class="dot"></span><strong>Fase 1:</strong> Núcleo DOF + Piloto Crowne Plaza + certificación Sandbox SEGOB.</li>
+                <li><span class="dot"></span><strong>Fase 2 ($215,000 + IVA):</strong> Se paga solo al comprobar éxito y liberar a Safi y a toda la Asociación.</li>
+                <li><span class="dot"></span><strong>Póliza opcional 24/7:</strong> $12k–$18k/mes total por toda la red (~$100/mes por hotel).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · No incluye trámites legales Llave MX, consumo directo AWS ni licencias propias de terceros (ej. Oracle OHIP)</span>
+          <span class="page-num">09 / 10</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: CIERRE Y DEMO EN VIVO -->
+      <section class="slide slide-dark" data-slide="10">
+        <div class="slide-head">
+          <div>
+            <h2>No es una idea en papel: Argus ID ya funciona hoy</h2>
+            <p class="slide-lead">
+              Demostración interactiva disponible 24/7 para explorar con el Consejo y los directores de TI.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/argus-emblem.jpg" alt="" />
+            <span>Argus ID</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="closing-grid">
+            <div>
+              <img class="closing-crest" src="./assets/argus-emblem.jpg" alt="Emblema Argus ID" />
+              <h3 style="font-size: 28px; margin: 0 0 12px; color: #ffffff;">Siguiente paso inmediato</h3>
+              <p style="font-size: 16px; color: #c4d3e4; line-height: 1.55; margin: 0;">
+                Agendar una sesión técnica de <strong>20 minutos con el responsable de TI del Crowne Plaza Monterrey</strong> para confirmar su versión exacta de OPERA y activar el plan piloto de 4 semanas.
+              </p>
+              <a class="closing-url" href="https://jesusoldekamp-hue.github.io/argus-id/" target="_blank" rel="noopener">
+                https://jesusoldekamp-hue.github.io/argus-id/
+              </a>
+            </div>
+
+            <div class="box-dark">
+              <h3 style="color: #6ee7cc;">Qué pueden probar en vivo ahora mismo</h3>
+              <ul class="clean-list">
+                <li><span class="dot dot-mint"></span><strong>4 perfiles RBAC reales:</strong> Consejo Asociación, TI Crowne Plaza, TI Hoteles Safi y Recepción.</li>
+                <li><span class="dot dot-mint"></span><strong>Simulación completa SEGOB ↔ Crowne Plaza:</strong> alerta de menor desaparecido, sigilo en recepción y envío Fase 3.</li>
+                <li><span class="dot dot-mint"></span><strong>Importador masivo CSV</strong> con validación real de dígito verificador RENAPO.</li>
+                <li><span class="dot dot-mint"></span><strong>Constancia Oficial PDF</strong> imprimible con sello criptográfico SHA-256.</li>
+                <li><span class="dot dot-mint"></span><strong>Calculadora ROI</strong> interactiva para ajustar cuotas y Socios Fundadores.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Argus ID · Hospitality Identity &amp; Gov Alerts · Nuevo León, México</span>
+          <span class="page-num">10 / 10</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./presentacion.js" defer></script>
+  </body>
+</html>
