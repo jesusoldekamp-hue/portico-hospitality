@@ -1,5 +1,5 @@
 /**
- * Argus Hospitality ID — Hospitality Identity & Gov Alerts
+ * Portico Hospitality — Hospitality Trust & Compliance
  * Frontend con autenticación RBAC real, terminal de recepción discreta,
  * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
  * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en GitHub Pages.
@@ -31,9 +31,9 @@ const ROLE_LABELS = {
 
 const VIEW_META = {
   resumen: {
-    title: 'Argus Hospitality ID — Resumen Ejecutivo y Retorno para la Asociación',
+    title: 'Portico Hospitality — Resumen Ejecutivo y Retorno para la Asociación',
     subtitle:
-      'Identidad hotelera, validación CURP y alertas gubernamentales PUI (SEGOB / RENAPO) sobre arquitectura multi-RFC con aislamiento RBAC.'
+      'Cumplimiento PUI (SEGOB / RENAPO) y protección hotelera sobre arquitectura propia multi-RFC con aislamiento RBAC.'
   },
   simulacion: {
     title: 'Simulación en Vivo: SEGOB (PUI) ↔ PMS del Hotel',
@@ -353,12 +353,14 @@ function updateRoiCalculator() {
   const setupPerHotel = 4500;
   const sharedCloudMonthly = 6000;
 
-  const extY1 = hotels * (extMonthly * 12 + setupPerHotel);
-  const extY3 = hotels * (extMonthly * 36 + setupPerHotel);
+  const extMonthlyTotal = hotels * extMonthly;
+  const extY1 = hotels * extMonthly * 12;
+  const extY3 = hotels * extMonthly * 36;
   const hotelsPayY3 = hotels * assocFee * 36;
   const hotelsSavingsY3 = Math.max(0, extY3 - hotelsPayY3);
   const cloudPerHotel = Math.max(1, Math.round(sharedCloudMonthly / hotels));
   const assocNetAnnual = hotels * assocFee * 12 - sharedCloudMonthly * 12;
+  const gremioPaybackMonths = extMonthlyTotal > 0 ? (devCost / extMonthlyTotal).toFixed(1) : null;
 
   const perFounder = Math.ceil(devCost / founders);
   const monthlyNet = assocNetAnnual / 12;
@@ -370,7 +372,7 @@ function updateRoiCalculator() {
   document.getElementById('roi-dev-cost-out').textContent = `${fmtMxn.format(devCost)} MXN`;
   document.getElementById('roi-founders-out').textContent = `${founders} hoteles`;
 
-  document.getElementById('roi-ext-y1').textContent = `${fmtMxn.format(extY1)} MXN`;
+  document.getElementById('roi-ext-y1').textContent = `${fmtMxn.format(extY1)} MXN / año`;
   document.getElementById('roi-ext-y3').textContent = `${fmtMxn.format(extY3)} MXN`;
   document.getElementById('roi-cloud-per-hotel').textContent = `${fmtMxn.format(cloudPerHotel)} MXN`;
   document.getElementById('roi-hotels-savings').textContent = `${fmtMxn.format(hotelsSavingsY3)} MXN`;
@@ -378,6 +380,13 @@ function updateRoiCalculator() {
     assocNetAnnual >= 0
       ? `${fmtMxn.format(assocNetAnnual)} MXN / año`
       : `Subsidiado (${fmtMxn.format(Math.abs(assocNetAnnual))} MXN / año)`;
+
+  const gremioPaybackEl = document.getElementById('roi-gremio-payback');
+  if (gremioPaybackEl) {
+    gremioPaybackEl.textContent = gremioPaybackMonths
+      ? `${gremioPaybackMonths} meses`
+      : 'Inmediato';
+  }
 
   document.getElementById('roi-per-founder').textContent = `${fmtMxn.format(perFounder)} MXN`;
   document.getElementById('roi-payback-months').textContent = paybackMonths
@@ -477,7 +486,7 @@ function renderConnectorPanel(hotel) {
   document.getElementById('conn-api-key').textContent = revealApiKey ? key : masked;
   document.getElementById('btn-toggle-key').textContent = revealApiKey ? 'Ocultar llave' : 'Mostrar llave';
 
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.argusid.mx' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.porticohospitality.mx' : window.location.origin;
   const shownKey = revealApiKey ? key : '<TU_LLAVE_PMS>';
 
   document.getElementById('pms-agent-snippet').textContent = `# Ejecutar en servidor local de ${hotel.nombre} (Windows / Linux)
@@ -487,10 +496,10 @@ node agent/pms-sync-agent.js \\
   --key "${shownKey}" \\
   --url "${origin}"`;
 
-  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Argus Hospitality ID
+  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Portico Hospitality
 curl -s -X POST "${origin}/api/pms/${hotel.slug}/checkin" \\
   -H "Content-Type: application/json" \\
-  -H "X-Argus-PMS-Key: ${shownKey}" \\
+  -H "X-Portico-PMS-Key: ${shownKey}" \\
   -d '{
     "nombre": "SOFIA MARTINEZ GARZA",
     "curp": "${appState.escenariosDemo.huespedSinAlerta.curp}",
@@ -687,14 +696,14 @@ function renderHotelsTable() {
 
 function renderDofSpec(hotel) {
   if (!hotel) return;
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.argusid.mx' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.porticohospitality.mx' : window.location.origin;
   const slug = hotel.slug;
   const endpoints = [
     { method: 'POST', path: `/api/pui/${slug}/login`, desc: 'Emite token Bearer JWT (HS256)' },
     { method: 'POST', path: `/api/pui/${slug}/activar-reporte`, desc: 'Recibe alerta SEGOB y ejecuta Fases 1, 2 y 3' },
     { method: 'POST', path: `/api/pui/${slug}/activar-reporte-prueba`, desc: 'Validación oficial en entorno Sandbox' },
     { method: 'POST', path: `/api/pui/${slug}/desactivar-reporte`, desc: 'Detiene monitoreo continuo Fase 3' },
-    { method: 'POST', path: `/api/pms/${slug}/checkin`, desc: 'Webhook PMS (X-Argus-PMS-Key) — Fase 3 silenciosa' },
+    { method: 'POST', path: `/api/pms/${slug}/checkin`, desc: 'Webhook PMS (X-Portico-PMS-Key) — Fase 3 silenciosa' },
     { method: 'POST', path: `/api/pms/${slug}/import-csv`, desc: 'Carga masiva CSV / Agente local OPERA' },
     { method: 'GET', path: `/constancia/${slug}`, desc: 'Constancia Oficial imprimible / PDF con sello SHA-256' }
   ];

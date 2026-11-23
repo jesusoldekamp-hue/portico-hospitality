@@ -8,9 +8,9 @@
 
 import crypto from 'node:crypto';
 
-const JWT_SECRET = process.env.PUI_JWT_SECRET || 'argus-id-jwt-dev-secret-change-in-prod-2026';
+const JWT_SECRET = process.env.PUI_JWT_SECRET || 'portico-hospitality-jwt-dev-secret-change-in-prod-2026';
 const VAULT_KEY_SOURCE =
-  process.env.PUI_VAULT_KEY || 'argus-id-vault-aes256-dev-key-change-in-prod-2026';
+  process.env.PUI_VAULT_KEY || 'portico-hospitality-vault-aes256-dev-key-change-in-prod-2026';
 const VAULT_KEY = crypto.createHash('sha256').update(VAULT_KEY_SOURCE).digest();
 
 function base64UrlEncode(input) {

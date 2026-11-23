@@ -1,5 +1,5 @@
 /**
- * Capa dual de transporte para Argus Hospitality ID:
+ * Capa dual de transporte para Portico Hospitality:
  * - Si hay servidor Node.js / AWS activo, usa los endpoints reales `/api/*`.
  * - Si se despliega estáticamente en GitHub Pages (`*.github.io`), activa
  *   automáticamente el motor completo en navegador (CURP RENAPO real, RBAC,
@@ -129,7 +129,7 @@ const DEMO_SCENARIOS = {
 const DEMO_ACCOUNTS = [
   {
     email: 'presidente@asociacionhotelesnl.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Consejo — Asociación de Hoteles NL',
     rol: 'ASOCIACION_ADMIN',
     etiqueta: 'Presidente / Consejo Asociación',
@@ -137,7 +137,7 @@ const DEMO_ACCOUNTS = [
   },
   {
     email: 'ti@crowneplazamty.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Dirección TI — Crowne Plaza Monterrey',
     rol: 'HOTEL_ADMIN',
     hotelSlug: 'crowne-plaza-monterrey',
@@ -146,7 +146,7 @@ const DEMO_ACCOUNTS = [
   },
   {
     email: 'recepcion@crowneplazamty.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Mostrador — Crowne Plaza Monterrey',
     rol: 'RECEPCION',
     hotelSlug: 'crowne-plaza-monterrey',
@@ -155,7 +155,7 @@ const DEMO_ACCOUNTS = [
   },
   {
     email: 'ti@safihotels.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Dirección TI — Safi Royal Luxury Centro',
     rol: 'HOTEL_ADMIN',
     hotelSlug: 'safi-centro',
@@ -164,8 +164,8 @@ const DEMO_ACCOUNTS = [
   }
 ];
 
-const STORAGE_KEY = 'argus_id_pages_state_v1';
-const SESSION_KEY = 'argus_id_pages_user_v1';
+const STORAGE_KEY = 'portico_hospitality_pages_state_v1';
+const SESSION_KEY = 'portico_hospitality_pages_user_v1';
 
 function createInitialLocalState() {
   const now = new Date().toISOString();
@@ -183,7 +183,7 @@ function createInitialLocalState() {
         estatus: 'Piloto Activo',
         llaveMxStatus: 'Certificado Sandbox',
         usuarioPui: 'pui_crowne_mty',
-        pmsApiKey: 'argus_pms_crowne_7f92a4c18e3b6d051a24e890',
+        pmsApiKey: 'portico_pms_crowne_7f92a4c18e3b6d051a24e890',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -200,7 +200,7 @@ function createInitialLocalState() {
         estatus: 'Siguiente Fase',
         llaveMxStatus: 'En Trámite',
         usuarioPui: 'pui_safi_centro',
-        pmsApiKey: 'argus_pms_saficent_4c18b2f90e7a3d615290c4e1',
+        pmsApiKey: 'portico_pms_saficent_4c18b2f90e7a3d615290c4e1',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -217,7 +217,7 @@ function createInitialLocalState() {
         estatus: 'Siguiente Fase',
         llaveMxStatus: 'En Trámite',
         usuarioPui: 'pui_safi_metro',
-        pmsApiKey: 'argus_pms_safimetr_9b04d3e71c5a8f206412a7b3',
+        pmsApiKey: 'portico_pms_safimetr_9b04d3e71c5a8f206412a7b3',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -234,7 +234,7 @@ function createInitialLocalState() {
         estatus: 'Programado',
         llaveMxStatus: 'Pendiente',
         usuarioPui: 'pui_safi_valle',
-        pmsApiKey: 'argus_pms_safivall_2e81c0a64f9d3b751084e2c9',
+        pmsApiKey: 'portico_pms_safivall_2e81c0a64f9d3b751084e2c9',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -251,7 +251,7 @@ function createInitialLocalState() {
         estatus: 'Activo',
         llaveMxStatus: 'Certificado Sandbox',
         usuarioPui: 'pui_posada_regia',
-        pmsApiKey: 'argus_pms_posadare_6a53f1d82c4e9b073165d8a2',
+        pmsApiKey: 'portico_pms_posadare_6a53f1d82c4e9b073165d8a2',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -304,11 +304,11 @@ function createInitialLocalState() {
         direccion: 'SISTEMA',
         endpoint: '/api/health',
         fase: 'INICIO',
-        resumen: 'Argus Hospitality ID en modo Demo Web 24/7 (GitHub Pages) con motor criptográfico SHA-256.',
+        resumen: 'Portico Hospitality en modo Demo Web 24/7 (GitHub Pages) con motor criptográfico SHA-256.',
         estatusHttp: 200,
         critico: false,
         payload: {
-          plataforma: 'Argus Hospitality ID — Hospitality Identity & Gov Alerts',
+          plataforma: 'Portico Hospitality — Hospitality Trust & Compliance',
           estandar: 'Manual Técnico PUI — DOF (23/01/2026)',
           modo: 'GitHub Pages CDN 24/7 (Motor local en navegador)'
         },
@@ -445,14 +445,14 @@ export function openConstancia(hotelSlug) {
   const huespedes = st.guests.filter((g) => g.hotelSlug === h.slug);
   const outbox = st.outbox.filter((o) => o.hotelSlug === h.slug);
   const eventos = st.auditLog.filter((e) => e.hotelSlug === h.slug);
-  const folio = `ARGUS-PUI-${h.rfc.slice(0, 6)}-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  const folio = `PORTICO-PUI-${h.rfc.slice(0, 6)}-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   const hash = st.auditLog[0]?.hash || 'GENESIS';
 
   const html = `<!doctype html><html lang="es-MX"><head><meta charset="utf-8"/><title>Constancia PUI — ${h.nombre}</title>
   <style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f6f8;color:#111d2e;margin:0;padding:1.5rem}.sheet{max-width:820px;margin:0 auto;background:#fff;border:1px solid #d5dce3;border-radius:10px;padding:2rem 2.25rem}h1{font-size:1.25rem;margin:.2rem 0}h2{font-size:.9rem;text-transform:uppercase;color:#0d6858;border-bottom:1px solid #d5dce3;padding-bottom:.25rem;margin-top:1.3rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.2rem;font-size:.88rem}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:.5rem}.kpi{border:1px solid #d5dce3;border-radius:6px;padding:.6rem}.kpi strong{display:block;font-size:1.2rem}.seal{margin-top:1.1rem;padding:.85rem;background:#eef8f5;border:1px solid #b5ddd4;border-radius:6px;font-size:.82rem;word-break:break-all}.btn{background:#0d6858;color:#fff;border:none;border-radius:6px;padding:.55rem 1rem;font-weight:600;cursor:pointer;margin-bottom:1rem}@media print{.btn{display:none}body{background:#fff;padding:0}.sheet{border:none;padding:0}}</style></head>
   <body><div style="max-width:820px;margin:0 auto"><button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button></div>
   <main class="sheet"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #111d2e;padding-bottom:.9rem;margin-bottom:1rem">
-  <div><strong style="font-size:1.3rem">Argus Hospitality ID</strong><div style="font-size:.84rem;color:#4b5868">Hospitality Identity &amp; Gov Alerts · Asociación Mexicana de Hoteles de Nuevo León</div></div>
+  <div><strong style="font-size:1.3rem">Portico Hospitality</strong><div style="font-size:.84rem;color:#4b5868">Hospitality Trust &amp; Compliance · Asociación Mexicana de Hoteles de Nuevo León</div></div>
   <div style="text-align:right;font-size:.8rem">Folio: <strong>${folio}</strong></div></div>
   <h1>Constancia Técnica de Interconexión y Cumplimiento PUI</h1>
   <h2>1. Institución Obligada</h2><div class="grid">
@@ -588,7 +588,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       estatus: 'Activo',
       llaveMxStatus: 'Listo para Sandbox',
       usuarioPui: `pui_${slug.replace(/-/g, '_').slice(0, 16)}`,
-      pmsApiKey: `argus_pms_${slug.slice(0, 8)}_${randomHex(20)}`,
+      pmsApiKey: `portico_pms_${slug.slice(0, 8)}_${randomHex(20)}`,
       segobMode: 'SANDBOX_SIMULADO',
       segobBaseUrl: '',
       segobUsuario: ''
@@ -599,7 +599,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       direccion: 'ASOCIACIÓN',
       endpoint: '/api/hotels',
       fase: 'ONBOARDING',
-      resumen: `Nuevo hotel dado de alta en Argus Hospitality ID (multi-RFC): ${nombre} (${rfc}).`,
+      resumen: `Nuevo hotel dado de alta en Portico Hospitality (multi-RFC): ${nombre} (${rfc}).`,
       estatusHttp: 201,
       payload: { slug, rfc, pms: hotel.pms }
     });
@@ -707,7 +707,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       return { ok: true, status: 200, data: buildDemoCsv(url.searchParams.get('demo') === '1') };
     }
     if (act === 'rotate-key') {
-      hotel.pmsApiKey = `argus_pms_${slug.slice(0, 8)}_${randomHex(20)}`;
+      hotel.pmsApiKey = `portico_pms_${slug.slice(0, 8)}_${randomHex(20)}`;
       saveLocalState(st);
       return { ok: true, status: 200, data: { ok: true, pmsApiKey: hotel.pmsApiKey } };
     }
@@ -802,7 +802,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       }
       await addLocalAudit(st, {
         hotelSlug: slug,
-        direccion: 'PMS → ARGUS ID',
+        direccion: 'PMS → PORTICO',
         endpoint: `/api/pms/${slug}/import-csv`,
         fase: 'IMPORTACION CSV',
         resumen: `Lote CSV procesado en ${hotel.nombre}: ${insertados} válidos, ${rechazados} rechazados.`,

@@ -151,7 +151,7 @@ export async function procesarColaOutbox() {
 export function startOutboxWorker(intervalMs = 5000) {
   const timer = setInterval(() => {
     procesarColaOutbox().catch((err) => {
-      console.error('[Argus Outbox Worker Error]', err);
+      console.error('[Portico Outbox Worker Error]', err);
     });
   }, intervalMs);
   timer.unref?.();

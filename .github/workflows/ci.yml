@@ -1,4 +1,4 @@
-name: CI — Pruebas Argus ID
+name: CI — Pruebas Portico Hospitality
 
 on:
   push:

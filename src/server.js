@@ -1,5 +1,5 @@
 /**
- * Argus Hospitality ID — Servidor HTTP Producción Multi-Hotel PUI (Manual Técnico DOF)
+ * Portico Hospitality — Servidor HTTP Producción Multi-Hotel PUI (Manual Técnico DOF)
  * Persistencia ACID (`node:sqlite`), RBAC con sesiones HttpOnly + scrypt,
  * Rate Limiting y Cola Outbox hacia SEGOB con reintentos exponenciales.
  */
@@ -51,7 +51,7 @@ import { procesarColaOutbox, startOutboxWorker } from './puiClient.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
-const SESSION_COOKIE = 'argus_session';
+const SESSION_COOKIE = 'portico_session';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -59,6 +59,10 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
   '.ico': 'image/x-icon'
 };
 
@@ -70,7 +74,7 @@ const PARENTESCO_LABELS = {
 };
 
 function isDemoModeEnabled() {
-  return process.env.ARGUS_DEMO_MODE !== 'false';
+  return process.env.PORTICO_DEMO_MODE !== 'false' && process.env.ARGUS_DEMO_MODE !== 'false';
 }
 
 function setSecurityHeaders(res) {
@@ -563,7 +567,7 @@ async function procesarImportacionCsv(hotel, body) {
 
   appendAudit({
     hotelSlug: hotel.slug,
-    direccion: 'PMS → ARGUS ID',
+    direccion: 'PMS → PORTICO',
     endpoint: `/api/pms/${hotel.slug}/import-csv`,
     fase: 'IMPORTACION CSV',
     resumen: `Lote CSV procesado en ${hotel.nombre}: ${insertados} registros válidos incorporados, ${rechazados} rechazados por validación CURP.`,
@@ -634,7 +638,7 @@ export function createServer({ enableWorker = true } = {}) {
         const cadena = verifyFullAuditChain();
         return sendJson(res, 200, {
           status: 'ok',
-          servicio: 'Argus Hospitality ID — Hospitality Identity & Gov Alerts',
+          servicio: 'Portico Hospitality — Hospitality Trust & Compliance',
           estandar: 'Manual Técnico DOF (23/01/2026)',
           baseDatos: 'SQLite ACID (WAL)',
           hotelesRegistrados: listHotels().length,
@@ -883,7 +887,7 @@ export function createServer({ enableWorker = true } = {}) {
           direccion: 'ASOCIACIÓN',
           endpoint: '/api/hotels',
           fase: 'ONBOARDING',
-          resumen: `Nuevo hotel dado de alta en Argus Hospitality ID (multi-RFC): ${nombre} (${rfc}).`,
+          resumen: `Nuevo hotel dado de alta en Portico Hospitality (multi-RFC): ${nombre} (${rfc}).`,
           estatusHttp: 201,
           payload: { slug, rfc, pms: result.hotel.pms }
         });
@@ -900,7 +904,7 @@ export function createServer({ enableWorker = true } = {}) {
         }
         resetDb();
         // Recrear sesión del usuario actual para no expulsarlo al restablecer
-        const userAfter = authenticateUser(currentUser.email, 'ArgusDemo#2026');
+        const userAfter = authenticateUser(currentUser.email, 'PorticoDemo#2026');
         const extra = userAfter
           ? { 'Set-Cookie': buildSessionCookie(req, createSession(userAfter.id, 12).token, 43200) }
           : {};
@@ -912,7 +916,7 @@ export function createServer({ enableWorker = true } = {}) {
         );
       }
 
-      // 10. Endpoints oficiales PUI (DOF — Máquina a máquina SEGOB ↔ Argus Hospitality ID)
+      // 10. Endpoints oficiales PUI (DOF — Máquina a máquina SEGOB ↔ Portico Hospitality)
       const puiMatch = pathname.match(
         /^\/api\/pui\/([a-z0-9-]+)\/(login|activar-reporte|activar-reporte-prueba|desactivar-reporte)$/
       );
@@ -1056,7 +1060,7 @@ export function createServer({ enableWorker = true } = {}) {
         return sendJson(res, 400, { error: 'Acción de simulación no reconocida.' });
       }
 
-      // 12. Endpoints PMS (autenticados por X-Argus-PMS-Key O sesión RBAC válida)
+      // 12. Endpoints PMS (autenticados por X-Portico-PMS-Key O sesión RBAC válida)
       const pmsMatch = pathname.match(
         /^\/api\/pms\/([a-z0-9-]+)\/(checkin|import-csv|csv-template|rotate-key)$/
       );
@@ -1111,15 +1115,15 @@ export function createServer({ enableWorker = true } = {}) {
         }
 
         // Autenticación dual para /checkin e /import-csv:
-        // (A) Conector externo / Agente local vía X-Argus-PMS-Key
+        // (A) Conector externo / Agente local vía X-Portico-PMS-Key
         // (B) Usuario web con sesión RBAC autorizada
-        const providedKey = req.headers['x-argus-pms-key'];
+        const providedKey = req.headers['x-portico-pms-key'];
         let authorized = false;
 
         if (providedKey !== undefined) {
           if (providedKey !== hotel.pmsApiKey) {
             return sendJson(res, 401, {
-              error: 'Llave X-Argus-PMS-Key inválida o perteneciente a otro hotel.'
+              error: 'Llave X-Portico-PMS-Key inválida o perteneciente a otro hotel.'
             });
           }
           authorized = true;
@@ -1137,7 +1141,7 @@ export function createServer({ enableWorker = true } = {}) {
           return sendJson(res, currentUser ? 403 : 401, {
             error: currentUser
               ? 'No tienes permiso para operar el PMS de este hotel.'
-              : 'Autenticación requerida (sesión o header X-Argus-PMS-Key).'
+              : 'Autenticación requerida (sesión o header X-Portico-PMS-Key).'
           });
         }
 
@@ -1167,7 +1171,7 @@ export function createServer({ enableWorker = true } = {}) {
       if (err.message === 'PAYLOAD_TOO_LARGE') {
         return sendJson(res, 413, { error: 'La petición excede el tamaño máximo permitido.' });
       }
-      console.error('[Argus Hospitality ID Server Error]', err);
+      console.error('[Portico Hospitality Server Error]', err);
       return sendJson(res, 500, { error: 'Error interno del servidor.' });
     }
   });
@@ -1186,6 +1190,6 @@ if (isMain) {
   const HOST = process.env.HOST || '0.0.0.0';
   const server = createServer({ enableWorker: true });
   server.listen(PORT, HOST, () => {
-    console.log(`Argus Hospitality ID (Producción SQLite + RBAC + Outbox) listo en http://localhost:${PORT}`);
+    console.log(`Portico Hospitality (Producción SQLite + RBAC + Outbox) listo en http://localhost:${PORT}`);
   });
 }

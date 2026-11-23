@@ -1,4 +1,4 @@
--- Argus ID — Esquema de Producción para PostgreSQL 16+ (AWS RDS con cifrado KMS)
+-- Portico Hospitality — Esquema de Producción para PostgreSQL 16+ (AWS RDS con cifrado KMS)
 -- Equivalente 1:1 del esquema SQLite embebido en src/db.js
 
 CREATE TABLE IF NOT EXISTS hotels (

@@ -21,11 +21,11 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, '..', 'data');
-const DEFAULT_DB_PATH = path.join(DATA_DIR, 'argus.sqlite');
+const DEFAULT_DB_PATH = path.join(DATA_DIR, 'portico.sqlite');
 
 export function generarPmsApiKey(slug) {
   const prefix = slug.replace(/[^a-z0-9]/g, '').slice(0, 8) || 'hotel';
-  return `argus_pms_${prefix}_${crypto.randomBytes(12).toString('hex')}`;
+  return `portico_pms_${prefix}_${crypto.randomBytes(12).toString('hex')}`;
 }
 
 export const DEMO_SCENARIOS = {
@@ -71,7 +71,7 @@ export const DEMO_SCENARIOS = {
 export const DEMO_ACCOUNTS_PUBLIC = [
   {
     email: 'presidente@asociacionhotelesnl.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Consejo — Asociación de Hoteles NL',
     rol: 'ASOCIACION_ADMIN',
     etiqueta: 'Presidente / Consejo Asociación',
@@ -79,7 +79,7 @@ export const DEMO_ACCOUNTS_PUBLIC = [
   },
   {
     email: 'ti@crowneplazamty.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Dirección TI — Crowne Plaza Monterrey',
     rol: 'HOTEL_ADMIN',
     hotelSlug: 'crowne-plaza-monterrey',
@@ -88,7 +88,7 @@ export const DEMO_ACCOUNTS_PUBLIC = [
   },
   {
     email: 'recepcion@crowneplazamty.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Mostrador — Crowne Plaza Monterrey',
     rol: 'RECEPCION',
     hotelSlug: 'crowne-plaza-monterrey',
@@ -97,7 +97,7 @@ export const DEMO_ACCOUNTS_PUBLIC = [
   },
   {
     email: 'ti@safihotels.mx',
-    passwordDemo: 'ArgusDemo#2026',
+    passwordDemo: 'PorticoDemo#2026',
     nombre: 'Dirección TI — Safi Royal Luxury Centro',
     rol: 'HOTEL_ADMIN',
     hotelSlug: 'safi-centro',
@@ -111,7 +111,7 @@ let cachedPasswordHash = null;
 let cachedPuiClaveHash = null;
 
 function getDefaultUserHash() {
-  if (!cachedPasswordHash) cachedPasswordHash = hashPassword('ArgusDemo#2026');
+  if (!cachedPasswordHash) cachedPasswordHash = hashPassword('PorticoDemo#2026');
   return cachedPasswordHash;
 }
 
@@ -274,7 +274,7 @@ function seedInitialData(database) {
       42,
       'pui_crowne_mty',
       puiHash,
-      'argus_pms_crowne_7f92a4c18e3b6d051a24e890',
+      'portico_pms_crowne_7f92a4c18e3b6d051a24e890',
       'SANDBOX_SIMULADO',
       '',
       '',
@@ -295,7 +295,7 @@ function seedInitialData(database) {
       55,
       'pui_safi_centro',
       puiHash,
-      'argus_pms_saficent_4c18b2f90e7a3d615290c4e1',
+      'portico_pms_saficent_4c18b2f90e7a3d615290c4e1',
       'SANDBOX_SIMULADO',
       '',
       '',
@@ -316,7 +316,7 @@ function seedInitialData(database) {
       39,
       'pui_safi_metro',
       puiHash,
-      'argus_pms_safimetr_9b04d3e71c5a8f206412a7b3',
+      'portico_pms_safimetr_9b04d3e71c5a8f206412a7b3',
       'SANDBOX_SIMULADO',
       '',
       '',
@@ -337,7 +337,7 @@ function seedInitialData(database) {
       51,
       'pui_safi_valle',
       puiHash,
-      'argus_pms_safivall_2e81c0a64f9d3b751084e2c9',
+      'portico_pms_safivall_2e81c0a64f9d3b751084e2c9',
       'SANDBOX_SIMULADO',
       '',
       '',
@@ -358,7 +358,7 @@ function seedInitialData(database) {
       68,
       'pui_posada_regia',
       puiHash,
-      'argus_pms_posadare_6a53f1d82c4e9b073165d8a2',
+      'portico_pms_posadare_6a53f1d82c4e9b073165d8a2',
       'SANDBOX_SIMULADO',
       '',
       '',
@@ -454,7 +454,7 @@ function seedInitialData(database) {
 
   // Evento génesis de auditoría encadenada SHA-256
   const payload = {
-    plataforma: 'Argus Hospitality ID — Hospitality Identity & Gov Alerts',
+    plataforma: 'Portico Hospitality — Hospitality Trust & Compliance',
     motor_bd: 'SQLite ACID (WAL) · Compatible AWS RDS PostgreSQL',
     estandar: 'Manual Técnico PUI — Instituciones Diversas (DOF 23/01/2026)',
     cifrado: 'AES-256-GCM + scrypt + JWT HS256',
@@ -467,7 +467,7 @@ function seedInitialData(database) {
     direccion: 'SISTEMA',
     endpoint: '/api/health',
     fase: 'INICIO',
-    resumen: 'Núcleo Argus Hospitality ID inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
+    resumen: 'Núcleo Portico Hospitality inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
     estatusHttp: 200,
     critico: false,
     payload
@@ -495,7 +495,7 @@ function seedInitialData(database) {
 
 export function getDb() {
   if (db) return db;
-  const dbPath = process.env.ARGUS_DB_PATH || DEFAULT_DB_PATH;
+  const dbPath = process.env.PORTICO_DB_PATH || process.env.ARGUS_DB_PATH || DEFAULT_DB_PATH;
   if (dbPath !== ':memory:') {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   }

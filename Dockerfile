@@ -9,7 +9,7 @@ COPY agent ./agent
 COPY sql ./sql
 
 ENV NODE_ENV=production
-ENV ARGUS_DEMO_MODE=false
+ENV PORTICO_DEMO_MODE=false
 ENV PORT=3080
 
 EXPOSE 3080

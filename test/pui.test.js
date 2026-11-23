@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 // Base SQLite en memoria aislada para pruebas rápidas y limpias
-process.env.ARGUS_DB_PATH = ':memory:';
+process.env.PORTICO_DB_PATH = ':memory:';
 
 const { validarCurp, completarCurpValida } = await import('../src/curp.js');
 const { generarPlantillaCsvDemo } = await import('../src/csv.js');
@@ -14,7 +14,7 @@ const { createServer } = await import('../src/server.js');
 const { resetDb, closeDb, getHotelBySlug, DEMO_SCENARIOS } = await import('../src/db.js');
 const { syncDirectoryOnce } = await import('../agent/pms-sync-agent.js');
 
-async function loginAs(baseUrl, email, password = 'ArgusDemo#2026') {
+async function loginAs(baseUrl, email, password = 'PorticoDemo#2026') {
   const res = await fetch(`${baseUrl}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -23,7 +23,7 @@ async function loginAs(baseUrl, email, password = 'ArgusDemo#2026') {
   assert.equal(res.status, 200, `Login falló para ${email}`);
   const setCookie = res.headers.get('set-cookie') || '';
   const cookie = setCookie.split(';')[0];
-  assert.ok(cookie.startsWith('argus_session='));
+  assert.ok(cookie.startsWith('portico_session='));
   return cookie;
 }
 
@@ -45,7 +45,7 @@ describe('Validador oficial CURP RENAPO', () => {
   });
 });
 
-describe('Argus ID Producción — SQLite ACID, RBAC, PUI DOF, Outbox HTTP real y Agente PMS', () => {
+describe('Portico Hospitality Producción — SQLite ACID, RBAC, PUI DOF, Outbox HTTP real y Agente PMS', () => {
   let server;
   let baseUrl;
 
@@ -227,8 +227,8 @@ describe('Argus ID Producción — SQLite ACID, RBAC, PUI DOF, Outbox HTTP real 
     }
   });
 
-  it('sincroniza una carpeta CSV real mediante agent/pms-sync-agent.js con X-Argus-PMS-Key', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'argus-opera-export-'));
+  it('sincroniza una carpeta CSV real mediante agent/pms-sync-agent.js con X-Portico-PMS-Key', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'portico-opera-export-'));
     try {
       const csvFile = path.join(tmpDir, 'opera_inhouse_20261120.csv');
       fs.writeFileSync(
