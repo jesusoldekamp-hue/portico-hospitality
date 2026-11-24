@@ -49,7 +49,11 @@ export async function syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl, logge
 
   const entries = fs
     .readdirSync(watchDir, { withFileTypes: true })
-    .filter((d) => d.isFile() && d.name.toLowerCase().endsWith('.csv'))
+    .filter((d) => {
+      if (!d.isFile()) return false;
+      const lower = d.name.toLowerCase();
+      return lower.endsWith('.csv') || lower.endsWith('.xml');
+    })
     .map((d) => d.name)
     .sort();
 

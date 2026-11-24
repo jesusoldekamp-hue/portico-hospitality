@@ -9,7 +9,8 @@ import path from 'node:path';
 process.env.PORTICO_DB_PATH = ':memory:';
 
 const { validarCurp, completarCurpValida } = await import('../src/curp.js');
-const { generarPlantillaCsvDemo } = await import('../src/csv.js');
+const { generarPlantillaCsvDemo, generarPlantillaOperaXmlDemo } = await import('../src/csv.js');
+const { parseMrz, buildSamplePassportMrz } = await import('../src/mrz.js');
 const { createServer } = await import('../src/server.js');
 const { resetDb, closeDb, getHotelBySlug, DEMO_SCENARIOS } = await import('../src/db.js');
 const { syncDirectoryOnce } = await import('../agent/pms-sync-agent.js');
@@ -305,5 +306,57 @@ describe('Portico Hospitality Producción — SQLite ACID, RBAC, PUI DOF, Outbox
     const csvBody = await exportRes.text();
     assert.ok(csvBody.includes('seq,timestamp,hotel_slug,direccion,endpoint,fase,estatus_http,resumen,sha256_hash'));
     assert.ok(csvBody.includes('nocturno@crowneplazamty.mx'));
+  });
+
+  it('decodifica MRZ ICAO 9303, registra extranjeros con pasaporte (incl. menores LGT) y sincroniza XML de OPERA 5', async () => {
+    const mrz = buildSamplePassportMrz({
+      pais: 'USA',
+      apellidos: 'MILLER',
+      nombres: 'EMILY GRACE',
+      pasaporte: '719384025',
+      fechaNacYYMMDD: '130510',
+      sexo: 'F'
+    });
+    const decoded = parseMrz(mrz);
+    assert.equal(decoded.valido, true);
+    assert.equal(decoded.nacionalidad, 'USA');
+    assert.equal(decoded.esMenor, true);
+
+    const crowneCookie = await loginAs(baseUrl, 'ti@crowneplazamty.mx');
+    const foreignCheckin = await fetch(`${baseUrl}/api/pms/crowne-plaza-monterrey/checkin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: crowneCookie },
+      body: JSON.stringify({
+        nombre: decoded.nombreCompleto,
+        esExtranjero: true,
+        pasaporte: decoded.numeroDocumento,
+        nacionalidad: decoded.nacionalidad,
+        fechaNacimiento: decoded.fechaNacimiento,
+        habitacion: '1904',
+        acompanante: 'JOHN MILLER',
+        parentescoDocumento: 'NO_ACREDITO'
+      })
+    });
+    assert.equal(foreignCheckin.status, 201);
+    const fPayload = await foreignCheckin.json();
+    assert.equal(fPayload.pms_status, 'HOLD_MINOR_PROTOCOL');
+
+    // Sincronización de archivo XML nativo de Oracle OPERA 5 mediante el Agente Local
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'portico-opera-xml-'));
+    try {
+      fs.writeFileSync(path.join(tmpDir, 'opera5_export.xml'), generarPlantillaOperaXmlDemo(), 'utf8');
+      const crowne = getHotelBySlug('crowne-plaza-monterrey');
+      const resXml = await syncDirectoryOnce({
+        dir: tmpDir,
+        hotelSlug: 'crowne-plaza-monterrey',
+        apiKey: crowne.pmsApiKey,
+        baseUrl,
+        logger: { log() {}, error() {} }
+      });
+      assert.equal(resXml.exitosos, 1);
+      assert.equal(resXml.resultados[0].insertados, 2);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
   });
 });

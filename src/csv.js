@@ -69,15 +69,18 @@ export function parseGuestsCsv(csvText) {
   const findCol = (...names) => rawHeaders.findIndex((h) => names.includes(h));
   const idxNombre = findCol('nombre', 'nombre_completo', 'huesped', 'guest_name', 'full_name');
   const idxCurp = findCol('curp', 'clave_curp', 'identificacion_curp');
+  const idxPasaporte = findCol('pasaporte', 'passport', 'documento_extranjero', 'passport_number');
+  const idxNac = findCol('nacionalidad', 'pais', 'nationality', 'country');
+  const idxNacFecha = findCol('fecha_nacimiento', 'birth_date', 'dob');
   const idxHab = findCol('habitacion', 'room', 'cuarto', 'no_habitacion');
   const idxFecha = findCol('fecha_registro', 'fecha_checkin', 'checkin', 'fecha', 'arrival_date');
   const idxTel = findCol('telefono', 'phone', 'celular');
   const idxCorreo = findCol('correo', 'email', 'correo_electronico');
   const idxAcomp = findCol('acompanante', 'tutor', 'companion');
 
-  if (idxNombre === -1 || idxCurp === -1) {
+  if (idxNombre === -1 || (idxCurp === -1 && idxPasaporte === -1)) {
     return {
-      error: 'El CSV debe contener al menos las columnas "nombre" y "curp".',
+      error: 'El CSV debe contener al menos "nombre" y "curp" (o "pasaporte").',
       rows: []
     };
   }
@@ -88,7 +91,10 @@ export function parseGuestsCsv(csvText) {
     rows.push({
       linea: i + 1,
       nombre: cols[idxNombre] || '',
-      curp: cols[idxCurp] || '',
+      curp: idxCurp >= 0 ? cols[idxCurp] || '' : '',
+      pasaporte: idxPasaporte >= 0 ? cols[idxPasaporte] || '' : '',
+      nacionalidad: idxNac >= 0 ? cols[idxNac] || '' : '',
+      fechaNacimiento: idxNacFecha >= 0 ? cols[idxNacFecha] || '' : '',
       habitacion: idxHab >= 0 ? cols[idxHab] || '' : '',
       fechaRegistro: idxFecha >= 0 ? cols[idxFecha] || '' : '',
       telefono: idxTel >= 0 ? cols[idxTel] || '' : '',
@@ -98,6 +104,86 @@ export function parseGuestsCsv(csvText) {
   }
 
   return { error: null, rows };
+}
+
+/**
+ * Parsea exportaciones XML de Oracle OPERA 5 (OXI / Opera Export XML: <G_RESERVATION>, <RESERVATION> o <GUEST>).
+ */
+export function parseOperaXml(xmlText) {
+  if (typeof xmlText !== 'string' || !xmlText.trim()) {
+    return { error: 'El archivo XML de OPERA está vacío.', rows: [] };
+  }
+  const blocks =
+    xmlText.match(/<(?:G_RESERVATION|RESERVATION|GUEST)\b[\s\S]*?<\/(?:G_RESERVATION|RESERVATION|GUEST)>/gi) || [];
+  if (!blocks.length) {
+    return {
+      error: 'No se encontraron nodos <RESERVATION>, <G_RESERVATION> o <GUEST> en el XML.',
+      rows: []
+    };
+  }
+
+  const getTag = (block, ...tags) => {
+    for (const t of tags) {
+      const m = block.match(new RegExp(`<${t}[^>]*>([\\s\\S]*?)<\\/${t}>`, 'i'));
+      if (m && m[1].trim()) return m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').trim();
+    }
+    return '';
+  };
+
+  const rows = blocks.map((block, i) => {
+    const fullName =
+      getTag(block, 'FULL_NAME', 'GUEST_NAME', 'NOMBRE') ||
+      `${getTag(block, 'FIRST_NAME', 'GIVEN_NAME')} ${getTag(block, 'LAST_NAME', 'SURNAME')}`.trim();
+    return {
+      linea: i + 1,
+      nombre: fullName,
+      curp: getTag(block, 'CURP', 'TAX_ID', 'GOV_ID', 'NATIONAL_ID'),
+      pasaporte: getTag(block, 'PASSPORT', 'PASAPORTE', 'DOCUMENT_NUMBER'),
+      nacionalidad: getTag(block, 'NATIONALITY', 'NACIONALIDAD', 'COUNTRY'),
+      fechaNacimiento: getTag(block, 'BIRTH_DATE', 'DOB', 'FECHA_NACIMIENTO'),
+      habitacion: getTag(block, 'ROOM', 'ROOM_NUMBER', 'HABITACION'),
+      fechaRegistro: getTag(block, 'ARRIVAL', 'CHECKIN_DATE', 'FECHA_REGISTRO'),
+      telefono: getTag(block, 'PHONE', 'TELEFONO'),
+      correo: getTag(block, 'EMAIL', 'CORREO'),
+      acompanante: getTag(block, 'COMPANION', 'ACOMPANANTE')
+    };
+  });
+
+  return { error: null, formato: 'OPERA_XML', rows };
+}
+
+/**
+ * Detecta automáticamente si el lote recibido desde el PMS/Agente es XML (OPERA 5) o CSV.
+ */
+export function parseGuestBatch(text) {
+  const trimmed = String(text || '').replace(/^\uFEFF/, '').trim();
+  if (trimmed.startsWith('<')) {
+    return parseOperaXml(trimmed);
+  }
+  return parseGuestsCsv(trimmed);
+}
+
+export function generarPlantillaOperaXmlDemo() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<OPERA_INHOUSE_EXPORT hotel="Crowne Plaza Monterrey">
+  <G_RESERVATION>
+    <FULL_NAME>ALEJANDRO GARZA SADA</FULL_NAME>
+    <CURP>${completarCurpValida('GASA820314HNLRLL0')}</CURP>
+    <ROOM>1502</ROOM>
+    <ARRIVAL>2026-11-24T14:20:00Z</ARRIVAL>
+    <EMAIL>agarza@corporativo.mx</EMAIL>
+  </G_RESERVATION>
+  <G_RESERVATION>
+    <FULL_NAME>MICHAEL JAMES ANDERSON</FULL_NAME>
+    <PASSPORT>548920174</PASSPORT>
+    <NATIONALITY>USA</NATIONALITY>
+    <BIRTH_DATE>1984-06-19</BIRTH_DATE>
+    <ROOM>1810</ROOM>
+    <ARRIVAL>2026-11-24T15:05:00Z</ARRIVAL>
+    <EMAIL>manderson@globalmfg.com</EMAIL>
+  </G_RESERVATION>
+</OPERA_INHOUSE_EXPORT>
+`;
 }
 
 /**

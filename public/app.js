@@ -12,6 +12,7 @@ import {
   getRuntimeMode,
   openConstancia
 } from './api-client.js';
+import { buildSamplePassportMrz, parseMrz } from './mrz.js';
 
 const fmtMxn = new Intl.NumberFormat('es-MX', {
   style: 'currency',
@@ -820,15 +821,25 @@ async function submitCheckinForm({
   btn.disabled = true;
   try {
     const parentescoEl = document.getElementById(parentescoId);
+    const docTypeEl = form.querySelector('[name="docType"]');
+    const isPassport = docTypeEl && docTypeEl.value === 'PASAPORTE';
+    const body = {
+      nombre: document.getElementById(nombreId).value.trim(),
+      habitacion: document.getElementById(habId).value.trim(),
+      acompanante: document.getElementById(acompId).value.trim(),
+      parentescoDocumento: parentescoEl?.value || null
+    };
+    if (isPassport) {
+      body.esExtranjero = true;
+      body.pasaporte = document.getElementById('desk-pasaporte').value.trim().toUpperCase();
+      body.nacionalidad = document.getElementById('desk-nacionalidad').value.trim().toUpperCase() || 'EXT';
+      body.fechaNacimiento = document.getElementById('desk-fnac').value || '';
+    } else {
+      body.curp = document.getElementById(curpId).value.trim().toUpperCase();
+    }
     const { ok, data } = await apiRequest(`/api/pms/${selectedHotelSlug}/checkin`, {
       method: 'POST',
-      body: {
-        nombre: document.getElementById(nombreId).value.trim(),
-        curp: document.getElementById(curpId).value.trim().toUpperCase(),
-        habitacion: document.getElementById(habId).value.trim(),
-        acompanante: document.getElementById(acompId).value.trim(),
-        parentescoDocumento: parentescoEl?.value || null
-      }
+      body
     });
     if (!ok) {
       fb.className = 'inline-feedback err';
@@ -988,7 +999,65 @@ function bindEvents() {
     checkCurpLive(sc.curp, 'pms-curp-live', 'pms-minor-box');
   });
 
+  const syncDeskDocType = (mode) => {
+    const sel = document.getElementById('desk-doc-type');
+    if (mode) sel.value = mode;
+    const isPass = sel.value === 'PASAPORTE';
+    document.getElementById('desk-curp-wrap').hidden = isPass;
+    document.getElementById('desk-passport-wrap').hidden = !isPass;
+    document.getElementById('desk-curp').required = !isPass;
+    document.getElementById('desk-pasaporte').required = isPass;
+  };
+
+  document.getElementById('desk-doc-type').addEventListener('change', () => syncDeskDocType());
+
+  const checkForeignBirthMinor = () => {
+    const fnac = document.getElementById('desk-fnac').value;
+    if (!fnac) return;
+    const [y, m, d] = fnac.split('-').map(Number);
+    const now = new Date();
+    let age = now.getFullYear() - y;
+    if (now.getMonth() + 1 < m || (now.getMonth() + 1 === m && now.getDate() < d)) age--;
+    document.getElementById('desk-minor-box').hidden = !(age >= 0 && age < 18);
+  };
+  document.getElementById('desk-fnac').addEventListener('change', checkForeignBirthMinor);
+
+  const applyMrzScan = (raw) => {
+    const meta = document.getElementById('desk-mrz-meta');
+    const parsed = parseMrz(raw);
+    if (!parsed.valido) {
+      meta.className = 'curp-meta invalid';
+      meta.textContent = parsed.error;
+      return;
+    }
+    meta.className = 'curp-meta valid';
+    meta.textContent = `MRZ ICAO válido (${parsed.formato}) · ${parsed.nacionalidad} · Doc: ${parsed.numeroDocumento} · Edad: ${parsed.edad} años${parsed.esMenor ? ' · MENOR DETECTADO (LGT)' : ''}`;
+    document.getElementById('desk-nombre').value = parsed.nombreCompleto;
+    if (parsed.nacionalidad !== 'MEX' || parsed.formato === 'TD3_PASAPORTE') {
+      syncDeskDocType('PASAPORTE');
+      document.getElementById('desk-pasaporte').value = parsed.numeroDocumento;
+      document.getElementById('desk-nacionalidad').value = parsed.nacionalidad;
+      document.getElementById('desk-fnac').value = parsed.fechaNacimiento;
+      document.getElementById('desk-minor-box').hidden = !parsed.esMenor;
+    }
+  };
+
+  document.getElementById('desk-mrz-input').addEventListener('input', (e) => applyMrzScan(e.target.value));
+
+  document.getElementById('btn-scan-passport').addEventListener('click', () => {
+    const box = document.getElementById('desk-mrz-box');
+    box.hidden = false;
+    const mrz = buildSamplePassportMrz();
+    document.getElementById('desk-mrz-input').value = mrz;
+    document.getElementById('desk-habitacion').value = '1810';
+    document.getElementById('desk-acompanante').value = '';
+    document.getElementById('desk-parentesco').value = '';
+    applyMrzScan(mrz);
+  });
+
   document.getElementById('btn-scan-ine').addEventListener('click', () => {
+    syncDeskDocType('CURP');
+    document.getElementById('desk-mrz-box').hidden = true;
     const sc = appState.escenariosDemo.escaneoIneEjecutivo;
     document.getElementById('desk-nombre').value = sc.nombre;
     document.getElementById('desk-curp').value = sc.curp;
@@ -999,6 +1068,8 @@ function bindEvents() {
   });
 
   document.getElementById('btn-scan-minor').addEventListener('click', () => {
+    syncDeskDocType('CURP');
+    document.getElementById('desk-mrz-box').hidden = true;
     const sc = appState.escenariosDemo.menorEnTiempoReal;
     document.getElementById('desk-nombre').value = sc.nombre;
     document.getElementById('desk-curp').value = sc.curp;
@@ -1105,6 +1176,29 @@ function bindEvents() {
     const { data: csvText } = await apiRequest(`/api/pms/${selectedHotelSlug}/csv-template?demo=1`);
     document.getElementById('csv-raw-text').value = csvText;
     await runCsvImport(csvText, 'Lote demo exportación OPERA/CSV');
+  });
+
+  document.getElementById('btn-import-demo-xml').addEventListener('click', async () => {
+    const sampleCurp = appState?.escenariosDemo?.huespedSinAlerta?.curp || '';
+    const xmlSample = `<?xml version="1.0" encoding="UTF-8"?>
+<OPERA_INHOUSE_EXPORT hotel="${selectedHotelSlug}">
+  <G_RESERVATION>
+    <FULL_NAME>ALEJANDRO GARZA SADA</FULL_NAME>
+    <CURP>${sampleCurp}</CURP>
+    <ROOM>1502</ROOM>
+    <ARRIVAL>${new Date().toISOString()}</ARRIVAL>
+  </G_RESERVATION>
+  <G_RESERVATION>
+    <FULL_NAME>MICHAEL JAMES ANDERSON</FULL_NAME>
+    <PASSPORT>548920174</PASSPORT>
+    <NATIONALITY>USA</NATIONALITY>
+    <BIRTH_DATE>1984-06-19</BIRTH_DATE>
+    <ROOM>1810</ROOM>
+    <ARRIVAL>${new Date().toISOString()}</ARRIVAL>
+  </G_RESERVATION>
+</OPERA_INHOUSE_EXPORT>`;
+    document.getElementById('csv-raw-text').value = xmlSample;
+    await runCsvImport(xmlSample, 'Exportación XML nativa Oracle OPERA 5');
   });
 
   document.getElementById('btn-toggle-key').addEventListener('click', () => {

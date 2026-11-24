@@ -38,8 +38,31 @@ function makeCurp(base17) {
 }
 
 function maskCurp(curp) {
-  if (!curp || curp.length < 18) return '******************';
+  if (!curp) return '******************';
+  if (curp.startsWith('PASS:')) {
+    const [, nac = 'EXT', num = ''] = curp.split(':');
+    return `PASS:${nac}:****${num.slice(-3)}`;
+  }
+  if (curp.length < 18) return '******************';
   return `${curp.slice(0, 4)}******${curp.slice(10, 13)}***${curp.slice(16)}`;
+}
+
+function validarPasaporteLocal({ pasaporte, nacionalidad = 'EXT', fechaNacimiento = '' } = {}) {
+  const num = String(pasaporte || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (num.length < 6 || num.length > 15) {
+    return { valida: false, error: 'El pasaporte debe tener entre 6 y 15 caracteres alfanuméricos.' };
+  }
+  const nac = String(nacionalidad || 'EXT').trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3) || 'EXT';
+  let edad = null;
+  let esMenor = false;
+  if (fechaNacimiento && /^\d{4}-\d{2}-\d{2}$/.test(fechaNacimiento)) {
+    const [y, m, d] = fechaNacimiento.split('-').map(Number);
+    const hoy = new Date();
+    edad = hoy.getFullYear() - y;
+    if (hoy.getMonth() + 1 < m || (hoy.getMonth() + 1 === m && hoy.getDate() < d)) edad--;
+    esMenor = edad < 18;
+  }
+  return { valida: true, esExtranjero: true, curp: `PASS:${nac}:${num}`, nacionalidad: nac, edad, esMenor };
 }
 
 function validarCurpLocal(rawCurp) {
@@ -832,7 +855,14 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       return { ok: true, status: 200, data: { ok: true, pmsApiKey: hotel.pmsApiKey } };
     }
     if (act === 'checkin') {
-      const val = validarCurpLocal(body.curp);
+      const usarPass = Boolean(body.esExtranjero || (body.pasaporte && !body.curp));
+      const val = usarPass
+        ? validarPasaporteLocal({
+            pasaporte: body.pasaporte,
+            nacionalidad: body.nacionalidad,
+            fechaNacimiento: body.fechaNacimiento
+          })
+        : validarCurpLocal(body.curp);
       if (!val.valida) return { ok: false, status: 400, data: { error: val.error } };
       const g = {
         id: `GST-${Date.now().toString().slice(-6)}`,
@@ -893,30 +923,59 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       };
     }
     if (act === 'import-csv') {
-      const lines = String(body.csvText || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-      if (lines.length < 2) return { ok: false, status: 400, data: { error: 'CSV vacío o sin filas.' } };
+      const rawText = String(body.csvText || '').trim();
+      let rows = [];
+      let isXml = false;
+      if (rawText.startsWith('<')) {
+        isXml = true;
+        const blocks = rawText.match(/<(?:G_RESERVATION|RESERVATION|GUEST)\b[\s\S]*?<\/(?:G_RESERVATION|RESERVATION|GUEST)>/gi) || [];
+        if (!blocks.length) return { ok: false, status: 400, data: { error: 'XML OPERA sin nodos <G_RESERVATION>.' } };
+        const tag = (b, ...ts) => {
+          for (const t of ts) {
+            const m = b.match(new RegExp(`<${t}[^>]*>([\\s\\S]*?)<\\/${t}>`, 'i'));
+            if (m && m[1].trim()) return m[1].trim();
+          }
+          return '';
+        };
+        rows = blocks.map((b, idx) => ({
+          linea: idx + 1,
+          nombre: tag(b, 'FULL_NAME', 'GUEST_NAME', 'NOMBRE'),
+          curp: tag(b, 'CURP', 'TAX_ID', 'GOV_ID'),
+          pasaporte: tag(b, 'PASSPORT', 'PASAPORTE'),
+          nacionalidad: tag(b, 'NATIONALITY', 'NACIONALIDAD') || 'EXT',
+          fechaNacimiento: tag(b, 'BIRTH_DATE', 'DOB'),
+          hab: tag(b, 'ROOM', 'HABITACION') || 'OPERA XML'
+        }));
+      } else {
+        const lines = rawText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        if (lines.length < 2) return { ok: false, status: 400, data: { error: 'CSV vacío o sin filas.' } };
+        rows = lines.slice(1).map((line, idx) => {
+          const [nombre = '', curp = '', hab = 'Histórico CSV'] = line.split(',').map((c) => c.trim());
+          return { linea: idx + 2, nombre, curp, hab };
+        });
+      }
       let insertados = 0;
       let rechazados = 0;
       const errores = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map((c) => c.trim());
-        const [nombre = '', curp = '', hab = 'Histórico CSV'] = cols;
-        const val = validarCurpLocal(curp);
+      for (const r of rows) {
+        const val = !r.curp && r.pasaporte
+          ? validarPasaporteLocal({ pasaporte: r.pasaporte, nacionalidad: r.nacionalidad, fechaNacimiento: r.fechaNacimiento })
+          : validarCurpLocal(r.curp);
         if (!val.valida) {
           rechazados++;
-          errores.push({ linea: i + 1, curp, motivo: val.error });
+          errores.push({ linea: r.linea, curp: r.curp || r.pasaporte, motivo: val.error });
           continue;
         }
         st.guests.unshift({
-          id: `CSV-${Date.now().toString().slice(-4)}-${i}`,
+          id: `${isXml ? 'XML' : 'CSV'}-${Date.now().toString().slice(-4)}-${r.linea}`,
           hotelSlug: slug,
-          nombre: nombre.toUpperCase(),
+          nombre: r.nombre.toUpperCase(),
           curp: val.curp,
           curpEnmascarada: maskCurp(val.curp),
-          habitacion: hab,
+          habitacion: r.hab,
           esMenor: val.esMenor,
           fechaRegistro: new Date().toISOString(),
-          tipo: 'Importado por lote CSV / PMS'
+          tipo: isXml ? 'Importado desde Oracle OPERA XML' : 'Importado por lote CSV / PMS'
         });
         insertados++;
       }
@@ -924,8 +983,8 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
         hotelSlug: slug,
         direccion: 'PMS → PORTICO',
         endpoint: `/api/pms/${slug}/import-csv`,
-        fase: 'IMPORTACION CSV',
-        resumen: `Lote CSV procesado en ${hotel.nombre}: ${insertados} válidos, ${rechazados} rechazados.`,
+        fase: isXml ? 'IMPORTACION OPERA XML' : 'IMPORTACION CSV',
+        resumen: `Lote ${isXml ? 'OPERA XML' : 'CSV'} procesado en ${hotel.nombre}: ${insertados} válidos, ${rechazados} rechazados.`,
         estatusHttp: 200,
         payload: { insertados, rechazados }
       });

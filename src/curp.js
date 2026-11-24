@@ -132,9 +132,73 @@ export function completarCurpValida(curp17) {
 }
 
 /**
- * Enmascara una CURP para vistas agregadas o reportes sin privilegio de PII.
+ * Enmascara una CURP o identificador de pasaporte para vistas agregadas o reportes sin privilegio de PII.
  */
 export function enmascararCurp(curp) {
-  if (!curp || curp.length < 18) return '******************';
+  if (!curp) return '******************';
+  if (curp.startsWith('PASS:')) {
+    const parts = curp.split(':');
+    const nac = parts[1] || 'EXT';
+    const num = parts[2] || '';
+    return `PASS:${nac}:****${num.slice(-3)}`;
+  }
+  if (curp.length < 18) return '******************';
   return `${curp.slice(0, 4)}******${curp.slice(10, 13)}***${curp.slice(16)}`;
+}
+
+/**
+ * Valida un pasaporte o documento migratorio extranjero (huéspedes internacionales sin CURP)
+ * y calcula minoría de edad (<18) para cumplir con la Ley General de Turismo.
+ */
+export function validarPasaporteExtranjero({ pasaporte, nacionalidad = 'EXT', fechaNacimiento = '' } = {}) {
+  const num = String(pasaporte || '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '');
+  if (num.length < 6 || num.length > 15) {
+    return {
+      valida: false,
+      error: 'El número de pasaporte extranjero debe tener entre 6 y 15 caracteres alfanuméricos.'
+    };
+  }
+  const nac = String(nacionalidad || 'EXT')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z]/g, '')
+    .slice(0, 3);
+  if (nac.length < 2) {
+    return { valida: false, error: 'Indica el código de país / nacionalidad del pasaporte (ej. USA, CAN, KOR).' };
+  }
+
+  let edad = null;
+  let esMenor = false;
+  let fechaIso = null;
+
+  if (fechaNacimiento && /^\d{4}-\d{2}-\d{2}$/.test(String(fechaNacimiento).trim())) {
+    const [y, m, d] = String(fechaNacimiento).trim().split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    if (dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d) {
+      const hoy = new Date();
+      edad = hoy.getUTCFullYear() - y;
+      const mDiff = hoy.getUTCMonth() + 1 - m;
+      if (mDiff < 0 || (mDiff === 0 && hoy.getUTCDate() < d)) edad--;
+      esMenor = edad < 18;
+      fechaIso = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+  }
+
+  const claveCanonica = `PASS:${nac}:${num}`;
+  return {
+    valida: true,
+    esExtranjero: true,
+    curp: claveCanonica,
+    pasaporte: num,
+    nacionalidad: nac,
+    fechaNacimiento: fechaIso,
+    edad,
+    esMenor,
+    sexo: 'X',
+    codigoEntidad: 'NE',
+    entidad: `Extranjero (${nac})`
+  };
 }

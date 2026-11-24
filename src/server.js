@@ -8,7 +8,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validarCurp, enmascararCurp } from './curp.js';
+import { validarCurp, validarPasaporteExtranjero, enmascararCurp } from './curp.js';
 import {
   firmarJwt,
   verificarJwt,
@@ -48,7 +48,7 @@ import {
   listAudit,
   verifyFullAuditChain
 } from './db.js';
-import { parseGuestsCsv, generarPlantillaCsvDemo } from './csv.js';
+import { parseGuestBatch, generarPlantillaCsvDemo, generarPlantillaOperaXmlDemo } from './csv.js';
 import { construirDatosConstancia, renderConstanciaHtml } from './constancia.js';
 import { procesarColaOutbox, startOutboxWorker } from './puiClient.js';
 
@@ -426,13 +426,23 @@ async function procesarCheckinPms(hotel, body) {
   const parentescoDocumento = body.parentescoDocumento
     ? String(body.parentescoDocumento).trim()
     : null;
-  const validacion = validarCurp(body.curp);
+  const usarPasaporte = Boolean(body.esExtranjero || (body.pasaporte && !body.curp));
+  const validacion = usarPasaporte
+    ? validarPasaporteExtranjero({
+        pasaporte: body.pasaporte,
+        nacionalidad: body.nacionalidad,
+        fechaNacimiento: body.fechaNacimiento
+      })
+    : validarCurp(body.curp);
 
   if (nombre.length < 3) {
     return { status: 400, payload: { error: 'Ingresa el nombre completo del huésped.' } };
   }
   if (!validacion.valida) {
-    return { status: 400, payload: { error: validacion.error, campo: 'curp' } };
+    return {
+      status: 400,
+      payload: { error: validacion.error, campo: usarPasaporte ? 'pasaporte' : 'curp' }
+    };
   }
 
   const curp = validacion.curp;
@@ -502,7 +512,9 @@ async function procesarCheckinPms(hotel, body) {
       mensaje_recepcion:
         validacion.esMenor && parentescoDocumento === 'NO_ACREDITO'
           ? `Registro retenido en ${hotel.nombre} por protocolo de menores (Ley General de Turismo).`
-          : `Check-in completado en ${hotel.nombre} (Habitación ${guestRecord.habitacion}). CURP validada correctamente.`,
+          : validacion.esExtranjero
+            ? `Check-in extranjero completado en ${hotel.nombre} (Hab. ${guestRecord.habitacion} · Pasaporte ${validacion.nacionalidad}).`
+            : `Check-in completado en ${hotel.nombre} (Habitación ${guestRecord.habitacion}). CURP validada correctamente.`,
       huesped: {
         id: guestRecord.id,
         nombre: guestRecord.nombre,
@@ -519,10 +531,11 @@ async function procesarCheckinPms(hotel, body) {
 }
 
 /**
- * Importación masiva de padrón / histórico CSV con validación RENAPO y Fase 3 silenciosa.
+ * Importación masiva de padrón / histórico CSV o XML (Oracle OPERA 5) con validación RENAPO/Pasaporte y Fase 3 silenciosa.
  */
 async function procesarImportacionCsv(hotel, body) {
-  const parsed = parseGuestsCsv(body.csvText || '');
+  const rawBatch = body.csvText || body.xmlText || '';
+  const parsed = parseGuestBatch(rawBatch);
   if (parsed.error) {
     return { status: 400, payload: { error: parsed.error } };
   }
@@ -533,54 +546,62 @@ async function procesarImportacionCsv(hotel, body) {
 
   for (const row of parsed.rows) {
     const nombre = row.nombre.trim().toUpperCase();
-    const val = validarCurp(row.curp);
+    const val =
+      !row.curp && row.pasaporte
+        ? validarPasaporteExtranjero({
+            pasaporte: row.pasaporte,
+            nacionalidad: row.nacionalidad || 'EXT',
+            fechaNacimiento: row.fechaNacimiento
+          })
+        : validarCurp(row.curp);
     if (nombre.length < 3) {
       rechazados++;
-      errores.push({ linea: row.linea, curp: row.curp, motivo: 'Nombre vacío o demasiado corto.' });
+      errores.push({ linea: row.linea, curp: row.curp || row.pasaporte, motivo: 'Nombre vacío o demasiado corto.' });
       continue;
     }
     if (!val.valida) {
       rechazados++;
-      errores.push({ linea: row.linea, curp: row.curp, motivo: val.error });
+      errores.push({ linea: row.linea, curp: row.curp || row.pasaporte, motivo: val.error });
       continue;
     }
 
     const curpHash = hashCurpPorHotel(hotel.slug, val.curp);
     const guestRecord = insertGuest({
-      id: `CSV-${Date.now().toString().slice(-5)}-${row.linea}-${Math.floor(Math.random() * 90 + 10)}`,
+      id: `LOTE-${Date.now().toString().slice(-5)}-${row.linea}-${Math.floor(Math.random() * 90 + 10)}`,
       hotelSlug: hotel.slug,
       nombre,
       curp: val.curp,
       curpHash,
       telefono: row.telefono,
       correo: row.correo,
-      habitacion: row.habitacion || 'Histórico CSV',
+      habitacion: row.habitacion || (parsed.formato === 'OPERA_XML' ? 'OPERA XML' : 'Histórico CSV'),
       esMenor: val.esMenor,
       edadEstimada: val.edad,
       entidad: val.entidad,
       acompanante: row.acompanante,
       parentescoDocumento: null,
       fechaRegistro: row.fechaRegistro || new Date().toISOString(),
-      tipo: 'Importado por lote CSV / PMS'
+      tipo: parsed.formato === 'OPERA_XML' ? 'Importado desde Oracle OPERA XML' : 'Importado por lote CSV / PMS'
     });
 
     insertados++;
-    await evaluarAlertasFase3(hotel, guestRecord, val.curp, val, 'IMPORTACION_LOTE_CSV_PMS');
+    await evaluarAlertasFase3(hotel, guestRecord, val.curp, val, 'IMPORTACION_LOTE_PMS');
   }
 
   appendAudit({
     hotelSlug: hotel.slug,
     direccion: 'PMS → PORTICO',
     endpoint: `/api/pms/${hotel.slug}/import-csv`,
-    fase: 'IMPORTACION CSV',
-    resumen: `Lote CSV procesado en ${hotel.nombre}: ${insertados} registros válidos incorporados, ${rechazados} rechazados por validación CURP.`,
+    fase: parsed.formato === 'OPERA_XML' ? 'IMPORTACION OPERA XML' : 'IMPORTACION CSV',
+    resumen: `Lote ${parsed.formato === 'OPERA_XML' ? 'OPERA XML' : 'CSV'} procesado en ${hotel.nombre}: ${insertados} registros válidos incorporados, ${rechazados} rechazados.`,
     estatusHttp: 200,
     payload: {
       rfc_institucion: hotel.rfc,
-      origen: body.origen || 'Carga manual CSV / Exportación PMS',
+      formato: parsed.formato || 'CSV',
+      origen: body.origen || 'Carga manual PMS',
       filas_totales: parsed.rows.length,
       validos_insertados: insertados,
-      rechazados_curp: rechazados
+      rechazados
     }
   });
 

@@ -239,10 +239,10 @@
 
                 <div class="range-group">
                   <div class="range-head">
-                    <label for="roi-external">Renta mensual proveedor externo (por hotel)</label>
+                    <label for="roi-external">Renta mensual proveedor externo / tarifa grupal (por hotel)</label>
                     <output id="roi-external-out" for="roi-external">$1,000 MXN</output>
                   </div>
-                  <input type="range" id="roi-external" min="700" max="2000" step="50" value="1000" />
+                  <input type="range" id="roi-external" min="400" max="1500" step="25" value="1000" />
                 </div>
 
                 <div class="range-group">
@@ -609,34 +609,56 @@
                 </div>
                 <div class="desk-scan-actions">
                   <button type="button" class="btn-secondary" id="btn-scan-ine">
-                    Simular lectura INE / QR
+                    Escanear INE (Nacional)
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-scan-passport">
+                    Escanear Pasaporte (MRZ ICAO)
                   </button>
                   <button type="button" class="btn-secondary" id="btn-scan-minor">
-                    Simular registro con menor
+                    Caso menor (Fase 3)
                   </button>
                 </div>
               </div>
 
+              <div class="sub-block" id="desk-mrz-box" hidden style="margin-top: 0.85rem;">
+                <label for="desk-mrz-input" style="font-size: 0.82rem; font-weight: 700;">Lector óptico MRZ ICAO 9303 (Pasaporte internacional o reverso INE — $0 por lectura)</label>
+                <textarea
+                  id="desk-mrz-input"
+                  rows="2"
+                  class="mono-input"
+                  style="margin-top: 0.35rem;"
+                  placeholder="P<USAANDERSON<<MICHAEL<JAMES<<<<<<<<<<<<<<<<&#10;5489201742USA8406199M3108205<<<<<<<<<<<<<<08"
+                ></textarea>
+                <div id="desk-mrz-meta" class="curp-meta"></div>
+              </div>
+
               <form id="form-desk-checkin" novalidate style="margin-top: 1.15rem;">
-                <div class="field">
-                  <label for="desk-nombre">Nombre completo del huésped</label>
-                  <span id="desk-nombre-hint" class="hint">Autocompletado por escáner de INE/pasaporte o captura manual</span>
-                  <input
-                    id="desk-nombre"
-                    name="nombre"
-                    type="text"
-                    required
-                    minlength="3"
-                    aria-describedby="desk-nombre-hint"
-                    data-error="desk-nombre-error"
-                    placeholder="Nombre y apellidos"
-                  />
-                  <div id="desk-nombre-error" class="error-msg">
-                    Error: captura el nombre completo del huésped.
+                <div class="field-row">
+                  <div class="field">
+                    <label for="desk-doc-type">Tipo de identificación</label>
+                    <select id="desk-doc-type" name="docType">
+                      <option value="CURP">Nacional — CURP / Credencial INE</option>
+                      <option value="PASAPORTE">Extranjero — Pasaporte Internacional / FMM</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="desk-nombre">Nombre completo del huésped</label>
+                    <input
+                      id="desk-nombre"
+                      name="nombre"
+                      type="text"
+                      required
+                      minlength="3"
+                      data-error="desk-nombre-error"
+                      placeholder="Nombre y apellidos"
+                    />
+                    <div id="desk-nombre-error" class="error-msg">
+                      Error: captura el nombre completo del huésped.
+                    </div>
                   </div>
                 </div>
 
-                <div class="field">
+                <div class="field" id="desk-curp-wrap">
                   <label for="desk-curp">CURP del huésped</label>
                   <span id="desk-curp-hint" class="hint">Valida automáticamente entidad federativa, edad y dígito verificador RENAPO</span>
                   <input
@@ -656,6 +678,35 @@
                     Error: ingresa una CURP válida de 18 caracteres.
                   </div>
                   <div id="desk-curp-live" class="curp-meta"></div>
+                </div>
+
+                <div class="field-row" id="desk-passport-wrap" hidden>
+                  <div class="field">
+                    <label for="desk-pasaporte">No. de Pasaporte</label>
+                    <input
+                      id="desk-pasaporte"
+                      name="pasaporte"
+                      type="text"
+                      class="mono-input"
+                      placeholder="Ej. 548920174"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="desk-nacionalidad">País (ISO-3)</label>
+                    <input
+                      id="desk-nacionalidad"
+                      name="nacionalidad"
+                      type="text"
+                      maxlength="3"
+                      class="mono-input"
+                      value="USA"
+                      placeholder="USA / CAN / KOR"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="desk-fnac">Fecha nac. (LGT menores)</label>
+                    <input id="desk-fnac" name="fechaNacimiento" type="date" />
+                  </div>
                 </div>
 
                 <div class="field-row">
@@ -727,35 +778,38 @@
             </div>
             <div class="scenario-buttons">
               <a class="btn-secondary link-btn" id="btn-download-csv-template" href="/api/pms/crowne-plaza-monterrey/csv-template">
-                Descargar plantilla CSV (OPERA / Excel)
+                Descargar plantilla CSV
               </a>
+              <button type="button" class="btn-secondary" id="btn-import-demo-xml">
+                Probar XML nativo OPERA 5 (con Extranjero)
+              </button>
               <button type="button" class="btn-primary" id="btn-import-demo-batch">
-                Probar lote demo (6 huéspedes con validación)
+                Probar lote CSV (6 huéspedes)
               </button>
             </div>
           </div>
 
           <div class="two-col-grid">
             <div class="panel">
-              <h2>Importación Masiva CSV (Histórico Fase 2 y Hoteles sin API)</h2>
+              <h2>Importación Masiva CSV y XML Nativo (Oracle OPERA 5 / Zeus)</h2>
               <p class="panel-desc">
-                Permite cargar exportaciones de Oracle OPERA, Zeus o Excel en segundos. Portico Hospitality valida cada CURP contra el algoritmo oficial RENAPO, cifra los datos en AES-256-GCM y corre Fase 3 silenciosa automáticamente.
+                Acepta exportaciones CSV o <strong>XML nativo de Oracle OPERA 5</strong> (nacionales con CURP y extranjeros con Pasaporte). Cifra en AES-256-GCM y ejecuta Fase 3 silenciosa.
               </p>
 
               <form id="form-csv-import" style="margin-top: 1rem;">
                 <div class="field">
-                  <label for="csv-file-input">Seleccionar archivo .csv del hotel</label>
-                  <span id="csv-file-hint" class="hint">Columnas mínimas: nombre, curp (opcional: habitacion, fecha_registro, telefono, correo, acompanante)</span>
+                  <label for="csv-file-input">Seleccionar archivo .csv o .xml del PMS</label>
+                  <span id="csv-file-hint" class="hint">Formatos soportados: CSV (nombre, curp/pasaporte) o XML OPERA (&lt;G_RESERVATION&gt;)</span>
                   <input
                     id="csv-file-input"
                     type="file"
-                    accept=".csv,text/csv"
+                    accept=".csv,.xml,text/csv,text/xml,application/xml"
                     aria-describedby="csv-file-hint"
                   />
                 </div>
 
                 <div class="field">
-                  <label for="csv-raw-text">O pega el contenido CSV directamente</label>
+                  <label for="csv-raw-text">O pega el contenido CSV / XML directamente</label>
                   <textarea
                     id="csv-raw-text"
                     rows="5"
