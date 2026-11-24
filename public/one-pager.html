@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portico Hospitality — One-Pager Ejecutivo</title>
+    <style>
+      :root {
+        --navy: #0e1929;
+        --navy-2: #16263d;
+        --stone: #f5f6f3;
+        --white: #ffffff;
+        --ink: #121d2d;
+        --muted: #526173;
+        --border: #dde3ea;
+        --emerald: #0f7662;
+        --emerald-bright: #1ca389;
+        --emerald-soft: #eaf6f2;
+        --mint: #6ee7cc;
+        --crimson: #b42318;
+        --crimson-soft: #fef2f2;
+        --crimson-border: #f3c4c0;
+      }
+
+      @page {
+        size: letter portrait;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #dce2e9;
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .screen-bar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #0b1320;
+        color: #eaf0f6;
+        border-bottom: 1px solid rgb(255 255 255 / 0.1);
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .screen-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .screen-bar-left img {
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+      }
+
+      .screen-bar-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .bar-btn {
+        appearance: none;
+        border: 1px solid rgb(255 255 255 / 0.18);
+        background: rgb(255 255 255 / 0.08);
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .bar-btn.primary {
+        background: var(--emerald);
+        border-color: var(--emerald);
+      }
+
+      .stage {
+        padding: 24px 0 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* 1 sola hoja Letter exacta: 8.5in x 11in */
+      .page {
+        width: 8.5in;
+        height: 11in;
+        background: var(--white);
+        box-shadow: 0 24px 60px rgb(10 20 35 / 0.22);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Cabecera arquitectónica (Quiénes somos) */
+      .hero {
+        background: var(--navy);
+        color: #ffffff;
+        padding: 0.34in 0.56in 0.3in;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid var(--emerald-bright);
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 42%;
+        opacity: 0.26;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, rgb(14 25 41 / 0.96) 0%, rgb(14 25 41 / 0.86) 56%, rgb(14 25 41 / 0.65) 100%);
+        pointer-events: none;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+
+      .brand-lockup img {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid rgb(255 255 255 / 0.22);
+      }
+
+      .brand-name {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      .brand-sub {
+        margin-top: 2px;
+        font-size: 8.4px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mint);
+      }
+
+      .hero-pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgb(28 163 137 / 0.2);
+        border: 1px solid rgb(110 231 204 / 0.45);
+        color: var(--mint);
+        font-size: 8.6px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 1.14;
+        letter-spacing: -0.028em;
+      }
+
+      .hero h1 span {
+        color: var(--mint);
+      }
+
+      .hero p {
+        margin: 8px 0 0;
+        font-size: 10.8px;
+        line-height: 1.45;
+        color: #c8d7e7;
+        max-width: 6.8in;
+      }
+
+      /* Cuerpo */
+      .body {
+        flex: 1;
+        padding: 0.28in 0.56in 0.22in;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .sec-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 9.2px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--navy);
+        margin: 0 0 8px;
+      }
+
+      .sec-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--emerald);
+        display: inline-block;
+      }
+
+      .sec-dot.crimson {
+        background: var(--crimson);
+      }
+
+      /* Bloque 1: Problema + Gasto actual */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.15fr 0.85fr;
+        gap: 10px;
+      }
+
+      .kpi {
+        border-radius: 9px;
+        padding: 12px 13px;
+        border: 1px solid var(--border);
+        background: var(--stone);
+      }
+
+      .kpi.danger {
+        background: var(--crimson-soft);
+        border-color: var(--crimson-border);
+      }
+
+      .kpi.navy {
+        background: var(--navy);
+        border-color: var(--navy);
+        color: #ffffff;
+      }
+
+      .kpi.emerald {
+        background: var(--emerald-soft);
+        border-color: #b0dbd0;
+      }
+
+      .kpi-tag {
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .kpi.danger .kpi-tag {
+        color: var(--crimson);
+      }
+
+      .kpi.navy .kpi-tag {
+        color: var(--mint);
+      }
+
+      .kpi.emerald .kpi-tag {
+        color: var(--emerald);
+      }
+
+      .kpi-val {
+        margin: 4px 0 3px;
+        font-size: 21px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .kpi.danger .kpi-val {
+        color: var(--crimson);
+      }
+
+      .kpi.navy .kpi-val {
+        color: #ffffff;
+      }
+
+      .kpi.emerald .kpi-val {
+        color: var(--emerald);
+      }
+
+      .kpi-sub {
+        font-size: 9px;
+        line-height: 1.35;
+        color: #3a4a5c;
+      }
+
+      .kpi.navy .kpi-sub {
+        color: #c3d3e4;
+      }
+
+      /* Bloque 2: Cómo funciona (Diagrama + 3 Fases) */
+      .flow-box {
+        background: var(--stone);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 11px 13px;
+      }
+
+      .arch-svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .phases-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 9px;
+        margin-top: 9px;
+      }
+
+      .phase-chip {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 8px 10px;
+      }
+
+      .phase-chip.em {
+        background: var(--emerald-soft);
+        border-color: #b0dbd0;
+      }
+
+      .phase-chip strong {
+        display: block;
+        font-size: 9.8px;
+        color: var(--navy);
+        margin-bottom: 2px;
+      }
+
+      .phase-chip strong span {
+        color: var(--emerald);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        margin-right: 4px;
+      }
+
+      .phase-chip p {
+        margin: 0;
+        font-size: 8.8px;
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      /* Bloque 3: Solución vs Construcción (2 columnas limpias) */
+      .split-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 12px 14px;
+        background: #ffffff;
+      }
+
+      .panel.emerald {
+        background: var(--emerald-soft);
+        border-color: #b0dbd0;
+      }
+
+      .panel h3 {
+        margin: 0 0 7px;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--navy);
+      }
+
+      .clean-list {
+        margin: 0;
+        padding-left: 14px;
+      }
+
+      .clean-list li {
+        margin-bottom: 4.5px;
+        font-size: 9.4px;
+        line-height: 1.38;
+        color: #243347;
+      }
+
+      .clean-list li:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Cinta de arquitectura técnica */
+      .tech-strip {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 7px;
+      }
+
+      .tech-pill {
+        background: var(--navy);
+        border-radius: 6px;
+        padding: 7px 5px;
+        text-align: center;
+      }
+
+      .tech-pill strong {
+        display: block;
+        font-size: 8.8px;
+        color: var(--mint);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .tech-pill span {
+        display: block;
+        margin-top: 2px;
+        font-size: 7.8px;
+        color: #c2d2e3;
+      }
+
+      /* Cierre final */
+      .cta-bar {
+        margin-top: auto;
+        background: var(--navy);
+        color: #ffffff;
+        border-radius: 9px;
+        padding: 11px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-left: 4px solid var(--emerald-bright);
+      }
+
+      .cta-bar .title {
+        font-size: 11.5px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .cta-bar .title span {
+        color: var(--mint);
+      }
+
+      .cta-bar .sub {
+        margin-top: 2px;
+        font-size: 9.2px;
+        color: #c2d2e3;
+      }
+
+      .cta-url {
+        flex: none;
+        padding: 7px 11px;
+        border-radius: 6px;
+        background: rgb(28 163 137 / 0.2);
+        border: 1px solid rgb(110 231 204 / 0.45);
+        color: var(--mint);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      /* Pie */
+      .foot {
+        padding: 0.11in 0.56in 0.2in;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        font-size: 8.5px;
+        color: var(--muted);
+      }
+
+      .foot strong {
+        color: var(--navy);
+      }
+
+      @media print {
+        html,
+        body {
+          background: #ffffff;
+        }
+        .screen-bar {
+          display: none !important;
+        }
+        .stage {
+          padding: 0;
+        }
+        .page {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="screen-bar">
+      <div class="screen-bar-left">
+        <img src="./assets/portico-emblem.jpg" alt="Portico Hospitality" />
+        <span>Portico Hospitality · One-Pager Ejecutivo</span>
+      </div>
+      <div class="screen-bar-actions">
+        <a class="bar-btn" href="./dossier.html" target="_blank" rel="noopener">Dossier 4 Págs</a>
+        <a class="bar-btn" href="./presentacion.html" target="_blank" rel="noopener">Presentación</a>
+        <a class="bar-btn primary" href="./index.html" target="_blank" rel="noopener">Demo en Vivo</a>
+      </div>
+    </header>
+
+    <main class="stage">
+      <article class="page">
+        <!-- QUIÉNES SOMOS -->
+        <header class="hero">
+          <img class="hero-bg" src="./assets/cover-monterrey.jpg" alt="" />
+          <div class="hero-inner">
+            <div class="hero-top">
+              <div class="brand-lockup">
+                <img src="./assets/portico-emblem.jpg" alt="Portico Hospitality" />
+                <div>
+                  <div class="brand-name">Portico Hospitality</div>
+                  <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
+                </div>
+              </div>
+              <span class="hero-pill">One-Pager Ejecutivo · 2026</span>
+            </div>
+            <h1>
+              Infraestructura propia de cumplimiento PUI para hoteles.<br />
+              <span>Cero rentas eternas. Estándar 5 estrellas.</span>
+            </h1>
+            <p>
+              <strong>Qué somos:</strong> plataforma tecnológica multi-hotel diseñada exclusivamente para la hotelería mexicana,
+              que conecta los PMS (Oracle OPERA, Cloudbeds, Zeus o CSV) con la <strong>Plataforma Única de Identidad (PUI · SEGOB/RENAPO)</strong>
+              y el protocolo de menores de la Ley General de Turismo — en la propia nube de la Asociación y con sigilo absoluto en mostrador.
+            </p>
+          </div>
+        </header>
+
+        <div class="body">
+          <!-- 1. EL PROBLEMA Y EL GASTO ACTUAL -->
+          <section>
+            <h2 class="sec-label"><span class="sec-dot crimson"></span> El problema y el gasto actual de los hoteles</h2>
+            <div class="problem-grid">
+              <div class="kpi danger">
+                <div class="kpi-tag">Multa federal · Art. 43 Bis</div>
+                <div class="kpi-val">$1.17M – $2.35M</div>
+                <div class="kpi-sub">MXN por hotel sancionado (10k–20k UMAs 2026) · DOF 23/01/2026.</div>
+              </div>
+              <div class="kpi navy">
+                <div class="kpi-tag">Fuga actual · $1,000/mes por hotel</div>
+                <div class="kpi-val">$1,632,000 / año</div>
+                <div class="kpi-sub">136 hoteles × $1,000/mes = <strong>$136k cada mes</strong> ($4.89M en 3 años sin activo propio).</div>
+              </div>
+              <div class="kpi emerald">
+                <div class="kpi-tag">Costo real SEGOB</div>
+                <div class="kpi-val">$0 pesos</div>
+                <div class="kpi-sub">El gobierno no cobra; hoy solo se paga renta a intermediarios externos.</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. CÓMO FUNCIONA -->
+          <section>
+            <h2 class="sec-label"><span class="sec-dot"></span> Cómo funciona (arquitectura invertida DOF + sigilo en recepción)</h2>
+            <div class="flow-box">
+              <svg class="arch-svg" viewBox="0 0 740 128" role="img" aria-label="Flujo SEGOB, Portico Hospitality y PMS">
+                <defs>
+                  <marker id="op-n" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#0e1929" />
+                  </marker>
+                  <marker id="op-e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f7662" />
+                  </marker>
+                </defs>
+
+                <rect x="4" y="14" width="164" height="100" rx="9" fill="#691c32" />
+                <text x="86" y="40" text-anchor="middle" fill="#f3d6de" font-size="8.2" font-weight="800" letter-spacing="0.9">AUTORIDAD FEDERAL</text>
+                <text x="86" y="65" text-anchor="middle" fill="#ffffff" font-size="14.5" font-weight="800">SEGOB / PUI</text>
+                <text x="86" y="84" text-anchor="middle" fill="#f3d6de" font-size="9.5">RENAPO · CNB ($0)</text>
+
+                <line x1="174" y1="45" x2="266" y2="45" stroke="#0e1929" stroke-width="2" marker-end="url(#op-n)" />
+                <text x="220" y="36" text-anchor="middle" fill="#0e1929" font-size="8.6" font-weight="800">1. Alerta JWT</text>
+
+                <line x1="266" y1="86" x2="174" y2="86" stroke="#0f7662" stroke-width="2" marker-end="url(#op-e)" />
+                <text x="220" y="77" text-anchor="middle" fill="#0f7662" font-size="8.6" font-weight="800">3. Aviso silencioso</text>
+
+                <rect x="272" y="6" width="206" height="116" rx="10" fill="#0e1929" stroke="#1ca389" stroke-width="2" />
+                <text x="375" y="28" text-anchor="middle" fill="#6ee7cc" font-size="8.2" font-weight="800" letter-spacing="0.9">NUBE PROPIA ASOCIACIÓN (AWS)</text>
+                <text x="375" y="53" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="800">Portico Hospitality</text>
+                <text x="375" y="73" text-anchor="middle" fill="#c7d6e7" font-size="9.2">Bóveda por RFC · AES-256-GCM</text>
+                <rect x="296" y="85" width="158" height="22" rx="5" fill="#183247" />
+                <text x="375" y="99" text-anchor="middle" fill="#6ee7cc" font-size="8.6" font-weight="800">Fases 1, 2 y 3 + Outbox 8x</text>
+
+                <line x1="564" y1="64" x2="484" y2="64" stroke="#0f7662" stroke-width="2" marker-end="url(#op-e)" />
+                <text x="524" y="54" text-anchor="middle" fill="#0f7662" font-size="8.6" font-weight="800">2. Check-in / CSV</text>
+
+                <rect x="570" y="14" width="166" height="100" rx="9" fill="#ffffff" stroke="#c5d0dc" stroke-width="1.5" />
+                <text x="653" y="38" text-anchor="middle" fill="#526173" font-size="8.2" font-weight="800" letter-spacing="0.9">HOTELES AFILIADOS</text>
+                <text x="653" y="61" text-anchor="middle" fill="#121d2d" font-size="13.5" font-weight="800">PMS &amp; Mostrador</text>
+                <text x="653" y="79" text-anchor="middle" fill="#526173" font-size="9">OPERA · Cloudbeds · CSV</text>
+                <text x="653" y="98" text-anchor="middle" fill="#0f7662" font-size="9" font-weight="800">Sigilo total en recepción</text>
+              </svg>
+
+              <div class="phases-3">
+                <div class="phase-chip">
+                  <strong><span>01</span> Datos básicos</strong>
+                  <p>Si la CURP reportada ya existía en el hotel, complementa datos para la ficha oficial.</p>
+                </div>
+                <div class="phase-chip">
+                  <strong><span>02</span> Histórico 12 años</strong>
+                  <p>Barre estancias previas en la bóveda aislada del RFC y cierra formalmente ante SEGOB.</p>
+                </div>
+                <div class="phase-chip em">
+                  <strong><span>03</span> Check-in en sigilo</strong>
+                  <p>Avisa en silencio a SEGOB sin alarmas rojas y activa verificación de menores (LGT).</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. CÓMO LO SOLUCIONAMOS + CÓMO ESTÁ CONSTRUIDA -->
+          <section class="split-2">
+            <div class="panel emerald">
+              <h3>Cómo eliminamos el gasto y la fricción</h3>
+              <ul class="clean-list">
+                <li><strong>De $1,000/mes a ~$44/mes reales:</strong> la plataforma es propiedad de la Asociación en una sola nube AWS compartida (<strong>-88% de costo a 3 años</strong>; $4.33M retenidos en el gremio).</li>
+                <li><strong>Compatible con cualquier PMS:</strong> API REST (OPERA Cloud OHIP / Cloudbeds), <strong>Agente Local CSV</strong> para OPERA 5 / Zeus sin tocar Oracle ni pagar licencias extra, y portal web para independientes.</li>
+                <li><strong>Doble blindaje legal:</strong> cumplimiento PUI DOF + validador gratuito de CURP RENAPO que detecta menores de 18 años en mostrador.</li>
+                <li><strong>Escudo ante inspecciones:</strong> cada hotel descarga en 1 clic su <strong>Constancia Oficial PDF</strong> y bitácora CSV con sello SHA-256.</li>
+              </ul>
+            </div>
+
+            <div class="panel">
+              <h3>Cómo está construida (arquitectura bancaria)</h3>
+              <ul class="clean-list">
+                <li><strong>Aislamiento real por RFC (Multi-Tenant):</strong> cada razón social tiene sus propios endpoints DOF, llave PMS y bóveda cifrada; bloqueo <code>HTTP 403</code> cruzado entre hoteles.</li>
+                <li><strong>3 Roles RBAC en servidor:</strong> Consejo Asociación (métricas sin PII), Gerencia TI del hotel (gestión de usuarios, PMS y constancias) y Recepción (solo check-in, cero visibilidad SEGOB).</li>
+                <li><strong>Núcleo cero dependencias npm:</strong> Node.js + PostgreSQL RDS cifrado (KMS) + HTTPS TLS 1.3 + WAF, listo para auditorías SAST / DAST / SCA.</li>
+                <li><strong>Cola Outbox con reintento 8x:</strong> garantiza que ningún aviso hacia SEGOB se pierda aunque falle internet.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- CINTA TÉCNICA -->
+          <section>
+            <div class="tech-strip">
+              <div class="tech-pill"><strong>AES-256-GCM</strong><span>CURPs cifradas</span></div>
+              <div class="tech-pill"><strong>JWT HS256</strong><span>Auth DOF RFC</span></div>
+              <div class="tech-pill"><strong>scrypt</strong><span>Claves seguras</span></div>
+              <div class="tech-pill"><strong>SHA-256</strong><span>Cadena inmutable</span></div>
+              <div class="tech-pill"><strong>Outbox 8x</strong><span>Entrega SEGOB</span></div>
+              <div class="tech-pill"><strong>0 deps npm</strong><span>SCA limpio</span></div>
+            </div>
+          </section>
+
+          <!-- CIERRE -->
+          <div class="cta-bar">
+            <div>
+              <div class="title">No es un concepto en papel: <span>Portico Hospitality ya funciona hoy.</span></div>
+              <div class="sub">Prueba en vivo 24/7 los 4 perfiles RBAC, la simulación de sigilo, la carga CSV y la Constancia Oficial PDF.</div>
+            </div>
+            <a class="cta-url" href="https://jesusoldekamp-hue.github.io/portico-hospitality/" target="_blank" rel="noopener">
+              jesusoldekamp-hue.github.io/portico-hospitality/
+            </a>
+          </div>
+        </div>
+
+        <footer class="foot">
+          <span><strong>Portico Hospitality</strong> · Hospitality Trust &amp; Compliance · Art. 12 Bis y 43 Bis LGMDFP · Ley General de Turismo</span>
+          <span>Monterrey, Nuevo León · 2026</span>
+        </footer>
+      </article>
+    </main>
+  </body>
+</html>
