@@ -12,3 +12,6 @@ data/
 # Sistema y dependencias
 .DS_Store
 node_modules/
+
+# Notas privadas de negociación (no subir a GitHub público)
+00_PRIVADO_NO_SUBIR/
