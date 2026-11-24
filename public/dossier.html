@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portico Hospitality — Dossier Ejecutivo (Problema, Solución, ROI y Propuesta)</title>
+    <title>Portico Hospitality — Dossier Ejecutivo de Impacto</title>
     <style>
       :root {
         --navy: #0e1929;
@@ -11,8 +11,8 @@
         --stone: #f5f6f3;
         --white: #ffffff;
         --ink: #121d2d;
-        --muted: #4b5a6b;
-        --border: #d9e0e7;
+        --muted: #526173;
+        --border: #dde3ea;
         --emerald: #0f7662;
         --emerald-bright: #1ca389;
         --emerald-soft: #eaf6f2;
@@ -20,7 +20,6 @@
         --crimson: #b42318;
         --crimson-soft: #fef2f2;
         --crimson-border: #f3c4c0;
-        --gold: #c9a25e;
       }
 
       @page {
@@ -44,7 +43,6 @@
         print-color-adjust: exact;
       }
 
-      /* Barra superior solo en pantalla */
       .screen-bar {
         position: sticky;
         top: 0;
@@ -101,7 +99,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 26px;
+        gap: 28px;
       }
 
       /* Hoja US Letter exacta */
@@ -109,18 +107,18 @@
         width: 8.5in;
         height: 11in;
         background: var(--white);
-        box-shadow: 0 22px 54px rgb(10 20 35 / 0.22);
+        box-shadow: 0 24px 60px rgb(10 20 35 / 0.22);
         display: flex;
         flex-direction: column;
         overflow: hidden;
         position: relative;
       }
 
-      /* Masthead ejecutivo */
+      /* Masthead ejecutivo limpio */
       .masthead {
         background: var(--navy);
         color: #ffffff;
-        padding: 0.3in 0.56in 0.26in;
+        padding: 0.28in 0.62in 0.26in;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -129,8 +127,11 @@
         overflow: hidden;
       }
 
-      .masthead.hero-cover {
-        padding: 0.36in 0.56in 0.32in;
+      .masthead.hero {
+        padding: 0.42in 0.62in 0.44in;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 26px;
       }
 
       .masthead-bg {
@@ -139,16 +140,24 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center 45%;
-        opacity: 0.22;
+        object-position: center 42%;
+        opacity: 0.28;
       }
 
-      .masthead::after {
+      .masthead.hero::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, rgb(14 25 41 / 0.96) 0%, rgb(14 25 41 / 0.82) 60%, rgb(14 25 41 / 0.6) 100%);
+        background: linear-gradient(125deg, rgb(14 25 41 / 0.96) 0%, rgb(14 25 41 / 0.86) 55%, rgb(14 25 41 / 0.64) 100%);
         pointer-events: none;
+      }
+
+      .masthead-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 1;
       }
 
       .brand-lockup {
@@ -160,403 +169,354 @@
       }
 
       .brand-lockup img {
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
         border-radius: 8px;
         object-fit: cover;
-        border: 1px solid rgb(255 255 255 / 0.2);
+        border: 1px solid rgb(255 255 255 / 0.22);
       }
 
       .brand-name {
         font-size: 18px;
         font-weight: 800;
         letter-spacing: -0.02em;
-        line-height: 1.1;
+        line-height: 1.05;
       }
 
       .brand-sub {
-        margin-top: 2px;
-        font-size: 8.8px;
+        margin-top: 3px;
+        font-size: 8.5px;
         font-weight: 700;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--mint);
       }
 
-      .doc-tag {
-        text-align: right;
-        position: relative;
-        z-index: 1;
-      }
-
-      .doc-pill {
+      .pill {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 5px 11px;
         border-radius: 999px;
         background: rgb(28 163 137 / 0.2);
         border: 1px solid rgb(110 231 204 / 0.45);
         color: var(--mint);
-        font-size: 8.8px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .doc-pill.crimson {
-        background: rgb(180 35 24 / 0.34);
-        border-color: rgb(252 165 165 / 0.48);
-        color: #fecaca;
-      }
-
-      .doc-meta {
-        margin-top: 4px;
-        font-size: 9.2px;
-        color: #c2d2e3;
-      }
-
-      /* Cuerpo interior */
-      .page-body {
-        flex: 1;
-        padding: 0.32in 0.56in 0.24in;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .eyebrow {
-        font-size: 9.2px;
+        font-size: 9px;
         font-weight: 800;
         letter-spacing: 0.1em;
         text-transform: uppercase;
+      }
+
+      .pill.crimson {
+        background: rgb(180 35 24 / 0.36);
+        border-color: rgb(252 165 165 / 0.5);
+        color: #fecaca;
+      }
+
+      .hero-copy {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-copy h1 {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        color: #ffffff;
+      }
+
+      .hero-copy h1 span {
+        color: var(--mint);
+      }
+
+      .hero-copy p {
+        margin: 12px 0 0;
+        font-size: 13px;
+        line-height: 1.45;
+        color: #c8d7e7;
+        max-width: 6.2in;
+      }
+
+      /* Cuerpo interior con aire real */
+      .page-body {
+        flex: 1;
+        padding: 0.4in 0.62in 0.28in;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .eyebrow {
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--emerald);
-        margin-bottom: 4px;
+        margin-bottom: 6px;
       }
 
       .eyebrow.crimson {
         color: var(--crimson);
       }
 
-      h1 {
+      h1.page-h1 {
         margin: 0;
-        font-size: 21px;
+        font-size: 28px;
         font-weight: 800;
-        line-height: 1.18;
-        letter-spacing: -0.025em;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
         color: var(--navy);
       }
 
       .lead {
-        margin: 7px 0 0;
-        font-size: 10.8px;
-        line-height: 1.48;
+        margin: 8px 0 0;
+        font-size: 12.2px;
+        line-height: 1.45;
         color: var(--muted);
       }
 
-      /* Títulos de sección */
-      .sec-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 10.2px;
+      .sec-label {
+        font-size: 9.5px;
         font-weight: 800;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--navy);
-        padding-bottom: 5px;
-        border-bottom: 1.5px solid var(--border);
-        margin: 0 0 9px;
+        color: var(--muted);
+        margin: 0 0 10px;
       }
 
-      .sec-num {
-        display: inline-grid;
-        place-items: center;
-        width: 18px;
-        height: 18px;
-        border-radius: 4px;
+      /* Bloques gigantes de impacto (Página 1) */
+      .hero-stats-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .stat-monument {
+        border-radius: 12px;
+        padding: 20px 22px;
+        border: 1px solid var(--border);
+      }
+
+      .stat-monument.danger {
+        background: var(--crimson-soft);
+        border-color: var(--crimson-border);
+      }
+
+      .stat-monument.navy {
         background: var(--navy);
+        border-color: var(--navy);
         color: #ffffff;
-        font-size: 9.2px;
+      }
+
+      .stat-monument.emerald {
+        background: var(--emerald-soft);
+        border-color: #aed9ce;
+      }
+
+      .stat-tag {
+        font-size: 9px;
         font-weight: 800;
-        flex: none;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
-      .sec-num.emerald {
-        background: var(--emerald);
+      .stat-monument.danger .stat-tag {
+        color: var(--crimson);
       }
 
-      .sec-num.crimson {
+      .stat-monument.navy .stat-tag {
+        color: var(--mint);
+      }
+
+      .stat-monument.emerald .stat-tag {
+        color: var(--emerald);
+      }
+
+      .stat-num {
+        margin: 8px 0 6px;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1.02;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat-monument.danger .stat-num {
+        color: var(--crimson);
+      }
+
+      .stat-monument.navy .stat-num {
+        color: #ffffff;
+      }
+
+      .stat-monument.emerald .stat-num {
+        color: var(--emerald);
+      }
+
+      .stat-cap {
+        font-size: 11px;
+        line-height: 1.4;
+        color: #3a4a5c;
+      }
+
+      .stat-monument.navy .stat-cap {
+        color: #c2d2e3;
+      }
+
+      /* Escalera visual de fuga actual */
+      .bleed-list {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+
+      .bleed-row {
+        display: grid;
+        grid-template-columns: 165px 1fr 122px;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 14px;
+        border-radius: 8px;
+        background: var(--stone);
+        border: 1px solid var(--border);
+      }
+
+      .bleed-row.peak {
+        background: var(--crimson-soft);
+        border-color: var(--crimson-border);
+      }
+
+      .bleed-row strong {
+        font-size: 11px;
+        color: var(--navy);
+      }
+
+      .bleed-track {
+        height: 10px;
+        background: #e3e8ee;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .bleed-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: #94a3b8;
+      }
+
+      .bleed-row.peak .bleed-fill {
         background: var(--crimson);
       }
 
-      /* KPI row */
-      .kpi-row {
+      .bleed-val {
+        text-align: right;
+        font-size: 12px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--navy);
+      }
+
+      .bleed-row.peak .bleed-val {
+        color: var(--crimson);
+      }
+
+      /* Chips cortos */
+      .chips-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
       }
 
-      .kpi-card {
+      .chip-card {
         border: 1px solid var(--border);
-        border-radius: 9px;
-        padding: 12px 14px;
+        border-radius: 10px;
+        padding: 14px 15px;
+        background: #ffffff;
+      }
+
+      .chip-card.stone {
         background: var(--stone);
       }
 
-      .kpi-card.danger {
-        background: var(--crimson-soft);
-        border-color: var(--crimson-border);
-      }
-
-      .kpi-card.emerald {
+      .chip-card.emerald-soft {
         background: var(--emerald-soft);
         border-color: #b5ddd3;
       }
 
-      .kpi-card.navy {
-        background: var(--navy);
-        border-color: var(--navy-2);
-        color: #ffffff;
-      }
-
-      .kpi-label {
-        font-size: 8.6px;
+      .chip-num {
+        font-size: 20px;
         font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--muted);
-      }
-
-      .kpi-card.navy .kpi-label {
-        color: #a9bdd3;
-      }
-
-      .kpi-val {
-        margin: 5px 0 3px;
-        font-size: 21px;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        font-variant-numeric: tabular-nums;
-        color: var(--navy);
-        line-height: 1.1;
-      }
-
-      .kpi-card.danger .kpi-val {
-        color: var(--crimson);
-      }
-
-      .kpi-card.emerald .kpi-val {
         color: var(--emerald);
-      }
-
-      .kpi-card.navy .kpi-val {
-        color: var(--mint);
-      }
-
-      .kpi-sub {
-        font-size: 9.4px;
-        line-height: 1.38;
-        color: #3a4a5c;
-      }
-
-      .kpi-card.navy .kpi-sub {
-        color: #cad7e6;
-      }
-
-      /* Tablas limpias */
-      table.data-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 10px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .data-table th {
-        background: #eef2f6;
-        text-align: left;
-        padding: 7px 10px;
-        font-size: 8.6px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--muted);
-        border-bottom: 1px solid var(--border);
-      }
-
-      .data-table td {
-        padding: 7px 10px;
-        border-bottom: 1px solid #edf1f5;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .data-table tr:last-child td {
-        border-bottom: none;
-      }
-
-      .data-table tr.row-highlight td {
-        background: var(--emerald-soft);
-        font-weight: 800;
-      }
-
-      .data-table tr.row-danger td {
-        background: var(--crimson-soft);
-        font-weight: 800;
-      }
-
-      .txt-crimson {
-        color: var(--crimson);
-        font-weight: 800;
-      }
-
-      .txt-emerald {
-        color: var(--emerald);
-        font-weight: 800;
-      }
-
-      /* Timeline DOF */
-      .dof-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-      }
-
-      .dof-step {
-        border: 1px solid var(--border);
-        border-top: 3px solid var(--navy);
-        border-radius: 7px;
-        padding: 10px 12px;
-        background: #ffffff;
-      }
-
-      .dof-step.urgent {
-        border-top-color: var(--crimson);
-      }
-
-      .dof-date {
-        font-size: 9px;
-        font-weight: 800;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        color: var(--navy);
+        line-height: 1;
+        margin-bottom: 6px;
       }
 
-      .dof-step.urgent .dof-date {
-        color: var(--crimson);
-      }
-
-      .dof-step strong {
-        display: block;
-        margin: 3px 0 3px;
-        font-size: 10.6px;
-        color: var(--ink);
-      }
-
-      .dof-step p {
-        margin: 0;
-        font-size: 9.4px;
-        line-height: 1.38;
-        color: var(--muted);
-      }
-
-      /* Grid 2x2 */
-      .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 11px;
-      }
-
-      .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 11px;
-      }
-
-      .card {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 11px 13px;
-        background: #ffffff;
-      }
-
-      .card.stone {
-        background: var(--stone);
-      }
-
-      .card.emerald-soft {
-        background: var(--emerald-soft);
-        border-color: #b5ddd3;
-      }
-
-      .card.navy {
-        background: var(--navy);
-        color: #ffffff;
-        border: 1.5px solid var(--emerald-bright);
-      }
-
-      .card h3 {
+      .chip-card h3 {
         margin: 0 0 4px;
-        font-size: 11px;
+        font-size: 12.5px;
         font-weight: 800;
         color: var(--navy);
       }
 
-      .card.navy h3 {
-        color: #ffffff;
-      }
-
-      .card p {
+      .chip-card p {
         margin: 0;
-        font-size: 9.6px;
-        line-height: 1.44;
-        color: #3a4a5c;
-      }
-
-      .card.navy p {
-        color: #c7d6e7;
-      }
-
-      ul.clean {
-        margin: 6px 0 0;
-        padding-left: 14px;
-      }
-
-      ul.clean li {
-        margin-bottom: 4px;
-        font-size: 9.6px;
+        font-size: 10.6px;
         line-height: 1.4;
-        color: #243347;
+        color: var(--muted);
       }
 
-      .card.navy ul.clean li {
-        color: #e6eff8;
-      }
-
-      /* Callout oscuro inferior */
-      .callout-dark {
+      /* Banner final de cada hoja */
+      .punch-banner {
         margin-top: auto;
         background: var(--navy);
-        color: #eaf2fa;
-        border-radius: 9px;
-        padding: 13px 16px;
+        color: #ffffff;
+        border-radius: 11px;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
         border-left: 4px solid var(--emerald-bright);
       }
 
-      .callout-dark strong {
+      .punch-banner .big-line {
+        font-size: 14px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.3;
+      }
+
+      .punch-banner .big-line span {
         color: var(--mint);
       }
 
-      .callout-dark p {
-        margin: 0;
-        font-size: 10.4px;
-        line-height: 1.46;
+      .punch-banner .sub-line {
+        margin-top: 3px;
+        font-size: 10.5px;
+        color: #bfd0e2;
       }
 
-      /* Diagrama SVG Página 2 */
-      .arch-wrap {
+      .punch-badge {
+        flex: none;
+        padding: 8px 14px;
+        border-radius: 8px;
+        background: rgb(28 163 137 / 0.2);
+        border: 1px solid rgb(110 231 204 / 0.45);
+        color: var(--mint);
+        font-weight: 800;
+        font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* Diagrama SVG Grande Página 2 */
+      .arch-stage {
         background: var(--stone);
         border: 1px solid var(--border);
-        border-radius: 9px;
-        padding: 12px 14px;
+        border-radius: 12px;
+        padding: 18px 16px;
       }
 
       .arch-svg {
@@ -565,103 +525,120 @@
         display: block;
       }
 
-      /* Cinta técnica seguridad */
-      .sec-strip {
+      /* Security ribbon */
+      .sec-ribbon {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 7px;
+        gap: 8px;
+        margin-top: auto;
       }
 
       .sec-pill {
         background: var(--navy);
-        border-radius: 6px;
-        padding: 7px 6px;
+        border-radius: 7px;
+        padding: 10px 6px;
         text-align: center;
       }
 
       .sec-pill strong {
         display: block;
-        font-size: 9px;
+        font-size: 9.8px;
         color: var(--mint);
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       .sec-pill span {
         display: block;
-        margin-top: 2px;
-        font-size: 8px;
+        margin-top: 3px;
+        font-size: 8.5px;
         color: #c2d2e3;
       }
 
-      /* Gráfica de barras acumuladas Página 3 */
-      .chart-box {
+      /* Página 3 ROI */
+      .kpi-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+
+      .kpi-3 .stat-monument {
+        padding: 16px 18px;
+      }
+
+      .kpi-3 .stat-num {
+        font-size: 32px;
+      }
+
+      .chart-panel {
         border: 1px solid var(--border);
-        border-radius: 9px;
-        padding: 13px 15px;
+        border-radius: 12px;
+        padding: 18px 20px;
         background: #ffffff;
       }
 
-      .chart-head {
+      .chart-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 14px;
       }
 
-      .chart-head strong {
-        font-size: 10.8px;
+      .chart-top strong {
+        font-size: 12px;
         color: var(--navy);
       }
 
       .legend {
         display: flex;
-        gap: 12px;
-        font-size: 9px;
+        gap: 14px;
+        font-size: 9.5px;
         font-weight: 700;
         color: var(--muted);
+        white-space: nowrap;
       }
 
-      .legend-dot {
+      .ldot {
         display: inline-block;
-        width: 9px;
-        height: 9px;
+        width: 10px;
+        height: 10px;
         border-radius: 2px;
-        margin-right: 4px;
+        margin-right: 5px;
         vertical-align: middle;
       }
 
-      .bar-group {
-        margin-bottom: 9px;
+      .yr-block {
+        margin-bottom: 13px;
       }
 
-      .bar-group:last-child {
+      .yr-block:last-child {
         margin-bottom: 0;
       }
 
-      .bar-yr {
-        font-size: 9.2px;
+      .yr-title {
+        font-size: 10px;
         font-weight: 800;
         color: var(--navy);
-        margin-bottom: 4px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
 
-      .bar-pair {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .bar-line {
+      .bar-row {
         display: grid;
-        grid-template-columns: 126px 1fr 94px;
+        grid-template-columns: 118px 1fr 122px;
         align-items: center;
-        gap: 8px;
-        font-size: 9px;
+        gap: 10px;
+        margin-bottom: 5px;
+        font-size: 10px;
+      }
+
+      .bar-row:last-child {
+        margin-bottom: 0;
       }
 
       .bar-track {
-        height: 11px;
-        background: #edf1f5;
+        height: 15px;
+        background: #eef2f6;
         border-radius: 999px;
         overflow: hidden;
       }
@@ -674,81 +651,218 @@
       .bar-amt {
         text-align: right;
         font-weight: 800;
+        font-size: 11px;
         font-variant-numeric: tabular-nums;
       }
 
-      /* Pricing cards Página 4 */
-      .inv-tag {
-        display: inline-block;
-        font-size: 8.2px;
+      .txt-crimson {
+        color: var(--crimson);
+      }
+
+      .txt-emerald {
+        color: var(--emerald);
+      }
+
+      .models-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .model-card {
+        border-radius: 11px;
+        padding: 16px 18px;
+        border: 1px solid var(--border);
+        background: var(--stone);
+      }
+
+      .model-card.emerald {
+        background: var(--emerald-soft);
+        border-color: #a9d7cb;
+      }
+
+      .model-card .m-num {
+        font-size: 24px;
         font-weight: 800;
-        letter-spacing: 0.07em;
+        color: var(--navy);
+        margin: 4px 0 6px;
+        letter-spacing: -0.025em;
+      }
+
+      .model-card.emerald .m-num {
+        color: var(--emerald);
+      }
+
+      .model-card p {
+        margin: 0;
+        font-size: 10.6px;
+        line-height: 1.42;
+        color: #334155;
+      }
+
+      .sens-bar {
+        margin-top: auto;
+        background: var(--navy);
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 14px 18px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        text-align: center;
+      }
+
+      .sens-item {
+        border-right: 1px solid rgb(255 255 255 / 0.14);
+        padding-right: 10px;
+      }
+
+      .sens-item:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+
+      .sens-item small {
+        display: block;
+        font-size: 8.8px;
         text-transform: uppercase;
-        padding: 2.5px 7px;
+        letter-spacing: 0.08em;
+        color: #9fb3c9;
+      }
+
+      .sens-item strong {
+        display: block;
+        margin: 3px 0 2px;
+        font-size: 16px;
+        color: var(--mint);
+      }
+
+      .sens-item span {
+        font-size: 9.8px;
+        color: #dbe6f2;
+      }
+
+      /* Página 4 Propuesta */
+      .pricing-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 13px;
+      }
+
+      .p-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 16px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .p-card.featured {
+        background: var(--navy);
+        color: #ffffff;
+        border: 2px solid var(--emerald-bright);
+      }
+
+      .p-card.soft {
+        background: var(--emerald-soft);
+        border-color: #a9d7cb;
+      }
+
+      .p-tag {
+        display: inline-block;
+        align-self: flex-start;
+        font-size: 8.4px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 8px;
         border-radius: 4px;
         background: #eef2f6;
         color: var(--navy);
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
-      .card.navy .inv-tag {
+      .p-card.featured .p-tag {
         background: var(--emerald);
         color: #ffffff;
       }
 
-      .card.emerald-soft .inv-tag {
+      .p-card.soft .p-tag {
         background: var(--navy);
         color: var(--mint);
       }
 
-      .inv-price {
-        font-size: 18px;
+      .p-card h3 {
+        margin: 0;
+        font-size: 13.5px;
         font-weight: 800;
-        letter-spacing: -0.025em;
-        margin: 4px 0 2px;
+      }
+
+      .p-price {
+        margin: 8px 0 2px;
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
         font-variant-numeric: tabular-nums;
       }
 
-      .card.navy .inv-price {
+      .p-card.featured .p-price {
         color: var(--mint);
       }
 
-      .card.emerald-soft .inv-price {
+      .p-card.soft .p-price {
         color: var(--emerald);
       }
 
-      .inv-sub {
-        font-size: 8.8px;
+      .p-sub {
+        font-size: 9.5px;
         color: var(--muted);
-        margin-bottom: 7px;
+        margin-bottom: 12px;
       }
 
-      .card.navy .inv-sub {
-        color: #b8c9dc;
+      .p-card.featured .p-sub {
+        color: #b4c6da;
       }
 
-      /* Cronograma Página 4 */
+      .p-list {
+        margin: 0;
+        padding-left: 14px;
+        font-size: 10.2px;
+        line-height: 1.45;
+        color: #243347;
+      }
+
+      .p-list li {
+        margin-bottom: 6px;
+      }
+
+      .p-card.featured .p-list {
+        color: #e8f1fa;
+      }
+
+      /* Cronograma visual 4 semanas */
       .road-4 {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 9px;
+        gap: 10px;
       }
 
       .road-step {
-        border: 1px solid var(--border);
-        border-radius: 7px;
-        padding: 9px 10px;
         background: var(--stone);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 12px 12px;
       }
 
       .road-step span {
         display: inline-block;
-        font-size: 8.2px;
+        font-size: 8.5px;
         font-weight: 800;
-        color: #ffffff;
+        padding: 2.5px 7px;
+        border-radius: 4px;
         background: var(--navy);
-        padding: 2px 6px;
-        border-radius: 3px;
+        color: #ffffff;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
@@ -758,66 +872,49 @@
 
       .road-step strong {
         display: block;
-        margin: 5px 0 3px;
-        font-size: 10px;
+        margin: 7px 0 3px;
+        font-size: 11px;
         color: var(--navy);
       }
 
       .road-step p {
         margin: 0;
-        font-size: 8.8px;
-        line-height: 1.36;
+        font-size: 9.5px;
+        line-height: 1.38;
         color: var(--muted);
       }
 
-      /* Banner CTA final */
-      .cta-bar {
-        margin-top: auto;
-        background: var(--navy);
-        color: #ffffff;
+      /* Scope 2 chips */
+      .scope-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .scope-box {
+        border: 1px solid var(--border);
         border-radius: 9px;
-        padding: 13px 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 14px;
-        border: 1.5px solid var(--emerald-bright);
+        padding: 12px 14px;
+        font-size: 9.8px;
+        line-height: 1.45;
+        color: #334155;
       }
 
-      .cta-bar h3 {
-        margin: 0 0 3px;
-        font-size: 12px;
-        color: var(--mint);
+      .scope-box strong {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 10.5px;
+        color: var(--navy);
       }
 
-      .cta-bar p {
-        margin: 0;
-        font-size: 9.6px;
-        color: #d2dfec;
-        line-height: 1.42;
-      }
-
-      .cta-url {
-        flex: none;
-        background: rgb(28 163 137 / 0.2);
-        border: 1px solid rgb(110 231 204 / 0.48);
-        color: var(--mint);
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 9.2px;
-        font-weight: 700;
-        text-decoration: none;
-      }
-
-      /* Pie de página */
+      /* Footer */
       .page-foot {
-        padding: 0.12in 0.56in 0.22in;
+        padding: 0.14in 0.62in 0.24in;
         border-top: 1px solid var(--border);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 8.8px;
+        font-size: 9px;
         color: var(--muted);
       }
 
@@ -864,153 +961,104 @@
     </header>
 
     <main class="pages-wrap">
-      <!-- ==================== PÁGINA 1: EL PROBLEMA Y GASTO ACTUAL ==================== -->
+      <!-- ==================== PÁGINA 1: EL PROBLEMA ==================== -->
       <article class="page">
-        <header class="masthead hero-cover">
+        <header class="masthead hero">
           <img class="masthead-bg" src="./assets/cover-monterrey.jpg" alt="" />
-          <div class="brand-lockup">
-            <img src="./assets/portico-emblem.jpg" alt="Portico Hospitality" />
-            <div>
-              <div class="brand-name">Portico Hospitality</div>
-              <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
+          <div class="masthead-top">
+            <div class="brand-lockup">
+              <img src="./assets/portico-emblem.jpg" alt="Portico Hospitality" />
+              <div>
+                <div class="brand-name">Portico Hospitality</div>
+                <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
+              </div>
             </div>
+            <span class="pill crimson">01 · El Problema</span>
           </div>
-          <div class="doc-tag">
-            <span class="doc-pill crimson">Página 01 · El Problema</span>
-            <div class="doc-meta">Asociación Mexicana de Hoteles de Nuevo León · 2026</div>
-          </div>
-        </header>
-
-        <div class="page-body">
-          <section>
-            <div class="eyebrow crimson">Diagnóstico Financiero y Legal para el Consejo Directivo</div>
-            <h1>
-              Hoy los hoteles de Nuevo León tiran $1.63 millones al año en rentas por cumplir una ley donde el gobierno cobra $0.
-            </h1>
-            <p class="lead">
-              Las reformas federales obligan a todos los establecimientos de hospedaje a interconectarse con la
-              <strong>Plataforma Única de Identidad (PUI) de SEGOB / RENAPO</strong>. Para evitar sanciones millonarias,
-              los hoteles vinculados hoy pagan <strong>$1,000 MXN mensuales cada uno</strong> por rentar una herramienta
-              externa que nunca será propiedad del gremio.
-            </p>
-          </section>
-
-          <section class="kpi-row">
-            <div class="kpi-card danger">
-              <div class="kpi-label">Multa federal por incumplimiento</div>
-              <div class="kpi-val">$1.17M – $2.35M</div>
-              <div class="kpi-sub">MXN por hotel sancionado (Art. 43 Bis · 10,000 a 20,000 UMAs 2026 de $117.31).</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Fuga actual en herramienta rentada</div>
-              <div class="kpi-val">$1,632,000 / año</div>
-              <div class="kpi-sub">136 hoteles × $1,000/mes = <strong>$136,000 cada mes</strong> ($4,896,000 en 3 años).</div>
-            </div>
-            <div class="kpi-card emerald">
-              <div class="kpi-label">Costo oficial ante SEGOB / RENAPO</div>
-              <div class="kpi-val">$0 pesos</div>
-              <div class="kpi-sub">El gobierno NO cobra por la conexión PUI; lo único que cobran terceros es el puente.</div>
-            </div>
-          </section>
-
-          <section>
-            <h2 class="sec-title"><span class="sec-num crimson">1</span> Cuánto cuesta HOY pagar $1,000/mes a un proveedor externo</h2>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Escala de hoteles afiliados</th>
-                  <th>Gasto Mensual Actual</th>
-                  <th>Gasto Anual Actual</th>
-                  <th>Fuga Acumulada a 3 Años</th>
-                  <th>Propiedad del Software</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>1 hotel individual</strong></td>
-                  <td>$1,000 MXN</td>
-                  <td>$12,000 MXN / año</td>
-                  <td>$36,000 MXN</td>
-                  <td class="txt-crimson">Ninguna (renta eterna)</td>
-                </tr>
-                <tr>
-                  <td><strong>Grupo regional (ej. 3 propiedades Safi)</strong></td>
-                  <td>$3,000 MXN</td>
-                  <td>$36,000 MXN / año</td>
-                  <td>$108,000 MXN</td>
-                  <td class="txt-crimson">Ninguna (renta eterna)</td>
-                </tr>
-                <tr>
-                  <td><strong>Primer bloque de 50 hoteles afiliados</strong></td>
-                  <td>$50,000 MXN</td>
-                  <td>$600,000 MXN / año</td>
-                  <td>$1,800,000 MXN</td>
-                  <td class="txt-crimson">Ninguna (renta eterna)</td>
-                </tr>
-                <tr class="row-danger">
-                  <td><strong>Red completa Asociación (136 hoteles)</strong></td>
-                  <td><strong>$136,000 MXN / mes</strong></td>
-                  <td class="txt-crimson"><strong>$1,632,000 MXN / año</strong></td>
-                  <td class="txt-crimson"><strong>$4,896,000 MXN</strong></td>
-                  <td class="txt-crimson"><strong>$0 de patrimonio propio</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section>
-            <h2 class="sec-title"><span class="sec-num">2</span> Por qué la obligación es ineludible (Marco DOF 2025–2026)</h2>
-            <div class="dof-strip">
-              <div class="dof-step">
-                <div class="dof-date">DOF · 16 JUL 2025</div>
-                <strong>Reforma Art. 12 Bis y 43 Bis</strong>
-                <p>Reforma a la Ley General en Materia de Desaparición Forzada y Ley de Población; crea la PUI para búsqueda nacional.</p>
-              </div>
-              <div class="dof-step">
-                <div class="dof-date">DOF · 27 NOV 2025</div>
-                <strong>Lineamientos Operativos</strong>
-                <p>SEGOB y RENAPO establecen la interconexión cifrada, continua y auditable para registros privados de identidad.</p>
-              </div>
-              <div class="dof-step urgent">
-                <div class="dof-date">DOF · 23 ENE 2026</div>
-                <strong>Manual Técnico + Menores</strong>
-                <p>Incluye expresamente a hoteles por el check-in (CURP/INE), más la obligación de la Ley General de Turismo en menores.</p>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h2 class="sec-title"><span class="sec-num">3</span> Además del dinero, los 3 riesgos operativos de rentar herramientas genéricas</h2>
-            <div class="grid-3">
-              <div class="card stone">
-                <h3>Fricción con Oracle OPERA</h3>
-                <p>Soluciones genéricas pensadas para otros giros no encajan en la operación de hoteles 5 estrellas y obligan a doble captura manual.</p>
-              </div>
-              <div class="card stone">
-                <h3>Datos VIP en manos de terceros</h3>
-                <p>CURPs e historiales de huéspedes corporativos quedan almacenados en servidores comerciales ajenos al control de la Asociación.</p>
-              </div>
-              <div class="card stone">
-                <h3>Riesgo físico sin sigilo real</h3>
-                <p>Sin aislamiento de roles ni flujo silencioso en mostrador, una alerta sensible puede exponer al recepcionista y a menores.</p>
-              </div>
-            </div>
-          </section>
-
-          <div class="callout-dark">
+          <div class="hero-copy">
+            <h1>$1.63 millones al año en rentas.<br /><span>SEGOB cobra $0.</span></h1>
             <p>
-              <strong>El punto de quiebre:</strong> Con solo <strong>2.6 meses</strong> de lo que hoy se fuga pagando $1,000/mes por hotel ($136,000 cada mes), la Asociación puede financiar su <strong>propia plataforma definitiva</strong> y eliminar esa renta para siempre.
+              El Manual Técnico PUI (DOF · Ene 2026) obliga a todos los hoteles a interconectarse.
+              Para evitar multas, hoy los hoteles afiliados rentan herramientas externas a <strong>$1,000/mes cada uno</strong>.
             </p>
+          </div>
+        </header>
+
+        <div class="page-body">
+          <section class="hero-stats-2">
+            <div class="stat-monument danger">
+              <div class="stat-tag">Riesgo legal · Art. 12 Bis y 43 Bis</div>
+              <div class="stat-num">$1.17M – $2.35M</div>
+              <div class="stat-cap">Multa federal por hotel sancionado (10,000 a 20,000 UMAs 2026) + protocolo de menores.</div>
+            </div>
+
+            <div class="stat-monument navy">
+              <div class="stat-tag">Fuga actual · 136 hoteles × $1,000/mes</div>
+              <div class="stat-num">$4,896,000</div>
+              <div class="stat-cap">Tirados en rentas externas en 3 años — y el software <strong>nunca es del gremio</strong>.</div>
+            </div>
+          </section>
+
+          <section>
+            <div class="sec-label">Lo que hoy se fuga cada año pagando $1,000/mes por hotel</div>
+            <div class="bleed-list">
+              <div class="bleed-row">
+                <strong>1 hotel afiliado</strong>
+                <div class="bleed-track"><div class="bleed-fill" style="width: 4%;"></div></div>
+                <span class="bleed-val">$12,000 / año</span>
+              </div>
+              <div class="bleed-row">
+                <strong>Grupo Safi (3 hoteles)</strong>
+                <div class="bleed-track"><div class="bleed-fill" style="width: 10%;"></div></div>
+                <span class="bleed-val">$36,000 / año</span>
+              </div>
+              <div class="bleed-row">
+                <strong>50 hoteles afiliados</strong>
+                <div class="bleed-track"><div class="bleed-fill" style="width: 37%;"></div></div>
+                <span class="bleed-val">$600,000 / año</span>
+              </div>
+              <div class="bleed-row peak">
+                <strong>Asociación NL (136 hoteles)</strong>
+                <div class="bleed-track"><div class="bleed-fill" style="width: 100%;"></div></div>
+                <span class="bleed-val">$1,632,000 / año</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="sec-label">3 fricciones reales de rentar un software genérico</div>
+            <div class="chips-3">
+              <div class="chip-card stone">
+                <h3>Ajeno a OPERA</h3>
+                <p>No encaja con hoteles 5 estrellas; obliga a cargas manuales.</p>
+              </div>
+              <div class="chip-card stone">
+                <h3>Datos VIP externos</h3>
+                <p>CURPs de huéspedes alojadas en servidores comerciales ajenos.</p>
+              </div>
+              <div class="chip-card stone">
+                <h3>Sin sigilo real</h3>
+                <p>Riesgo físico en mostrador si una alerta se expone al personal.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="punch-banner">
+            <div>
+              <div class="big-line">SEGOB cobra <span>$0 pesos</span> por la interconexión oficial.</div>
+              <div class="sub-line">Con solo 2.6 meses de las rentas actuales ($136,000/mes) la Asociación paga su propia plataforma.</div>
+            </div>
+            <div class="punch-badge">DOF 16/07/25 · 23/01/26</div>
           </div>
         </div>
 
         <footer class="page-foot">
-          <span>Portico Hospitality · Dossier Ejecutivo para Consejo Directivo · Asociación Mexicana de Hoteles de Nuevo León</span>
-          <strong>PÁGINA 01 / 04</strong>
+          <span>Portico Hospitality · Asociación Mexicana de Hoteles de Nuevo León</span>
+          <strong>01 / 04</strong>
         </footer>
       </article>
 
-      <!-- ==================== PÁGINA 2: LA SOLUCIÓN Y CÓMO FUNCIONA ==================== -->
+      <!-- ==================== PÁGINA 2: CÓMO FUNCIONA ==================== -->
       <article class="page">
         <header class="masthead">
           <div class="brand-lockup">
@@ -1020,139 +1068,119 @@
               <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
             </div>
           </div>
-          <div class="doc-tag">
-            <span class="doc-pill">Página 02 · Cómo Funciona</span>
-            <div class="doc-meta">Arquitectura Invertida DOF · Sigilo Total</div>
-          </div>
+          <span class="pill">02 · Cómo Funciona</span>
         </header>
 
         <div class="page-body">
           <section>
-            <div class="eyebrow">La Solución Propia de Estándar 5 Estrellas</div>
-            <h1>
-              Portico Hospitality: cumplimiento automático ante SEGOB en segundo plano, sin interrumpir la hospitalidad en recepción.
-            </h1>
+            <div class="eyebrow">La Solución Propia · Estándar 5 Estrellas</div>
+            <h1 class="page-h1">Cumplimiento PUI en silencio.<br />Sin interrumpir la hospitalidad.</h1>
             <p class="lead">
-              Por ley y confidencialidad, los hoteles <strong>nunca descargan listas de personas desaparecidas</strong>.
-              Portico Hospitality implementa la <strong>arquitectura invertida oficial del Manual Técnico DOF</strong>:
-              SEGOB envía alertas cifradas hacia la nube propia de la Asociación y el motor cruza localmente con sigilo estricto.
+              Ningún hotel descarga listas de desaparecidos. SEGOB envía alertas cifradas a la nube AWS de la Asociación y Portico cruza en sigilo absoluto.
             </p>
           </section>
 
-          <section>
-            <h2 class="sec-title"><span class="sec-num emerald">1</span> Flujo operativo en tiempo real (SEGOB ↔ Portico ↔ PMS del Hotel)</h2>
-            <div class="arch-wrap">
-              <svg class="arch-svg" viewBox="0 0 740 165" role="img" aria-label="Flujo invertido SEGOB, Portico Hospitality y PMS">
-                <defs>
-                  <marker id="arr-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#0e1929" />
-                  </marker>
-                  <marker id="arr-em" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f7662" />
-                  </marker>
-                </defs>
+          <section class="arch-stage">
+            <svg class="arch-svg" viewBox="0 0 740 190" role="img" aria-label="Flujo SEGOB, Portico Hospitality y PMS">
+              <defs>
+                <marker id="an" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#0e1929" />
+                </marker>
+                <marker id="ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f7662" />
+                </marker>
+              </defs>
 
-                <!-- SEGOB -->
-                <rect x="6" y="22" width="160" height="120" rx="10" fill="#691c32" />
-                <text x="86" y="50" text-anchor="middle" fill="#f3d6de" font-size="8.5" font-weight="700" letter-spacing="0.8">AUTORIDAD FEDERAL</text>
-                <text x="86" y="75" text-anchor="middle" fill="#ffffff" font-size="14.5" font-weight="800">SEGOB / RENAPO</text>
-                <text x="86" y="96" text-anchor="middle" fill="#f3d6de" font-size="9.5">Plataforma Única</text>
-                <text x="86" y="110" text-anchor="middle" fill="#f3d6de" font-size="9.5">de Identidad (PUI)</text>
-                <text x="86" y="129" text-anchor="middle" fill="#ffd9e2" font-size="8.5" font-weight="700">Costo oficial: $0</text>
+              <rect x="6" y="24" width="162" height="142" rx="12" fill="#691c32" />
+              <text x="87" y="58" text-anchor="middle" fill="#f3d6de" font-size="9" font-weight="800" letter-spacing="1">GOBIERNO</text>
+              <text x="87" y="88" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="800">SEGOB / PUI</text>
+              <text x="87" y="112" text-anchor="middle" fill="#f3d6de" font-size="10.5">RENAPO · CNB</text>
+              <text x="87" y="142" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="800">Costo oficial: $0</text>
 
-                <!-- Flechas SEGOB <-> Portico -->
-                <line x1="172" y1="60" x2="268" y2="60" stroke="#0e1929" stroke-width="2" marker-end="url(#arr-navy)" />
-                <text x="220" y="51" text-anchor="middle" fill="#0e1929" font-size="8.5" font-weight="800">1. /activar-reporte</text>
-                <text x="220" y="73" text-anchor="middle" fill="#4b5a6b" font-size="8">CURP + JWT HS256</text>
+              <line x1="176" y1="68" x2="266" y2="68" stroke="#0e1929" stroke-width="2.4" marker-end="url(#an)" />
+              <text x="221" y="57" text-anchor="middle" fill="#0e1929" font-size="9.5" font-weight="800">1. Alerta JWT</text>
+              <text x="221" y="83" text-anchor="middle" fill="#526173" font-size="8.5">/activar-reporte</text>
 
-                <line x1="268" y1="112" x2="172" y2="112" stroke="#0f7662" stroke-width="2" marker-end="url(#arr-em)" />
-                <text x="220" y="103" text-anchor="middle" fill="#0f7662" font-size="8.5" font-weight="800">3. Aviso silencioso</text>
-                <text x="220" y="125" text-anchor="middle" fill="#4b5a6b" font-size="8">/notificar-coincidencia</text>
+              <line x1="266" y1="128" x2="176" y2="128" stroke="#0f7662" stroke-width="2.4" marker-end="url(#ae)" />
+              <text x="221" y="117" text-anchor="middle" fill="#0f7662" font-size="9.5" font-weight="800">3. Aviso sigiloso</text>
+              <text x="221" y="143" text-anchor="middle" fill="#526173" font-size="8.5">En segundos</text>
 
-                <!-- Portico Core -->
-                <rect x="274" y="12" width="204" height="140" rx="10" fill="#0e1929" stroke="#1ca389" stroke-width="2" />
-                <text x="376" y="36" text-anchor="middle" fill="#6ee7cc" font-size="8.5" font-weight="800" letter-spacing="0.8">NÚCLEO PROPIO ASOCIACIÓN (AWS)</text>
-                <text x="376" y="61" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="800">Portico Hospitality</text>
-                <text x="376" y="81" text-anchor="middle" fill="#c7d6e7" font-size="9.5">Bóveda aislada por cada RFC</text>
-                <text x="376" y="96" text-anchor="middle" fill="#c7d6e7" font-size="9.5">Cifrado AES-256-GCM · Cadena SHA-256</text>
-                <rect x="294" y="112" width="164" height="24" rx="5" fill="#183247" />
-                <text x="376" y="128" text-anchor="middle" fill="#6ee7cc" font-size="9" font-weight="700">Fases 1, 2 y 3 + Outbox 8x</text>
+              <rect x="274" y="12" width="204" height="166" rx="12" fill="#0e1929" stroke="#1ca389" stroke-width="2.2" />
+              <text x="376" y="42" text-anchor="middle" fill="#6ee7cc" font-size="9" font-weight="800" letter-spacing="1">NUBE PROPIA ASOCIACIÓN</text>
+              <text x="376" y="72" text-anchor="middle" fill="#ffffff" font-size="17.5" font-weight="800">Portico Hospitality</text>
+              <text x="376" y="98" text-anchor="middle" fill="#c7d6e7" font-size="10.5">Bóveda aislada por RFC</text>
+              <text x="376" y="116" text-anchor="middle" fill="#c7d6e7" font-size="10.5">Cifrado AES-256 · SHA-256</text>
+              <rect x="296" y="134" width="160" height="26" rx="6" fill="#183247" />
+              <text x="376" y="151" text-anchor="middle" fill="#6ee7cc" font-size="9.5" font-weight="800">Fases 1, 2 y 3 + Outbox 8x</text>
 
-                <!-- Flecha PMS -> Portico -->
-                <line x1="564" y1="82" x2="484" y2="82" stroke="#0f7662" stroke-width="2" marker-end="url(#arr-em)" />
-                <text x="524" y="72" text-anchor="middle" fill="#0f7662" font-size="8.5" font-weight="800">2. Check-in / CSV</text>
-                <text x="524" y="96" text-anchor="middle" fill="#4b5a6b" font-size="8">X-Portico-PMS-Key</text>
+              <line x1="564" y1="95" x2="486" y2="95" stroke="#0f7662" stroke-width="2.4" marker-end="url(#ae)" />
+              <text x="525" y="84" text-anchor="middle" fill="#0f7662" font-size="9.5" font-weight="800">2. Check-in</text>
+              <text x="525" y="110" text-anchor="middle" fill="#526173" font-size="8.5">OPERA / CSV</text>
 
-                <!-- PMS Hoteles -->
-                <rect x="570" y="22" width="164" height="120" rx="10" fill="#ffffff" stroke="#c5d0dc" stroke-width="1.5" />
-                <text x="652" y="47" text-anchor="middle" fill="#4b5a6b" font-size="8.5" font-weight="700" letter-spacing="0.8">HOTELES AFILIADOS</text>
-                <text x="652" y="68" text-anchor="middle" fill="#121d2d" font-size="13.5" font-weight="800">PMS &amp; Recepción</text>
-                <text x="652" y="88" text-anchor="middle" fill="#4b5a6b" font-size="9">OPERA Cloud / OPERA 5</text>
-                <text x="652" y="102" text-anchor="middle" fill="#4b5a6b" font-size="9">Cloudbeds · Zeus · CSV</text>
-                <text x="652" y="124" text-anchor="middle" fill="#0f7662" font-size="9" font-weight="800">Sigilo total en mostrador</text>
-              </svg>
-            </div>
+              <rect x="572" y="24" width="162" height="142" rx="12" fill="#ffffff" stroke="#c5d0dc" stroke-width="1.6" />
+              <text x="653" y="54" text-anchor="middle" fill="#526173" font-size="9" font-weight="800" letter-spacing="1">HOTELES AFILIADOS</text>
+              <text x="653" y="82" text-anchor="middle" fill="#121d2d" font-size="15" font-weight="800">PMS &amp; Mostrador</text>
+              <text x="653" y="106" text-anchor="middle" fill="#526173" font-size="10">OPERA · Safi · CSV</text>
+              <text x="653" y="138" text-anchor="middle" fill="#0f7662" font-size="10.5" font-weight="800">Sigilo 100% real</text>
+            </svg>
           </section>
 
           <section>
-            <h2 class="sec-title"><span class="sec-num emerald">2</span> Cumplimiento íntegro de las 3 Fases DOF + Ley General de Turismo</h2>
-            <div class="grid-3">
-              <div class="card">
-                <h3>Fase 1 · Datos Básicos</h3>
-                <p>Cuando SEGOB envía un reporte, Portico verifica si la CURP ya existía en el hotel para complementar datos de contacto hacia la ficha de búsqueda.</p>
+            <div class="sec-label">Las 3 Fases DOF automáticas + protección a menores</div>
+            <div class="chips-3">
+              <div class="chip-card">
+                <div class="chip-num">01</div>
+                <h3>Datos básicos</h3>
+                <p>Complementa la ficha oficial de SEGOB si la CURP ya existía en el hotel.</p>
               </div>
-              <div class="card">
-                <h3>Fase 2 · Histórico (12 Años)</h3>
-                <p>Barre automáticamente estancias previas en la bóveda aislada del hotel, notifica antecedentes y envía el cierre formal <code>/busqueda-finalizada</code>.</p>
+              <div class="chip-card">
+                <div class="chip-num">02</div>
+                <h3>Histórico 12 años</h3>
+                <p>Barre estancias previas en segundos y cierra formalmente ante SEGOB.</p>
               </div>
-              <div class="card emerald-soft">
-                <h3>Fase 3 · Check-in Silencioso + Menores</h3>
-                <p>Cruza cada llegada en milisegundos. Si coincide, avisa en silencio a SEGOB (cero alarmas rojas en mostrador) y activa verificación de parentesco en menores de 18 años.</p>
+              <div class="chip-card emerald-soft">
+                <div class="chip-num">03</div>
+                <h3>Check-in en sigilo</h3>
+                <p>Avisa en silencio sin alarmas rojas y valida parentesco en menores (LGT).</p>
               </div>
             </div>
           </section>
 
           <section>
-            <h2 class="sec-title"><span class="sec-num emerald">3</span> Universal para todos los hoteles (cadenas 5 estrellas e independientes)</h2>
-            <div class="grid-2">
-              <div class="card">
-                <h3>3 formas de conectar cualquier PMS sin frenar al hotel</h3>
-                <ul class="clean">
-                  <li><strong>API / Webhook REST:</strong> Para <em>Oracle OPERA Cloud (OHIP)</em>, Cloudbeds o Mews en tiempo real.</li>
-                  <li><strong>Agente Local Ligero (OPERA 5 / Zeus):</strong> Lee exportaciones CSV autorizadas sin tocar Oracle, sin abrir puertos y sin pagar licencias extra de OHIP.</li>
-                  <li><strong>Portal Web / Carga CSV:</strong> Para hoteles independientes sin API; incluye validador matemático gratuito de dígito verificador CURP RENAPO.</li>
-                </ul>
+            <div class="sec-label">Listo para cadenas 5 estrellas y hoteles independientes</div>
+            <div class="chips-3">
+              <div class="chip-card stone">
+                <h3>Cualquier PMS</h3>
+                <p><strong>OPERA Cloud (OHIP)</strong>, Agente Local CSV (sin tocar Oracle) o Portal Web.</p>
               </div>
-              <div class="card">
-                <h3>Aislamiento total por RFC y evidencia ante inspecciones</h3>
-                <ul class="clean">
-                  <li><strong>3 Roles RBAC en servidor:</strong> Consejo Asociación (métricas sin PII), Gerencia TI (aislado solo a su propio RFC con bloqueo <code>HTTP 403</code> cruzado) y Recepción (solo mostrador en sigilo).</li>
-                  <li><strong>Autogestión de usuarios:</strong> Cada hotel crea y suspende a sus recepcionistas al instante.</li>
-                  <li><strong>Constancia Oficial PDF + Bitácora CSV:</strong> Descargables en 1 clic con sello criptográfico <strong>SHA-256</strong>.</li>
-                </ul>
+              <div class="chip-card stone">
+                <h3>Aislamiento por RFC</h3>
+                <p>Consejo, TI Hotel y Recepción aislados (<code>HTTP 403</code> cruzado).</p>
+              </div>
+              <div class="chip-card stone">
+                <h3>Constancia PDF</h3>
+                <p>Evidencia auditable con sello <strong>SHA-256</strong> lista en 1 clic.</p>
               </div>
             </div>
           </section>
 
-          <section style="margin-top: auto;">
-            <div class="sec-strip">
-              <div class="sec-pill"><strong>AES-256-GCM</strong><span>CURPs cifradas</span></div>
-              <div class="sec-pill"><strong>JWT HS256</strong><span>Auth DOF por RFC</span></div>
-              <div class="sec-pill"><strong>scrypt</strong><span>Claves seguras</span></div>
-              <div class="sec-pill"><strong>SHA-256</strong><span>Cadena inmutable</span></div>
-              <div class="sec-pill"><strong>Outbox 8x</strong><span>Cero avisos perdidos</span></div>
-              <div class="sec-pill"><strong>0 deps npm</strong><span>Auditoría SCA limpia</span></div>
-            </div>
-          </section>
+          <div class="sec-ribbon">
+            <div class="sec-pill"><strong>AES-256</strong><span>Cifrado CURP</span></div>
+            <div class="sec-pill"><strong>JWT HS256</strong><span>Auth DOF</span></div>
+            <div class="sec-pill"><strong>scrypt</strong><span>Claves</span></div>
+            <div class="sec-pill"><strong>SHA-256</strong><span>Bitácora</span></div>
+            <div class="sec-pill"><strong>Outbox 8x</strong><span>Reintentos</span></div>
+            <div class="sec-pill"><strong>0 deps</strong><span>SCA limpio</span></div>
+          </div>
         </div>
 
         <footer class="page-foot">
-          <span>Portico Hospitality · Cumple Manual Técnico de Instituciones Diversas (DOF 23/01/2026) y Ley General de Turismo</span>
-          <strong>PÁGINA 02 / 04</strong>
+          <span>Portico Hospitality · Manual Técnico DOF (23/01/2026) y Ley General de Turismo</span>
+          <strong>02 / 04</strong>
         </footer>
       </article>
 
-      <!-- ==================== PÁGINA 3: ROI Y MODELO FINANCIERO ==================== -->
+      <!-- ==================== PÁGINA 3: EL ROI ==================== -->
       <article class="page">
         <header class="masthead">
           <div class="brand-lockup">
@@ -1162,171 +1190,127 @@
               <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
             </div>
           </div>
-          <div class="doc-tag">
-            <span class="doc-pill">Página 03 · Retorno de Inversión</span>
-            <div class="doc-meta">Análisis Financiero a 3 Años · 136 Hoteles</div>
-          </div>
+          <span class="pill">03 · Retorno de Inversión</span>
         </header>
 
         <div class="page-body">
           <section>
-            <div class="eyebrow">Retorno de Inversión (ROI) Irrefutable</div>
-            <h1>
-              De un gasto eterno de $1.63M/año a un activo propio que se paga solo en 2.6 meses y reduce el costo en 88%.
-            </h1>
+            <div class="eyebrow">Matemática Directa · 136 Hoteles Afiliados</div>
+            <h1 class="page-h1">Se paga sola en 2.6 meses.<br />Ahorra $4.33 millones en 3 años.</h1>
             <p class="lead">
-              Comparativa financiera directa tomando los <strong>$1,000 MXN/mes reales</strong> que hoy paga cada hotel en
-              una herramienta rentada frente a invertir una sola vez <strong>$350,000 MXN</strong> en la plataforma propia
-              de la Asociación (~$6,000 MXN/mes total de nube AWS compartida = <strong>$44 MXN/mes reales por hotel</strong>).
+              $1,000/mes rentados hoy vs. inversión única de <strong>$350,000 MXN</strong> + nube AWS compartida (~$6,000/mes total).
             </p>
           </section>
 
-          <section class="kpi-row">
-            <div class="kpi-card navy">
-              <div class="kpi-label">Retorno frente a rentas actuales</div>
-              <div class="kpi-val">2.6 meses</div>
-              <div class="kpi-sub">$350,000 inversión ÷ $136,000/mes que hoy se van a proveedores externos.</div>
+          <section class="kpi-3">
+            <div class="stat-monument navy">
+              <div class="stat-tag">Payback gremial</div>
+              <div class="stat-num">2.6 meses</div>
+              <div class="stat-cap">$350k ÷ $136k/mes ahorrados</div>
             </div>
-            <div class="kpi-card emerald">
-              <div class="kpi-label">Ahorro neto del gremio (3 años)</div>
-              <div class="kpi-val">$4,330,000</div>
-              <div class="kpi-sub">MXN retenidos en Nuevo León ($4.89M en rentas vs. $566k propio todo incluido).</div>
+            <div class="stat-monument emerald">
+              <div class="stat-tag">Reducción a 3 años</div>
+              <div class="stat-num">-88%</div>
+              <div class="stat-cap">$566k propio vs. $4.89M renta</div>
             </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Costo real de nube por hotel</div>
-              <div class="kpi-val">$44 / mes</div>
-              <div class="kpi-sub">Frente a $1,000/mes actuales en renta (reducción de costo operativo de <strong>-95%</strong>).</div>
+            <div class="stat-monument">
+              <div class="stat-tag">Costo real por hotel</div>
+              <div class="stat-num">$44 / mes</div>
+              <div class="stat-cap">Frente a $1,000/mes hoy</div>
             </div>
           </section>
 
-          <section class="chart-box">
-            <div class="chart-head">
-              <strong>Costo Acumulado a 3 Años (136 Hoteles)</strong>
-              <div class="legend" style="white-space: nowrap;">
-                <span><i class="legend-dot" style="background: #b42318;"></i>Renta actual ($1,000/mes × hotel)</span>
-                <span><i class="legend-dot" style="background: #0f7662;"></i>Portico propio (desarrollo + nube AWS)</span>
+          <section class="chart-panel">
+            <div class="chart-top">
+              <strong>Gasto Acumulado del Gremio (136 Hoteles)</strong>
+              <div class="legend">
+                <span><i class="ldot" style="background: #b42318;"></i>Renta actual ($1,000/mes)</span>
+                <span><i class="ldot" style="background: #0f7662;"></i>Portico propio ($350k + AWS)</span>
               </div>
             </div>
 
-            <div class="bar-group">
-              <div class="bar-yr">Año 1 (12 meses)</div>
-              <div class="bar-pair">
-                <div class="bar-line">
-                  <span>Herramienta rentada</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 33.3%; background: #b42318;"></div></div>
-                  <span class="bar-amt txt-crimson">$1,632,000</span>
-                </div>
-                <div class="bar-line">
-                  <span>Portico propio (incl. $350k)</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 8.6%; background: #0f7662;"></div></div>
-                  <span class="bar-amt txt-emerald">$422,000 (-74%)</span>
-                </div>
+            <div class="yr-block">
+              <div class="yr-title">Año 1</div>
+              <div class="bar-row">
+                <span>Herramienta rentada</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 33.3%; background: #b42318;"></div></div>
+                <span class="bar-amt txt-crimson">$1,632,000</span>
+              </div>
+              <div class="bar-row">
+                <span>Portico propio</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 8.6%; background: #0f7662;"></div></div>
+                <span class="bar-amt txt-emerald">$422,000 (-74%)</span>
               </div>
             </div>
 
-            <div class="bar-group">
-              <div class="bar-yr">Año 2 acumulado (24 meses)</div>
-              <div class="bar-pair">
-                <div class="bar-line">
-                  <span>Herramienta rentada</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 66.6%; background: #b42318;"></div></div>
-                  <span class="bar-amt txt-crimson">$3,264,000</span>
-                </div>
-                <div class="bar-line">
-                  <span>Portico propio acumulado</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 10.1%; background: #0f7662;"></div></div>
-                  <span class="bar-amt txt-emerald">$494,000 (-85%)</span>
-                </div>
+            <div class="yr-block">
+              <div class="yr-title">Año 2 acumulado</div>
+              <div class="bar-row">
+                <span>Herramienta rentada</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 66.6%; background: #b42318;"></div></div>
+                <span class="bar-amt txt-crimson">$3,264,000</span>
+              </div>
+              <div class="bar-row">
+                <span>Portico propio</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 10.1%; background: #0f7662;"></div></div>
+                <span class="bar-amt txt-emerald">$494,000 (-85%)</span>
               </div>
             </div>
 
-            <div class="bar-group">
-              <div class="bar-yr">Año 3 acumulado (36 meses)</div>
-              <div class="bar-pair">
-                <div class="bar-line">
-                  <span>Herramienta rentada</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 100%; background: #b42318;"></div></div>
-                  <span class="bar-amt txt-crimson">$4,896,000</span>
-                </div>
-                <div class="bar-line">
-                  <span>Portico propio acumulado</span>
-                  <div class="bar-track"><div class="bar-fill" style="width: 11.6%; background: #0f7662;"></div></div>
-                  <span class="bar-amt txt-emerald">$566,000 (-88%)</span>
-                </div>
+            <div class="yr-block">
+              <div class="yr-title">Año 3 acumulado</div>
+              <div class="bar-row">
+                <span>Herramienta rentada</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 100%; background: #b42318;"></div></div>
+                <span class="bar-amt txt-crimson">$4,896,000</span>
+              </div>
+              <div class="bar-row">
+                <span>Portico propio</span>
+                <div class="bar-track"><div class="bar-fill" style="width: 11.6%; background: #0f7662;"></div></div>
+                <span class="bar-amt txt-emerald">$566,000 (-88%)</span>
               </div>
             </div>
           </section>
 
-          <section>
-            <h2 class="sec-title"><span class="sec-num emerald">1</span> Dos modelos financieros para que el Consejo elija cómo aprovechar el ahorro</h2>
-            <div class="grid-2">
-              <div class="card">
-                <h3>Modelo 1 · Incluido en Membresía (Ahorro Máximo al Hotel)</h3>
-                <p>La Asociación absorbe la nube (~$6,000/mes en total) o prorratea $44/mes por propiedad como beneficio exclusivo de afiliación.</p>
-                <ul class="clean">
-                  <li>Cada hotel deja de pagar <strong>$12,000 MXN/año</strong> de inmediato.</li>
-                  <li>Refuerza la retención de socios: la membresía se paga sola con el ahorro PUI.</li>
-                  <li>Ahorro neto gremial en 3 años: <strong>$4,330,000 MXN</strong>.</li>
-                </ul>
-              </div>
-              <div class="card emerald-soft">
-                <h3>Modelo 2 · Cuota Simbólica $250/mes (Autosustentable + Ingreso)</h3>
-                <p>Cada hotel baja <strong>75% de golpe</strong> (de $1,000 a $250/mes) y la Asociación convierte una obligación legal en ingreso propio.</p>
-                <ul class="clean">
-                  <li>Recaudación mensual (136 × $250): <strong>$34,000 MXN/mes</strong>.</li>
-                  <li>Menos nube AWS ($6,000/mes) = <strong>+$28,000/mes (+$336,000 MXN/año netos)</strong>.</li>
-                  <li>Ahorro neto para hoteles en 3 años: <strong>$3,672,000 MXN</strong> + opción de licenciar el software a otros estados.</li>
-                </ul>
-              </div>
+          <section class="models-2">
+            <div class="model-card">
+              <div class="stat-tag">Opción 1 · Incluido en Membresía</div>
+              <div class="m-num">$4,330,000</div>
+              <p>Ahorro neto directo para los hoteles en 3 años. Cada socio deja de pagar <strong>$12,000/año</strong> desde el mes 1.</p>
+            </div>
+            <div class="model-card emerald">
+              <div class="stat-tag">Opción 2 · Cuota Simbólica $250/mes</div>
+              <div class="m-num">+$336,000 / año</div>
+              <p>Ingreso neto anual para la Asociación (tras nube AWS), mientras cada hotel ahorra <strong>-75% inmediato</strong> ($1,000 → $250).</p>
             </div>
           </section>
 
-          <section style="margin-top: auto;">
-            <h2 class="sec-title"><span class="sec-num emerald">2</span> Prueba conservadora: el ROI gana incluso si empiezan pocos hoteles</h2>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Hoteles conectados al inicio</th>
-                  <th>Renta externa 3 años ($1,000/mes)</th>
-                  <th>Portico propio 3 años ($350k + AWS)</th>
-                  <th>Ahorro neto a 3 años</th>
-                  <th>Meses para pagarse sola</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>30 hoteles</strong> (arranque conservador)</td>
-                  <td>$1,080,000 MXN</td>
-                  <td>$566,000 MXN</td>
-                  <td class="txt-emerald">$514,000 MXN (-48%)</td>
-                  <td><strong>11.7 meses</strong></td>
-                </tr>
-                <tr>
-                  <td><strong>50 hoteles</strong> (37% de la Asociación)</td>
-                  <td>$1,800,000 MXN</td>
-                  <td>$566,000 MXN</td>
-                  <td class="txt-emerald">$1,234,000 MXN (-69%)</td>
-                  <td><strong>7.0 meses</strong></td>
-                </tr>
-                <tr class="row-highlight">
-                  <td><strong>136 hoteles</strong> (Asociación completa NL)</td>
-                  <td>$4,896,000 MXN</td>
-                  <td>$566,000 MXN</td>
-                  <td class="txt-emerald">$4,330,000 MXN (-88%)</td>
-                  <td class="txt-emerald"><strong>2.6 meses</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
+          <div class="sens-bar">
+            <div class="sens-item">
+              <small>Si inician solo 30 hoteles</small>
+              <strong>11.7 meses</strong>
+              <span>Ahorro 3 años: $514,000</span>
+            </div>
+            <div class="sens-item">
+              <small>Con 50 hoteles (37% red)</small>
+              <strong>7.0 meses</strong>
+              <span>Ahorro 3 años: $1,234,000</span>
+            </div>
+            <div class="sens-item">
+              <small>Red completa (136 hoteles)</small>
+              <strong>2.6 meses</strong>
+              <span>Ahorro 3 años: $4,330,000</span>
+            </div>
+          </div>
         </div>
 
         <footer class="page-foot">
-          <span>Portico Hospitality · Análisis basado en $1,000 MXN/mes por hotel en herramienta rentada externa y nube AWS compartida de ~$6,000 MXN/mes</span>
-          <strong>PÁGINA 03 / 04</strong>
+          <span>Portico Hospitality · Comparativa directa sobre $1,000 MXN/mes actual por hotel</span>
+          <strong>03 / 04</strong>
         </footer>
       </article>
 
-      <!-- ==================== PÁGINA 4: PROPUESTA, CRONOGRAMA Y DECISIÓN ==================== -->
+      <!-- ==================== PÁGINA 4: PROPUESTA Y ARRANQUE ==================== -->
       <article class="page">
         <header class="masthead">
           <div class="brand-lockup">
@@ -1336,136 +1320,107 @@
               <div class="brand-sub">Hospitality Trust &amp; Compliance</div>
             </div>
           </div>
-          <div class="doc-tag">
-            <span class="doc-pill">Página 04 · Propuesta y Arranque</span>
-            <div class="doc-meta">Piloto 4–6 Semanas · Crowne Plaza → Safi → Red NL</div>
-          </div>
+          <span class="pill">04 · Propuesta y Arranque</span>
         </header>
 
         <div class="page-body">
           <section>
-            <div class="eyebrow">Propuesta Comercial y Plan de Ejecución</div>
-            <h1>
-              Tres caminos sin riesgo para aprobar hoy, probar en Crowne Plaza Monterrey y abrir a toda la Asociación.
-            </h1>
+            <div class="eyebrow">Decisión Sin Riesgo · Despliegue en 4 a 6 Semanas</div>
+            <h1 class="page-h1">Tres caminos para aprobar hoy.<br />Piloto en Crowne Plaza → Hoteles Safi.</h1>
             <p class="lead">
-              El núcleo funcional de <strong>Portico Hospitality</strong> ya está construido y probado hoy. Las siguientes
-              <strong>4 a 6 semanas</strong> cubren su despliegue en la cuenta oficial AWS de la Asociación, integración
-              con Oracle OPERA en el hotel piloto y certificación oficial en el entorno Sandbox de SEGOB.
+              El núcleo ya está programado y probado. El pago principal solo se libera al certificar el piloto en el Sandbox oficial de SEGOB.
             </p>
           </section>
 
-          <section>
-            <h2 class="sec-title"><span class="sec-num emerald">1</span> Modalidades de inversión (inversión única, cero rentas por hotel)</h2>
-            <div class="grid-3">
-              <div class="card navy">
-                <span class="inv-tag">Opción A · Recomendada</span>
-                <h3>Plataforma Completa</h3>
-                <div class="inv-price">$350,000 MXN</div>
-                <div class="inv-sub">+ IVA · Pago único llave en mano</div>
-                <ul class="clean">
-                  <li>Propiedad para la Asociación sin límite de hoteles ni consultas.</li>
-                  <li>Piloto Crowne Plaza + alta Hoteles Safi + Agente OPERA + CSV + Constancias PDF.</li>
-                  <li><strong>Pagos por hitos:</strong> 30% inicio · 40% certificación Sandbox SEGOB · 30% entrega final.</li>
-                </ul>
-              </div>
+          <section class="pricing-3">
+            <div class="p-card featured">
+              <span class="p-tag">Recomendada</span>
+              <h3>Plataforma Completa</h3>
+              <div class="p-price">$350,000</div>
+              <div class="p-sub">+ IVA · Pago único llave en mano</div>
+              <ul class="p-list">
+                <li><strong>Sin límite</strong> de hoteles ni rentas.</li>
+                <li>Piloto Crowne Plaza + Safi + Agente OPERA + Constancias PDF.</li>
+                <li><strong>Hitos:</strong> 30% inicio · 40% Sandbox SEGOB · 30% entrega.</li>
+              </ul>
+            </div>
 
-              <div class="card emerald-soft">
-                <span class="inv-tag">$0 Caja Asociación</span>
-                <h3>Socios Fundadores</h3>
-                <div class="inv-price">$35,000 MXN</div>
-                <div class="inv-sub">+ IVA · Pago único × 10 hoteles</div>
-                <ul class="clean">
-                  <li>10 hoteles líderes (ej. Crowne Plaza, Safi y 8 más) financian el desarrollo completo.</li>
-                  <li>Los fundadores quedan <strong>exentos de cuota por 3 años</strong>.</li>
-                  <li>La Asociación desembolsa <strong>$0 de su tesorería</strong> y se queda con el activo para todos.</li>
-                </ul>
-              </div>
+            <div class="p-card soft">
+              <span class="p-tag">$0 Caja Asociación</span>
+              <h3>Socios Fundadores</h3>
+              <div class="p-price">$35,000</div>
+              <div class="p-sub">+ IVA × 10 hoteles fundadores</div>
+              <ul class="p-list">
+                <li>10 hoteles líderes financian el 100%.</li>
+                <li>Fundadores <strong>exentos 3 años</strong>.</li>
+                <li><strong>$0 desembolso</strong> de tesorería; propiedad para la Asociación.</li>
+              </ul>
+            </div>
 
-              <div class="card">
-                <span class="inv-tag">Opción B · 2 Etapas</span>
-                <h3>Arranque por Piloto</h3>
-                <div class="inv-price">$135,000 MXN</div>
-                <div class="inv-sub">+ IVA · Fase 1 Piloto Crowne Plaza</div>
-                <ul class="clean">
-                  <li><strong>Fase 1 (50/50):</strong> Núcleo DOF en AWS + Piloto Crowne Plaza + Sandbox SEGOB.</li>
-                  <li><strong>Fase 2 ($215,000 + IVA):</strong> Se paga solo al comprobar éxito y liberar Safi y afiliados.</li>
-                  <li>Cero riesgo presupuestal antes de ver el sistema certificado con SEGOB.</li>
-                </ul>
-              </div>
+            <div class="p-card">
+              <span class="p-tag">Por Etapas</span>
+              <h3>Arranque 2 Fases</h3>
+              <div class="p-price">$135,000</div>
+              <div class="p-sub">+ IVA · Fase 1 Piloto Crowne Plaza</div>
+              <ul class="p-list">
+                <li><strong>Fase 1:</strong> Núcleo AWS + Piloto certificado en SEGOB.</li>
+                <li><strong>Fase 2 ($215k):</strong> Solo tras validar éxito en Fase 1.</li>
+                <li>Póliza 24/7 opcional: $12k–$18k/mes total red.</li>
+              </ul>
             </div>
           </section>
 
           <section>
-            <h2 class="sec-title"><span class="sec-num emerald">2</span> Hoja de ruta controlada (4 a 6 semanas) con plan de continuidad</h2>
+            <div class="sec-label">Hoja de ruta · 4 a 6 semanas (con plan de continuidad)</div>
             <div class="road-4">
               <div class="road-step">
-                <span>SEMANA 1</span>
-                <strong>Diagnóstico TI &amp; AWS</strong>
-                <p>Sesión de 20 min con TI de Crowne Plaza MTY (versión OPERA), cuenta AWS oficial y trámite Llave MX.</p>
+                <span>SEM 1</span>
+                <strong>Diagnóstico TI</strong>
+                <p>20 min con Crowne Plaza, AWS y Llave MX.</p>
               </div>
               <div class="road-step">
-                <span>SEMANAS 2 – 3</span>
-                <strong>Producción &amp; OPERA</strong>
-                <p>AWS RDS PostgreSQL cifrado (KMS), TLS 1.3 + WAF, conector OPERA y pruebas SAST / DAST / SCA.</p>
+                <span>SEM 2 – 3</span>
+                <strong>AWS &amp; OPERA</strong>
+                <p>RDS cifrado, WAF, conector y SAST/DAST.</p>
               </div>
               <div class="road-step">
-                <span class="em">SEMANA 4</span>
-                <strong>Sandbox SEGOB Vivo</strong>
-                <p>Certificación oficial de <code>/activar-reporte-prueba</code> (Fases 1–3) y salida en Crowne Plaza MTY.</p>
+                <span class="em">SEM 4</span>
+                <strong>Sandbox SEGOB</strong>
+                <p>Certificación oficial y piloto en vivo.</p>
               </div>
               <div class="road-step">
-                <span class="em">SEMANAS 5 – 6</span>
-                <strong>Safi &amp; Red Estatal</strong>
-                <p>Alta de Hoteles Safi (Centro, Metro, Valle), apertura multi-RFC para afiliados y capacitación a TI.</p>
-              </div>
-            </div>
-            <p style="margin: 7px 0 0; font-size: 9.2px; color: #334155;">
-              <strong>Plan de continuidad integrado:</strong> si el corporativo de IHG / Oracle demora en autorizar API OHIP en Crowne Plaza, el hotel cumple desde la Semana 4 con nuestro <strong>Agente Local CSV</strong> (sin tocar Oracle) — o se corre el piloto en paralelo con <strong>Hoteles Safi</strong>.
-            </p>
-          </section>
-
-          <section>
-            <h2 class="sec-title"><span class="sec-num">3</span> Transparencia total de alcance (qué incluye y qué corresponde al cliente)</h2>
-            <div class="grid-2">
-              <div class="card">
-                <h3>Incluido en la inversión única</h3>
-                <ul class="clean">
-                  <li>Núcleo PUI DOF multi-RFC, Fases 1–3, cola Outbox 8x y cifrado AES-256-GCM.</li>
-                  <li>Roles RBAC, gestión de usuarios, validador CURP RENAPO y protocolo menores LGT.</li>
-                  <li>Conector piloto OPERA (OHIP o Agente Local CSV), carga CSV y Constancias PDF SHA-256.</li>
-                  <li>Acompañamiento técnico en certificación Sandbox SEGOB y capacitación inicial a TI.</li>
-                </ul>
-              </div>
-              <div class="card stone">
-                <h3>Costos externos / opcionales (sin sorpresas)</h3>
-                <ul class="clean">
-                  <li><strong>Trámite Llave MX / e.firma:</strong> Lo realiza cada razón social ante SEGOB ($0 gobierno).</li>
-                  <li><strong>Cuenta AWS oficial:</strong> A nombre de la Asociación (~$6,000 MXN/mes total por toda la red).</li>
-                  <li><strong>Licencias PMS externas:</strong> Solo si el hotel elige API de pago (ej. Oracle OHIP); con Agente CSV es $0.</li>
-                  <li><strong>Póliza opcional 24/7 post-entrega:</strong> $12k–$18k MXN/mes total por toda la red (&lt;$100/mes por hotel).</li>
-                </ul>
+                <span class="em">SEM 5 – 6</span>
+                <strong>Safi &amp; Red NL</strong>
+                <p>Alta de Hoteles Safi y red de afiliados.</p>
               </div>
             </div>
           </section>
 
-          <div class="cta-bar">
+          <section class="scope-2">
+            <div class="scope-box">
+              <strong>Incluido en la inversión única</strong>
+              Núcleo PUI DOF multi-RFC · Fases 1–3 · RBAC · Agente OPERA / CSV · Constancias PDF SHA-256 · Certificación Sandbox SEGOB.
+            </div>
+            <div class="scope-box" style="background: var(--stone);">
+              <strong>Responsabilidad externa (sin sorpresas)</strong>
+              Trámite Llave MX / e.firma ($0) · Cuenta AWS Asociación (~$6k/mes total) · Licencias OHIP solo si el hotel elige API de pago.
+            </div>
+          </section>
+
+          <div class="punch-banner" style="border: 1.5px solid var(--emerald-bright);">
             <div>
-              <h3>Demo real disponible 24/7 — Siguiente paso inmediato</h3>
-              <p>
-                Explora hoy mismo los 4 perfiles RBAC, la simulación de sigilo, el importador CSV y la Constancia PDF.<br />
-                <strong>Acuerdo sugerido hoy:</strong> seleccionar modalidad en la Orden de Arranque y agendar <strong>20 min con TI de Crowne Plaza Monterrey</strong>.
-              </p>
+              <div class="big-line">Ya está construida. <span>Pruébala en vivo hoy 24/7.</span></div>
+              <div class="sub-line">Siguiente paso: sesión técnica de <strong>20 minutos con TI de Crowne Plaza Monterrey</strong>.</div>
             </div>
-            <a class="cta-url" href="https://jesusoldekamp-hue.github.io/portico-hospitality/" target="_blank" rel="noopener">
+            <div class="punch-badge" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.8px;">
               jesusoldekamp-hue.github.io/portico-hospitality/
-            </a>
+            </div>
           </div>
         </div>
 
         <footer class="page-foot">
-          <span>Portico Hospitality · Hospitality Trust &amp; Compliance · Monterrey, Nuevo León · 2026</span>
-          <strong>PÁGINA 04 / 04</strong>
+          <span>Portico Hospitality · Hospitality Trust &amp; Compliance · Monterrey, N.L. · 2026</span>
+          <strong>04 / 04</strong>
         </footer>
       </article>
     </main>
