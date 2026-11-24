@@ -11,6 +11,9 @@ process.env.PORTICO_DB_PATH = ':memory:';
 const { validarCurp, completarCurpValida } = await import('../src/curp.js');
 const { generarPlantillaCsvDemo, generarPlantillaOperaXmlDemo } = await import('../src/csv.js');
 const { parseMrz, buildSamplePassportMrz } = await import('../src/mrz.js');
+const { resolveStorageConfig, estimateScaleInfrastructure, withHotelRlsTransaction } = await import(
+  '../src/db-adapter.js'
+);
 const { createServer } = await import('../src/server.js');
 const { resetDb, closeDb, getHotelBySlug, DEMO_SCENARIOS } = await import('../src/db.js');
 const { syncDirectoryOnce } = await import('../agent/pms-sync-agent.js');
@@ -358,5 +361,71 @@ describe('Portico Hospitality Producción — SQLite ACID, RBAC, PUI DOF, Outbox
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
+  });
+
+  it('genera instaladores 1-clic Windows/Linux aislados por RFC, valida adaptador PostgreSQL RLS y benchmark de 1,000 hoteles', async () => {
+    const pgCfg = resolveStorageConfig({ DATABASE_URL: 'postgres://user:pass@rds.aws:5432/portico' });
+    assert.equal(pgCfg.engine, 'postgresql');
+    assert.equal(pgCfg.rlsEnabled, true);
+    assert.equal(pgCfg.recommendedCapacityHotels, 1000);
+
+    const queries = [];
+    const mockPool = {
+      async connect() {
+        return {
+          async query(sql, params) {
+            queries.push({ sql, params });
+          },
+          release() {}
+        };
+      }
+    };
+    const rlsVal = await withHotelRlsTransaction(mockPool, 'crowne-plaza-monterrey', async () => 'ok-rls');
+    assert.equal(rlsVal, 'ok-rls');
+    assert.ok(queries.some((q) => q.sql.includes('app.current_hotel_slug') && q.params?.[0] === 'crowne-plaza-monterrey'));
+
+    const infra1000 = estimateScaleInfrastructure(1000);
+    assert.equal(infra1000.sla, '99.99%');
+    assert.ok(infra1000.monthlyAwsMxn <= 35000);
+
+    // Instalador 1-clic bloqueado a Recepción, permitido a Gerencia TI de ese hotel
+    const recCookie = await loginAs(baseUrl, 'recepcion@crowneplazamty.mx');
+    const forbiddenInst = await fetch(`${baseUrl}/api/pms/crowne-plaza-monterrey/installer?os=windows`, {
+      headers: { Cookie: recCookie }
+    });
+    assert.equal(forbiddenInst.status, 403);
+
+    const crowneCookie = await loginAs(baseUrl, 'ti@crowneplazamty.mx');
+    const winInst = await fetch(`${baseUrl}/api/pms/crowne-plaza-monterrey/installer?os=windows`, {
+      headers: { Cookie: crowneCookie }
+    });
+    assert.equal(winInst.status, 200);
+    const ps1Text = await winInst.text();
+    assert.match(ps1Text, /Register-ScheduledTask/);
+    assert.match(ps1Text, /crowne-plaza-monterrey/);
+    assert.match(ps1Text, /MGM940512NL1/);
+
+    const linInst = await fetch(`${baseUrl}/api/pms/crowne-plaza-monterrey/installer?os=linux`, {
+      headers: { Cookie: crowneCookie }
+    });
+    assert.equal(linInst.status, 200);
+    const shText = await linInst.text();
+    assert.match(shText, /systemctl/);
+    assert.match(shText, /crowne-plaza-monterrey/);
+
+    // Benchmark real de capacidad a 1,000 hoteles
+    const assocCookie = await loginAs(baseUrl, 'presidente@asociacionhotelesnl.mx');
+    const benchRes = await fetch(`${baseUrl}/api/demo/scale-benchmark`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: assocCookie },
+      body: JSON.stringify({ hotels: 1000 })
+    });
+    assert.equal(benchRes.status, 200);
+    const bench = await benchRes.json();
+    assert.equal(bench.ok, true);
+    assert.equal(bench.hotelesObjetivo, 1000);
+    assert.equal(bench.fugasEntreRfc, 0);
+    assert.equal(bench.hashesUnicosPorHotel, bench.operacionesRealesEjecutadas);
+    assert.ok(bench.capacidadEstimadaCheckinsPorSegundo > 100);
   });
 });

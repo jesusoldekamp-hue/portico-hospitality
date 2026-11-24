@@ -219,12 +219,19 @@
           <div class="panel roi-panel">
             <div class="panel-header">
               <div>
-                <h2>Calculadora de Retorno de Inversión (Asociación vs. Proveedores de Renta)</h2>
+                <h2>Calculadora de Retorno y Escala Nacional (10 hasta 1,000 Hoteles)</h2>
                 <p class="panel-desc">
-                  Ajusta el número de hoteles afiliados y la cuota de recuperación para mostrar el ahorro gremial y el financiamiento sin desembolso.
+                  Compara en vivo contra competidores y tarifas grupales (-50%) desde el piloto de Nuevo León hasta expansión nacional multi-asociación.
                 </p>
               </div>
               <span class="tag-neutral">SEGOB cobra $0 por conexión</span>
+            </div>
+
+            <div class="scale-presets" role="group" aria-label="Escenarios rápidos de escala">
+              <button type="button" class="preset-chip" data-scale-hotels="10">Piloto Fundador (10 hoteles)</button>
+              <button type="button" class="preset-chip is-active" data-scale-hotels="136">Asociación NL (136 hoteles)</button>
+              <button type="button" class="preset-chip" data-scale-hotels="350">Red Regional (350 hoteles)</button>
+              <button type="button" class="preset-chip" data-scale-hotels="1000">Escala Nacional (1,000 hoteles)</button>
             </div>
 
             <div class="roi-grid">
@@ -234,7 +241,7 @@
                     <label for="roi-hotels">Hoteles afiliados conectados</label>
                     <output id="roi-hotels-out" for="roi-hotels">136 hoteles</output>
                   </div>
-                  <input type="range" id="roi-hotels" min="10" max="250" step="2" value="136" />
+                  <input type="range" id="roi-hotels" min="10" max="1000" step="2" value="136" aria-valuetext="136 hoteles" />
                 </div>
 
                 <div class="range-group">
@@ -242,7 +249,7 @@
                     <label for="roi-external">Renta mensual proveedor externo / tarifa grupal (por hotel)</label>
                     <output id="roi-external-out" for="roi-external">$1,000 MXN</output>
                   </div>
-                  <input type="range" id="roi-external" min="400" max="1500" step="25" value="1000" />
+                  <input type="range" id="roi-external" min="400" max="1500" step="25" value="1000" aria-valuetext="1,000 pesos al mes por hotel" />
                 </div>
 
                 <div class="range-group">
@@ -250,11 +257,11 @@
                     <label for="roi-assoc-fee">Cuota simbólica Asociación (por hotel/mes)</label>
                     <output id="roi-assoc-fee-out" for="roi-assoc-fee">$250 MXN</output>
                   </div>
-                  <input type="range" id="roi-assoc-fee" min="0" max="500" step="25" value="250" />
+                  <input type="range" id="roi-assoc-fee" min="0" max="500" step="25" value="250" aria-valuetext="250 pesos al mes por hotel" />
                 </div>
 
-                <div class="roi-footnote">
-                  Incluye estimación de servidor compartido AWS en producción (24/7, alta disponibilidad y respaldos) de $6,000 MXN/mes en total para toda la red.
+                <div class="roi-footnote" id="roi-aws-tier-note">
+                  Etapa 2 · Asociación Estatal (NL): AWS RDS PostgreSQL Multi-AZ + RLS + ECS Fargate ($6,000 MXN/mes total para toda la red · ~10,880 check-ins/día).
                 </div>
               </div>
 
@@ -272,7 +279,7 @@
                   <strong id="roi-gremio-payback" class="text-accent">2.6 meses</strong>
                 </div>
                 <div class="roi-metric-row">
-                  <span>Costo real de nube compartida por hotel/mes</span>
+                  <span>Costo real de nube AWS compartida por hotel/mes</span>
                   <strong id="roi-cloud-per-hotel">$44 MXN</strong>
                 </div>
                 <div class="roi-metric-row highlight">
@@ -280,9 +287,39 @@
                   <strong id="roi-hotels-savings">$3,672,000 MXN</strong>
                 </div>
                 <div class="roi-metric-row highlight-alt">
-                  <span>Ingreso neto anual para la Asociación (tras nube)</span>
+                  <span>Ingreso neto anual para la Asociación (tras nube AWS)</span>
                   <strong id="roi-assoc-net">$336,000 MXN / año</strong>
                 </div>
+              </div>
+            </div>
+
+            <div class="sub-block" style="margin-top: 1.35rem;">
+              <div class="panel-header compact">
+                <div>
+                  <h3>Comparativa Real en Vivo vs. Competidores y Tarifa Grupal (-50%)</h3>
+                  <p class="panel-desc" id="scale-bench-subtitle">
+                    Cálculo dinámico a 3 años para 136 hoteles (antes de IVA), incluyendo póliza 24/7 y nube AWS real.
+                  </p>
+                </div>
+                <span class="badge badge-active" id="scale-tier-badge">Etapa 2 · SLA 99.95%</span>
+              </div>
+
+              <div tabindex="0" role="region" aria-labelledby="scale-table-caption" class="table-wrapper">
+                <table id="scale-bench-table">
+                  <caption id="scale-table-caption" class="visually-hidden">
+                    Comparativa de costo total a 3 años entre proveedores SaaS externos, tarifa grupal y Portico Hospitality
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Alternativa evaluada</th>
+                      <th scope="col">Costo mensual / hotel</th>
+                      <th scope="col">Total 3 años red</th>
+                      <th scope="col">Ahorro vs. lista</th>
+                      <th scope="col">Propiedad y Datos</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scale-bench-tbody"></tbody>
+                </table>
               </div>
             </div>
 
@@ -366,18 +403,29 @@
             </div>
 
             <div class="panel">
-              <h2>Ingeniería de Producción Incluida</h2>
+              <div class="panel-header compact">
+                <div>
+                  <h2>Arquitectura Escala Nacional (Lista para 1,000 Hoteles)</h2>
+                  <p class="panel-desc" id="storage-engine-desc">
+                    PostgreSQL 16 + Row-Level Security (RLS), cifrado AES-256-GCM y prueba criptográfica en vivo.
+                  </p>
+                </div>
+                <button type="button" class="btn-primary btn-sm" id="btn-run-scale-bench">
+                  Probar carga (1,000 hoteles)
+                </button>
+              </div>
               <ul class="check-list">
                 <li>
-                  <strong>Base relacional ACID cifrada:</strong> SQLite en modo WAL embebido localmente y esquema PostgreSQL 16 (<code>sql/schema.postgres.sql</code>) listo para AWS RDS. CURPs cifradas con <strong>AES-256-GCM</strong> en reposo.
+                  <strong>Aislamiento físico PostgreSQL RLS (<code>sql/schema.postgres.sql</code>):</strong> Política <code>ENABLE ROW LEVEL SECURITY</code> por RFC + soporte Multi-Asociación y purga automática LFPDPPP (<code>purge_expired_guest_pii</code>).
                 </li>
                 <li>
-                  <strong>Control de acceso real (RBAC + scrypt):</strong> Roles separados para Consejo Asociación, Gerencia TI de cada hotel y Recepción (sin acceso a alertas SEGOB ni a otros hoteles).
+                  <strong>Adaptador dual SQLite ↔ AWS RDS (<code>src/db-adapter.js</code>):</strong> Corre sin dependencias en piloto y escala horizontalmente con <code>docker-compose.prod.yml</code> (PostgreSQL 16 + Redis 7 + SQS Workers).
                 </li>
                 <li>
-                  <strong>Cola Outbox con reintento exponencial:</strong> Ninguna alerta a SEGOB se pierde si el servidor gubernamental presenta intermitencia.
+                  <strong>Despliegue masivo sin fricción:</strong> Instalador Windows/Linux de 1 clic preconfigurado por hotel en la pestaña <em>Conectores PMS</em>.
                 </li>
               </ul>
+              <div id="scale-bench-result" class="bench-result-box" aria-live="polite" hidden></div>
             </div>
           </div>
         </section>
@@ -846,19 +894,57 @@
                 <code class="key-value" id="conn-api-key">portico_pms_••••••••••••</code>
                 <div class="key-actions">
                   <button type="button" class="btn-secondary" id="btn-toggle-key">Mostrar llave</button>
-                  <button type="button" class="btn-secondary" id="btn-copy-key">Copiar</button>
+                  <span class="copy">
+                    <button type="button" class="btn-secondary copy-button" id="btn-copy-key" command="--copy" commandfor="conn-api-key">Copiar llave</button>
+                    <span class="tip" role="status"></span>
+                  </span>
                   <button type="button" class="btn-secondary" id="btn-rotate-key">Rotar llave</button>
                 </div>
               </div>
 
+              <div class="installer-box">
+                <div class="installer-head">
+                  <div>
+                    <strong>Instalador 1-Clic de Servicio en Segundo Plano (OPERA 5 / Zeus)</strong>
+                    <p class="panel-desc">
+                      Genera un script preconfigurado con el RFC y llave privada de este hotel. El equipo de TI solo lo ejecuta una vez para registrar el servicio automático de carpetas XML/CSV.
+                    </p>
+                  </div>
+                </div>
+                <div class="key-actions">
+                  <button type="button" class="btn-primary btn-sm" id="btn-dl-installer-win">
+                    Descargar Instalador Windows Server (.ps1)
+                  </button>
+                  <button type="button" class="btn-secondary btn-sm" id="btn-dl-installer-linux">
+                    Descargar Servicio Linux / Mac (.sh)
+                  </button>
+                </div>
+              </div>
+
               <div class="sub-block">
-                <h3>1. Agente Local de Sincronización (OPERA 5 / Carpetas CSV)</h3>
-                <pre class="code-block" id="pms-agent-snippet"></pre>
+                <h3>1. Agente Local de Sincronización (OPERA 5 / Carpetas XML y CSV)</h3>
+                <div class="copyable">
+                  <span class="copy">
+                    <button type="button" class="copy-button btn-copy-code" command="--copy" commandfor="pms-agent-snippet">
+                      Copiar comando
+                    </button>
+                    <span class="tip" role="status"></span>
+                  </span>
+                  <pre class="code-block" id="pms-agent-snippet" tabindex="0"></pre>
+                </div>
               </div>
 
               <div class="sub-block">
                 <h3>2. Webhook directo API REST (OPERA Cloud OHIP / Cloudbeds)</h3>
-                <pre class="code-block" id="pms-webhook-snippet"></pre>
+                <div class="copyable">
+                  <span class="copy">
+                    <button type="button" class="copy-button btn-copy-code" command="--copy" commandfor="pms-webhook-snippet">
+                      Copiar cURL
+                    </button>
+                    <span class="tip" role="status"></span>
+                  </span>
+                  <pre class="code-block" id="pms-webhook-snippet" tabindex="0"></pre>
+                </div>
               </div>
             </div>
           </div>

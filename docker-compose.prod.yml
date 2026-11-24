@@ -1,0 +1,58 @@
+# Portico Hospitality — Stack de Producción Escala Nacional (1,000+ Hoteles)
+# Incluye PostgreSQL 16 (con RLS + esquema automático), Redis 7 y API Portico escalable.
+# Uso: docker compose -f docker-compose.prod.yml up -d --scale portico-api=3
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: portico_pui
+      POSTGRES_USER: portico_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-CambiaEstaClaveEnProduccion#2026}
+    volumes:
+      - portico_pgdata:/var/lib/postgresql/data
+      - ./sql/schema.postgres.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portico_app -d portico_pui"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - portico_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  portico-api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3080}:3080"
+    environment:
+      NODE_ENV: production
+      PORT: 3080
+      PORTICO_DEMO_MODE: ${PORTICO_DEMO_MODE:-false}
+      PORTICO_MASTER_KEY: ${PORTICO_MASTER_KEY:-cambia-esta-llave-maestra-32bytes-en-aws-kms}
+      DATABASE_URL: postgres://portico_app:${POSTGRES_PASSWORD:-CambiaEstaClaveEnProduccion#2026}@postgres:5432/portico_pui
+      REDIS_URL: redis://redis:6379
+      PG_POOL_MAX: 40
+    volumes:
+      - portico_data:/app/data
+
+volumes:
+  portico_pgdata:
+  portico_redis:
+  portico_data:

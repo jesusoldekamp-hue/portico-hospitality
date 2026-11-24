@@ -13,6 +13,11 @@ import {
   openConstancia
 } from './api-client.js';
 import { buildSamplePassportMrz, parseMrz } from './mrz.js';
+import {
+  buildLinuxInstallerScript,
+  buildWindowsInstallerScript,
+  estimateScaleInfrastructure
+} from './installer.js';
 
 const fmtMxn = new Intl.NumberFormat('es-MX', {
   style: 'currency',
@@ -200,13 +205,74 @@ function setupDialogClosedByFallback() {
   }
 }
 
-function updateRangeFallbackProgress(input) {
-  if (CSS.supports('accent-color', '#0d6858')) return;
-  const min = Number(input.min || 0);
-  const max = Number(input.max || 100);
-  const val = Number(input.value || 0);
-  const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
-  input.style.setProperty('--progress', `${pct}%`);
+function syncSliderValue(input, ariaText) {
+  input.style.setProperty('--attr-min', input.min || '0');
+  input.style.setProperty('--attr-max', input.max || '100');
+  input.style.setProperty('--control-value', input.value);
+  if (ariaText) input.setAttribute('aria-valuetext', ariaText);
+}
+
+function setupDeclarativeCopyButtons() {
+  const timers = new WeakMap();
+  let lastMessage = '';
+
+  function report(button, ok) {
+    const tip = button.nextElementSibling;
+    if (!tip) return;
+    clearTimeout(timers.get(button));
+    button.removeAttribute('data-copied');
+    button.removeAttribute('data-failed');
+    let message = ok ? 'Copiado' : 'Error al copiar';
+    if (message === lastMessage) message += '\u00A0';
+    lastMessage = message;
+    tip.textContent = '';
+    void button.offsetWidth;
+    button.setAttribute(ok ? 'data-copied' : 'data-failed', '');
+    requestAnimationFrame(() => {
+      tip.textContent = message;
+    });
+    timers.set(
+      button,
+      setTimeout(() => {
+        button.removeAttribute('data-copied');
+        button.removeAttribute('data-failed');
+        tip.textContent = '';
+      }, 2000)
+    );
+  }
+
+  async function copy(button, target) {
+    const text = target.dataset.copyValue
+      ? target.dataset.copyValue
+      : target.matches('input, textarea')
+        ? target.value
+        : target.innerText.trim();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      report(button, true);
+    } catch {
+      report(button, false);
+    }
+  }
+
+  if ('CommandEvent' in window) {
+    document.addEventListener(
+      'command',
+      (event) => {
+        if (event.command === '--copy') copy(event.source, event.target);
+      },
+      true
+    );
+  } else {
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented) return;
+      const button = event.target.closest('button[command="--copy"]');
+      if (!button) return;
+      const target = document.getElementById(button.getAttribute('commandfor'));
+      if (target) copy(button, target);
+    });
+  }
 }
 
 function escapeHtml(text) {
@@ -343,18 +409,25 @@ function updateRoiCalculator() {
   const devEl = document.getElementById('roi-dev-cost');
   const foundersEl = document.getElementById('roi-founders');
 
-  for (const el of [hotelsEl, extEl, feeEl, devEl, foundersEl]) {
-    updateRangeFallbackProgress(el);
-  }
-
   const hotels = Number(hotelsEl.value);
   const extMonthly = Number(extEl.value);
   const assocFee = Number(feeEl.value);
   const devCost = Number(devEl.value);
   const founders = Number(foundersEl.value);
 
-  const setupPerHotel = 4500;
-  const sharedCloudMonthly = 6000;
+  syncSliderValue(hotelsEl, `${hotels} hoteles`);
+  syncSliderValue(extEl, `${fmtMxn.format(extMonthly)} pesos al mes por hotel`);
+  syncSliderValue(feeEl, `${fmtMxn.format(assocFee)} pesos al mes por hotel`);
+  syncSliderValue(devEl, `${fmtMxn.format(devCost)} pesos inversión única`);
+  syncSliderValue(foundersEl, `${founders} hoteles fundadores`);
+
+  for (const chip of document.querySelectorAll('.preset-chip[data-scale-hotels]')) {
+    chip.classList.toggle('is-active', Number(chip.dataset.scaleHotels) === hotels);
+  }
+
+  const infra = estimateScaleInfrastructure(hotels);
+  const sharedCloudMonthly = infra.monthlyAwsMxn;
+  const supportMonthly = infra.supportRetainerMxn;
 
   const extMonthlyTotal = hotels * extMonthly;
   const extY1 = hotels * extMonthly * 12;
@@ -369,7 +442,7 @@ function updateRoiCalculator() {
   const monthlyNet = assocNetAnnual / 12;
   const paybackMonths = monthlyNet > 0 ? Math.ceil(devCost / monthlyNet) : null;
 
-  document.getElementById('roi-hotels-out').textContent = `${hotels} hoteles`;
+  document.getElementById('roi-hotels-out').textContent = `${hotels.toLocaleString('es-MX')} hoteles`;
   document.getElementById('roi-external-out').textContent = `${fmtMxn.format(extMonthly)} MXN`;
   document.getElementById('roi-assoc-fee-out').textContent = `${fmtMxn.format(assocFee)} MXN`;
   document.getElementById('roi-dev-cost-out').textContent = `${fmtMxn.format(devCost)} MXN`;
@@ -383,6 +456,93 @@ function updateRoiCalculator() {
     assocNetAnnual >= 0
       ? `${fmtMxn.format(assocNetAnnual)} MXN / año`
       : `Subsidiado (${fmtMxn.format(Math.abs(assocNetAnnual))} MXN / año)`;
+
+  const tierNote = document.getElementById('roi-aws-tier-note');
+  if (tierNote) {
+    tierNote.textContent = `${infra.tier}: ${infra.dbSpec} · ${infra.computeSpec} (${fmtMxn.format(sharedCloudMonthly)} MXN/mes total · ~${infra.dailyCheckins.toLocaleString('es-MX')} check-ins/día).`;
+  }
+  const tierBadge = document.getElementById('scale-tier-badge');
+  if (tierBadge) {
+    tierBadge.textContent = `${infra.tier.split('·')[0].trim()} · SLA ${infra.sla}`;
+  }
+  const benchSub = document.getElementById('scale-bench-subtitle');
+  if (benchSub) {
+    benchSub.textContent = `Cálculo dinámico a 3 años para ${hotels.toLocaleString('es-MX')} hoteles (antes de IVA), incluyendo nube AWS real (${fmtMxn.format(sharedCloudMonthly)}/mes) y póliza opcional 24/7.`;
+  }
+
+  const benchBody = document.getElementById('scale-bench-tbody');
+  if (benchBody) {
+    const puiHoteles3y = hotels * (4350 + 930 * 36);
+    const puiMexicoAnual3y = hotels * (8500 * 3);
+    const tarifaGrupal3y = hotels * (450 * 36);
+    const porticoAws3y = devCost + sharedCloudMonthly * 36;
+    const porticoManaged3y = devCost + (sharedCloudMonthly + supportMonthly) * 36;
+    const porticoManagedPerHotel = Math.max(1, Math.round((sharedCloudMonthly + supportMonthly) / hotels));
+
+    const rows = [
+      {
+        name: 'PUIhoteles (Rotamundos)',
+        sub: '$930/mes + $4,350 setup por hotel',
+        perHotel: '$1,051 MXN',
+        total3y: puiHoteles3y,
+        savings: '— (Referencia alta)',
+        owner: 'Tercero SaaS (0% Asociación)',
+        portico: false
+      },
+      {
+        name: 'PUI México (Plan Anual)',
+        sub: '$8,500 + IVA/año por propiedad',
+        perHotel: '$708 MXN',
+        total3y: puiMexicoAnual3y,
+        savings: fmtMxn.format(Math.max(0, puiHoteles3y - puiMexicoAnual3y)),
+        owner: 'PROLOG S.A. de C.V. (0% Asociación)',
+        portico: false
+      },
+      {
+        name: 'Tarifa Grupal Externa (-50%)',
+        sub: 'Descuento por volumen negociado ($450/mes)',
+        perHotel: '$450 MXN',
+        total3y: tarifaGrupal3y,
+        savings: fmtMxn.format(Math.max(0, puiHoteles3y - tarifaGrupal3y)),
+        owner: 'Proveedor externo (0% Asociación)',
+        portico: false
+      },
+      {
+        name: 'Portico Hospitality (Nube AWS propia)',
+        sub: `Pago único ${fmtMxn.format(devCost)} + AWS ${fmtMxn.format(sharedCloudMonthly)}/mes`,
+        perHotel: `${fmtMxn.format(cloudPerHotel)} MXN`,
+        total3y: porticoAws3y,
+        savings: `${fmtMxn.format(Math.max(0, tarifaGrupal3y - porticoAws3y))} menos que -50%`,
+        owner: '100% Asociación en su propio AWS',
+        portico: true
+      },
+      {
+        name: 'Portico Hospitality (Todo Incluido 24/7)',
+        sub: `Incluye AWS + Póliza 24/7 y cambios DOF (${fmtMxn.format(supportMonthly)}/mes)`,
+        perHotel: `${fmtMxn.format(porticoManagedPerHotel)} MXN`,
+        total3y: porticoManaged3y,
+        savings: `${fmtMxn.format(Math.max(0, tarifaGrupal3y - porticoManaged3y))} menos que -50%`,
+        owner: '100% Asociación · Cero lock-in',
+        portico: true
+      }
+    ];
+
+    benchBody.innerHTML = rows
+      .map(
+        (r) => `
+        <tr class="${r.portico ? 'row-portico' : ''}">
+          <th scope="row">
+            ${escapeHtml(r.name)}
+            <span class="cell-sub">${escapeHtml(r.sub)}</span>
+          </th>
+          <td>${escapeHtml(r.perHotel)}</td>
+          <td><strong>${escapeHtml(fmtMxn.format(r.total3y))} MXN</strong></td>
+          <td>${escapeHtml(r.savings)}</td>
+          <td>${escapeHtml(r.owner)}</td>
+        </tr>`
+      )
+      .join('');
+  }
 
   const gremioPaybackEl = document.getElementById('roi-gremio-payback');
   if (gremioPaybackEl) {
@@ -456,6 +616,11 @@ function renderAll() {
       ? 'SQLite ACID · SHA-256 íntegro'
       : 'SQLite ACID · Revisar cadena';
 
+  const storageDesc = document.getElementById('storage-engine-desc');
+  if (storageDesc && appState.storage?.engineLabel) {
+    storageDesc.textContent = `${appState.storage.engineLabel} · ${appState.storage.encryptionStandard}`;
+  }
+
   populateHotelSelect('sim-hotel-select');
   populateHotelSelect('desk-hotel-select');
   populateHotelSelect('conn-hotel-select');
@@ -500,7 +665,9 @@ function renderConnectorPanel(hotel) {
   document.getElementById('conn-hotel-rfc').textContent = `RFC: ${hotel.rfc}`;
   const key = hotel.pmsApiKey || '';
   const masked = key ? `${key.slice(0, 16)}••••••••••••••••` : 'Sin llave';
-  document.getElementById('conn-api-key').textContent = revealApiKey ? key : masked;
+  const keyEl = document.getElementById('conn-api-key');
+  keyEl.textContent = revealApiKey ? key : masked;
+  keyEl.dataset.copyValue = key;
   document.getElementById('btn-toggle-key').textContent = revealApiKey ? 'Ocultar llave' : 'Mostrar llave';
 
   const origin = getRuntimeMode() === 'static-pages' ? 'https://api.porticohospitality.mx' : window.location.origin;
@@ -957,6 +1124,59 @@ function bindEvents() {
     document.getElementById(id).addEventListener('input', updateRoiCalculator);
   }
 
+  for (const chip of document.querySelectorAll('.preset-chip[data-scale-hotels]')) {
+    chip.addEventListener('click', () => {
+      document.getElementById('roi-hotels').value = chip.dataset.scaleHotels;
+      updateRoiCalculator();
+    });
+  }
+
+  const benchBtn = document.getElementById('btn-run-scale-bench');
+  if (benchBtn) {
+    benchBtn.addEventListener('click', async () => {
+      const box = document.getElementById('scale-bench-result');
+      const targetHotels = Number(document.getElementById('roi-hotels')?.value || 1000);
+      const effectiveHotels = targetHotels < 1000 ? 1000 : targetHotels;
+      benchBtn.disabled = true;
+      benchBtn.textContent = 'Midiendo cifrado y aislamiento…';
+      try {
+        const { ok, data } = await apiRequest('/api/demo/scale-benchmark', {
+          method: 'POST',
+          body: { hotels: effectiveHotels }
+        });
+        if (!ok) {
+          box.hidden = false;
+          box.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'No se pudo ejecutar la prueba.')}</span>`;
+          return;
+        }
+        box.hidden = false;
+        box.innerHTML = `
+          <strong>Prueba criptográfica en vivo completada (${data.hotelesObjetivo.toLocaleString('es-MX')} hoteles objetivo)</strong>
+          <div class="bench-grid">
+            <div class="bench-stat">
+              <span>Capacidad medida (CURP + AES-256 + HMAC)</span>
+              <strong>${data.capacidadEstimadaCheckinsPorSegundo.toLocaleString('es-MX')} check-ins/seg</strong>
+            </div>
+            <div class="bench-stat">
+              <span>Latencia promedio por validación</span>
+              <strong>${escapeHtml(data.latenciaPromedioMs)} ms (${escapeHtml(data.tiempoTotalMs)} ms total)</strong>
+            </div>
+            <div class="bench-stat">
+              <span>Aislamiento multi-RFC (RLS / HMAC único)</span>
+              <strong class="text-accent">${data.fugasEntreRfc} fugas · ${data.hashesUnicosPorHotel}/${data.operacionesRealesEjecutadas} únicos</strong>
+            </div>
+            <div class="bench-stat">
+              <span>Costo nube AWS estimado por hotel</span>
+              <strong>${escapeHtml(fmtMxn.format(Math.round(data.infra.monthlyAwsMxn / data.hotelesObjetivo)))} MXN/mes (${escapeHtml(data.infra.sla)})</strong>
+            </div>
+          </div>`;
+      } finally {
+        benchBtn.disabled = false;
+        benchBtn.textContent = 'Probar carga (1,000 hoteles)';
+      }
+    });
+  }
+
   for (const selId of ['sim-hotel-select', 'desk-hotel-select', 'conn-hotel-select']) {
     document.getElementById(selId).addEventListener('change', (e) => syncHotelChange(e.target.value));
   }
@@ -1207,22 +1427,45 @@ function bindEvents() {
     if (hotel) renderConnectorPanel(hotel);
   });
 
-  document.getElementById('btn-copy-key').addEventListener('click', async () => {
-    const hotel = appState.hotels.find((h) => h.slug === selectedHotelSlug);
-    if (!hotel?.pmsApiKey) return;
-    try {
-      await navigator.clipboard.writeText(hotel.pmsApiKey);
-      const btn = document.getElementById('btn-copy-key');
-      const prev = btn.textContent;
-      btn.textContent = 'Copiada';
-      setTimeout(() => {
-        btn.textContent = prev;
-      }, 1400);
-    } catch {
-      revealApiKey = true;
-      renderConnectorPanel(hotel);
+  const downloadInstaller = (os) => {
+    const hotel = appState?.hotels?.find((h) => h.slug === selectedHotelSlug);
+    if (!hotel) return;
+    if (getRuntimeMode() !== 'static-pages') {
+      window.location.href = `./api/pms/${encodeURIComponent(hotel.slug)}/installer?os=${os}`;
+      return;
     }
-  });
+    const origin = 'https://api.porticohospitality.mx';
+    const isLinux = os === 'linux';
+    const content = isLinux
+      ? buildLinuxInstallerScript({
+          hotelNombre: hotel.nombre,
+          hotelSlug: hotel.slug,
+          rfc: hotel.rfc,
+          apiKey: hotel.pmsApiKey,
+          baseUrl: origin
+        })
+      : buildWindowsInstallerScript({
+          hotelNombre: hotel.nombre,
+          hotelSlug: hotel.slug,
+          rfc: hotel.rfc,
+          apiKey: hotel.pmsApiKey,
+          baseUrl: origin
+        });
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = isLinux
+      ? `instalar-portico-agent-${hotel.slug}.sh`
+      : `Instalar-Portico-Agent-${hotel.slug}.ps1`;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  document.getElementById('btn-dl-installer-win')?.addEventListener('click', () => downloadInstaller('windows'));
+  document.getElementById('btn-dl-installer-linux')?.addEventListener('click', () => downloadInstaller('linux'));
 
   document.getElementById('btn-rotate-key').addEventListener('click', async () => {
     await apiRequest(`/api/pms/${selectedHotelSlug}/rotate-key`, { method: 'POST' });
@@ -1421,6 +1664,7 @@ function bindEvents() {
 
 setupFormValidationAccessibility();
 setupDialogClosedByFallback();
+setupDeclarativeCopyButtons();
 bindEvents();
 updateRoiCalculator();
 bootstrapAuth();
