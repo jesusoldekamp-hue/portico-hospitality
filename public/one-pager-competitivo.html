@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hospitality PUI ID — One-Pager Tecnológico y Benchmarking Competitivo</title>
+    <style>
+      :root {
+        --navy: #0e1929;
+        --navy-2: #16263d;
+        --stone: #f5f6f3;
+        --white: #ffffff;
+        --ink: #121d2d;
+        --muted: #4b5a6b;
+        --border: #d9e0e7;
+        --emerald: #0f7662;
+        --emerald-bright: #1ca389;
+        --emerald-soft: #e7f5f1;
+        --mint: #6ee7cc;
+        --crimson: #b42318;
+        --crimson-soft: #fef2f2;
+        --crimson-border: #f3c4c0;
+        --amber: #9a5209;
+        --amber-soft: #fff8eb;
+      }
+
+      @page {
+        size: letter portrait;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #dce2e9;
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .screen-bar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #0b1320;
+        color: #eaf0f6;
+        border-bottom: 1px solid rgb(255 255 255 / 0.1);
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .screen-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .screen-bar-left img {
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+      }
+
+      .screen-bar-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .bar-btn {
+        appearance: none;
+        border: 1px solid rgb(255 255 255 / 0.18);
+        background: rgb(255 255 255 / 0.08);
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .bar-btn.primary {
+        background: var(--emerald);
+        border-color: var(--emerald);
+      }
+
+      .stage {
+        padding: 24px 0 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* 1 sola hoja Letter exacta: 8.5in x 11in */
+      .page {
+        width: 8.5in;
+        height: 11in;
+        background: var(--white);
+        box-shadow: 0 24px 60px rgb(10 20 35 / 0.22);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* HERO SUPERIOR */
+      .hero {
+        background: var(--navy);
+        color: #ffffff;
+        padding: 0.26in 0.48in 0.24in;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 3px solid var(--emerald-bright);
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 42%;
+        opacity: 0.24;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, rgb(14 25 41 / 0.96) 0%, rgb(14 25 41 / 0.87) 58%, rgb(14 25 41 / 0.68) 100%);
+        pointer-events: none;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-lockup img {
+        width: 38px;
+        height: 38px;
+        border-radius: 7px;
+        object-fit: cover;
+        border: 1px solid rgb(255 255 255 / 0.22);
+      }
+
+      .brand-name {
+        font-size: 16.5px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      .brand-sub {
+        margin-top: 2px;
+        font-size: 7.8px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--mint);
+      }
+
+      .hero-pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgb(28 163 137 / 0.2);
+        border: 1px solid rgb(110 231 204 / 0.45);
+        color: var(--mint);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-size: 20.5px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+      }
+
+      .hero h1 span {
+        color: var(--mint);
+      }
+
+      .hero p {
+        margin: 5px 0 0;
+        font-size: 9.8px;
+        line-height: 1.4;
+        color: #c8d7e7;
+        max-width: 7.2in;
+      }
+
+      /* CUERPO */
+      .body {
+        flex: 1;
+        padding: 0.2in 0.48in 0.16in;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+      }
+
+      .sec-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 8.6px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--navy);
+        margin: 0 0 6px;
+      }
+
+      .sec-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--emerald);
+        display: inline-block;
+      }
+
+      .sec-dot.crimson {
+        background: var(--crimson);
+      }
+
+      /* BLOQUE 1: PROBLEMÁTICA */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 1.15fr 0.8fr;
+        gap: 8px;
+      }
+
+      .kpi {
+        border-radius: 8px;
+        padding: 9px 11px;
+        border: 1px solid var(--border);
+        background: var(--stone);
+      }
+
+      .kpi.danger {
+        background: var(--crimson-soft);
+        border-color: var(--crimson-border);
+      }
+
+      .kpi.navy {
+        background: var(--navy);
+        border-color: var(--navy);
+        color: #ffffff;
+      }
+
+      .kpi.emerald {
+        background: var(--emerald-soft);
+        border-color: #b0dbd0;
+      }
+
+      .kpi-tag {
+        font-size: 7.4px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .kpi.danger .kpi-tag {
+        color: var(--crimson);
+      }
+
+      .kpi.navy .kpi-tag {
+        color: var(--mint);
+      }
+
+      .kpi.emerald .kpi-tag {
+        color: var(--emerald);
+      }
+
+      .kpi-val {
+        margin: 2px 0 2px;
+        font-size: 16.5px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .kpi.danger .kpi-val {
+        color: var(--crimson);
+      }
+
+      .kpi.navy .kpi-val {
+        color: #ffffff;
+      }
+
+      .kpi.emerald .kpi-val {
+        color: var(--emerald);
+      }
+
+      .kpi-sub {
+        font-size: 8.2px;
+        line-height: 1.32;
+        color: var(--muted);
+      }
+
+      .kpi.navy .kpi-sub {
+        color: #c7d6e6;
+      }
+
+      /* BLOQUE 2: TECNOLOGÍA */
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .tech-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 10px;
+        background: var(--white);
+      }
+
+      .tech-card.accent {
+        background: var(--emerald-soft);
+        border-color: #b5ddd3;
+      }
+
+      .tech-card h3 {
+        margin: 0 0 4px;
+        font-size: 9.6px;
+        font-weight: 800;
+        color: var(--navy);
+      }
+
+      .tech-card ul {
+        margin: 0;
+        padding-left: 12px;
+      }
+
+      .tech-card li {
+        font-size: 8.2px;
+        line-height: 1.34;
+        color: #2c3b4d;
+        margin-bottom: 2.5px;
+      }
+
+      .tech-card li:last-child {
+        margin-bottom: 0;
+      }
+
+      .tech-pills {
+        margin-top: 7px;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .tpill {
+        background: var(--navy);
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 5px 6px;
+        text-align: center;
+      }
+
+      .tpill strong {
+        display: block;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 8.2px;
+        color: var(--mint);
+      }
+
+      .tpill span {
+        display: block;
+        font-size: 7.2px;
+        color: #b7c8da;
+        margin-top: 1px;
+      }
+
+      /* BLOQUE 3: BENCHMARKING COMPETITIVO */
+      .comp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8.4px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .comp-table th,
+      .comp-table td {
+        padding: 6px 8px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .comp-table thead th {
+        background: var(--navy);
+        color: #e2ecf6;
+        font-size: 7.4px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .comp-table tbody th {
+        font-weight: 800;
+        color: var(--ink);
+        background: var(--white);
+      }
+
+      .comp-table tbody tr:last-child th,
+      .comp-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .comp-table tbody tr.row-win th,
+      .comp-table tbody tr.row-win td {
+        background: var(--emerald-soft);
+        color: #0a4238;
+        font-weight: 700;
+        border-top: 1.75px solid var(--emerald);
+      }
+
+      .c-sub {
+        display: block;
+        font-size: 7.3px;
+        font-weight: 400;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      .row-win .c-sub {
+        color: #165c4f;
+        font-weight: 500;
+      }
+
+      .text-crimson {
+        color: var(--crimson);
+        font-weight: 800;
+      }
+
+      .pill-win,
+      .pill-no,
+      .pill-warn {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 999px;
+        font-size: 7.3px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .pill-win {
+        background: var(--emerald);
+        color: #ffffff;
+      }
+
+      .pill-no {
+        background: var(--crimson-soft);
+        color: var(--crimson);
+      }
+
+      .pill-warn {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      /* 4 VENTAJAS IRREFUTABLES */
+      .win-4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 7px;
+      }
+
+      .win-box {
+        background: var(--stone);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 7px 8px;
+      }
+
+      .win-box strong {
+        display: block;
+        font-size: 8.2px;
+        color: var(--emerald);
+        margin-bottom: 2px;
+      }
+
+      .win-box span {
+        display: block;
+        font-size: 7.6px;
+        line-height: 1.3;
+        color: var(--muted);
+      }
+
+      /* BANNER FINAL */
+      .cta-bar {
+        margin-top: auto;
+        background: var(--navy);
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 9px 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border: 1.5px solid var(--emerald-bright);
+      }
+
+      .cta-bar .title {
+        font-size: 10.2px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .cta-bar .title span {
+        color: var(--mint);
+      }
+
+      .cta-bar .sub {
+        margin-top: 2px;
+        font-size: 8px;
+        color: #c4d4e5;
+      }
+
+      .cta-badge {
+        flex: none;
+        padding: 6px 11px;
+        border-radius: 6px;
+        background: rgb(28 163 137 / 0.22);
+        border: 1px solid rgb(110 231 204 / 0.45);
+        color: var(--mint);
+        font-size: 8.4px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      /* PIE LEGAL */
+      .foot {
+        padding: 6px 0.48in 9px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 7.4px;
+        color: var(--muted);
+      }
+
+      @media print {
+        html,
+        body {
+          background: #ffffff;
+        }
+        .screen-bar {
+          display: none !important;
+        }
+        .stage {
+          padding: 0 !important;
+        }
+        .page {
+          box-shadow: none !important;
+          width: 8.5in !important;
+          height: 11in !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="screen-bar">
+      <div class="screen-bar-left">
+        <img src="./assets/portico-emblem.jpg" alt="Hospitality PUI ID" />
+        <span>Hospitality PUI ID · One-Pager Tecnológico y Benchmarking Competitivo</span>
+      </div>
+      <div class="screen-bar-actions">
+        <button type="button" class="bar-btn primary" onclick="window.print()">Guardar / Imprimir PDF (1 Hoja)</button>
+        <a class="bar-btn" href="./presentacion.html">Presentación 11 Láminas</a>
+        <a class="bar-btn" href="./index.html">Demo en Vivo</a>
+      </div>
+    </header>
+
+    <main class="stage">
+      <article class="page">
+        <!-- CABECERA -->
+        <header class="hero">
+          <img class="hero-bg" src="./assets/cover-monterrey.jpg" alt="" />
+          <div class="hero-inner">
+            <div class="hero-top">
+              <div class="brand-lockup">
+                <img src="./assets/portico-emblem.jpg" alt="Hospitality PUI ID" />
+                <div>
+                  <div class="brand-name">Hospitality PUI ID</div>
+                  <div class="brand-sub">Hospitality Trust &amp; Compliance · Propiedad exclusiva de Hospitality PUI ID</div>
+                </div>
+              </div>
+              <span class="hero-pill">Tecnología &amp; Benchmarking 2026</span>
+            </div>
+            <h1>Cumplimiento PUI de grado bancario para hoteles.<br /><span>2.2× a 9× más económico que cualquier competidor del mercado.</span></h1>
+            <p>
+              Tecnología propia diseñada para conectar a los hoteles afiliados con la <strong>Plataforma Única de Identidad (SEGOB / RENAPO / ATDT)</strong> y la <strong>Ley General de Turismo</strong> en la nube AWS de la Asociación, superando en seguridad, operación y costo total a los proveedores SaaS existentes.
+            </p>
+          </div>
+        </header>
+
+        <div class="body">
+          <!-- 1. LA PROBLEMÁTICA -->
+          <section>
+            <h2 class="sec-label"><span class="sec-dot crimson"></span> 1. La problemática real que enfrentan hoy los hoteles en México</h2>
+            <div class="problem-grid">
+              <div class="kpi danger">
+                <div class="kpi-tag">Riesgo legal · Art. 12 Bis y 43 Bis</div>
+                <div class="kpi-val">$1.17M – $2.35M</div>
+                <div class="kpi-sub">Multa federal por hotel (10k–20k UMAs 2026). El plazo de inscripción ATDT venció el <strong>31 de marzo</strong> (regularización inmediata).</div>
+              </div>
+              <div class="kpi navy">
+                <div class="kpi-tag">Fuga actual en proveedores rentados</div>
+                <div class="kpi-val">$1,632,000 / año</div>
+                <div class="kpi-sub">136 hoteles × ~$1,000/mes = <strong>$4.89M MXN en 3 años</strong> pagados a terceros en renta perpetua, cediendo datos VIP sin patrimonio.</div>
+              </div>
+              <div class="kpi emerald">
+                <div class="kpi-tag">Costo oficial SEGOB</div>
+                <div class="kpi-val">$0 pesos</div>
+                <div class="kpi-sub">El Gobierno no cobra por interconectarse; el sobrecosto viene de intermediarios SaaS.</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. CÓMO LA RESOLVEMOS CON NUESTRA TECNOLOGÍA -->
+          <section>
+            <h2 class="sec-label"><span class="sec-dot"></span> 2. Cómo lo resolvemos con la tecnología de Hospitality PUI ID</h2>
+            <div class="tech-grid">
+              <div class="tech-card">
+                <h3>Cumplimiento PUI / ATDT 100% Oficial</h3>
+                <ul>
+                  <li><strong>Arquitectura invertida DOF:</strong> SEGOB envía alertas por folio <strong>CURP + FUB + UUID4</strong>; el hotel nunca descarga listas.</li>
+                  <li><strong>Fases 1, 2 y 3 automáticas</strong> con cola Outbox de reintento 8× y validación oficial de Webhook en <code>plataformadebusqueda.gob.mx</code>.</li>
+                  <li><strong>Alineado a controles ATDT (Feb. 2026):</strong> IP fija autorizada, WAF, TLS 1.3, JWS/JWT y protocolo <code>incidentesciber@</code>.</li>
+                </ul>
+              </div>
+              <div class="tech-card">
+                <h3>Operación Hotelera Sin Fricción</h3>
+                <ul>
+                  <li><strong>Universal para cualquier PMS:</strong> Oracle OPERA Cloud (OHIP), <strong>OPERA 5 XML nativo</strong>, Cloudbeds, Zeus y portal CSV.</li>
+                  <li><strong>Instalador 1-Clic (Windows/Linux):</strong> sincroniza carpetas locales del hotel sin abrir puertos ni tocar Oracle.</li>
+                  <li><strong>Nacionales y Extranjeros ($0/escaneo):</strong> validador CURP RENAPO + lector óptico <strong>MRZ ICAO 9303</strong> para pasaportes e INE.</li>
+                </ul>
+              </div>
+              <div class="tech-card accent">
+                <h3>Blindaje Legal, Sigilo y Escala 1,000+</h3>
+                <ul>
+                  <li><strong>Sigilo total RBAC en recepción:</strong> el recepcionista jamás ve alertas SEGOB ni arriesga su integridad física.</li>
+                  <li><strong>Menores de edad (LGT):</strong> bloquea check-in de menores nacionales y extranjeros sin parentesco acreditado.</li>
+                  <li><strong>Escala nacional (PostgreSQL 16 + RLS):</strong> aislamiento físico por RFC (>12,000 check-ins/seg, 0 fugas) y Constancia PDF SHA-256.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tech-pills">
+              <div class="tpill"><strong>IP Fija + WAF</strong><span>Lista blanca ATDT</span></div>
+              <div class="tpill"><strong>TLS + JWS/JWT</strong><span>Firma oficial PUI</span></div>
+              <div class="tpill"><strong>PostgreSQL RLS</strong><span>1,000+ hoteles</span></div>
+              <div class="tpill"><strong>AES-256-GCM</strong><span>CURPs cifradas</span></div>
+              <div class="tpill"><strong>MRZ ICAO $0</strong><span>INE y Pasaportes</span></div>
+              <div class="tpill"><strong>SHA-256 PDF</strong><span>Constancia 1-clic</span></div>
+            </div>
+          </section>
+
+          <!-- 3. BENCHMARKING COMPETITIVO REAL 2026 -->
+          <section>
+            <h2 class="sec-label"><span class="sec-dot"></span> 3. Por qué somos superiores a nuestros competidores (Benchmarking real · 136 hoteles a 3 años, antes de IVA)</h2>
+            <table class="comp-table">
+              <thead>
+                <tr>
+                  <th scope="col">Alternativa evaluada</th>
+                  <th scope="col">Modelo comercial real</th>
+                  <th scope="col">Total 3 años (136)</th>
+                  <th scope="col">Sigilo + LGT + MRZ</th>
+                  <th scope="col">Soberanía y Beneficio Gremial</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">PUIhoteles<span class="c-sub">R2 OS / Rotamundos</span></th>
+                  <td>$930/mes + $4,350 setup por hotel</td>
+                  <td class="text-crimson">$5,144,880 MXN</td>
+                  <td><span class="pill-no">Sin LGT · Hostales</span></td>
+                  <td><span class="pill-no">0% Asociación · Renta eterna</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">PUI México<span class="c-sub">PROLOG S.A. de C.V.</span></th>
+                  <td>$800/mes o $8,500/año · Código referido</td>
+                  <td class="text-crimson">$3,468,000 MXN</td>
+                  <td><span class="pill-warn">Alertas visibles · Sin LGT</span></td>
+                  <td><span class="pill-no">0% Asociación · Datos en tercero</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Facto Identity / INNKEY<span class="c-sub">SaaS renta / Cambio PMS</span></th>
+                  <td>Renta anual por hab. / Obliga cambiar OPERA</td>
+                  <td class="text-crimson">$3.0M – $4.5M MXN</td>
+                  <td><span class="pill-warn">Solo PUI / Rompe OPERA</span></td>
+                  <td><span class="pill-no">0% Asociación · Lock-in</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Tarifa Grupal (-50%)<span class="c-sub">Descuento extremo negociado</span></th>
+                  <td>$450/mes por hotel (renta perpetua)</td>
+                  <td><strong>$2,203,200 MXN</strong></td>
+                  <td><span class="pill-warn">Depende del proveedor</span></td>
+                  <td><span class="pill-no">Tercero · Sube tarifa Año 2</span></td>
+                </tr>
+                <tr class="row-win">
+                  <th scope="row">HOSPITALITY PUI ID<span class="c-sub">Propiedad exclusiva Hospitality PUI ID</span></th>
+                  <td>$350k único + AWS ($44/h) o 24/7 ($132/h)</td>
+                  <td>$566k AWS · $998k 24/7<span class="c-sub">2.2× a 9× más barato</span></td>
+                  <td><span class="pill-win">Sigilo + LGT + MRZ $0</span></td>
+                  <td><span class="pill-win">AWS Asociación · +$336k/año</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="win-4">
+              <div class="win-box">
+                <strong>1. Vence incluso al -50% grupal</strong>
+                <span>Ningún SaaS puede bajar a $44–$132/mes por hotel. Se paga sola en 2.6 meses de rentas ahorradas.</span>
+              </div>
+              <div class="win-box">
+                <strong>2. Ingreso neto para el gremio</strong>
+                <span>Cobrando solo $250/mes (-75% al hotel), la Asociación gana +$336,000/año tras cubrir AWS.</span>
+              </div>
+              <div class="win-box">
+                <strong>3. Alineado al Plan ATDT ($0 caja)</strong>
+                <span>La ATDT recomienda iniciar con 10 hoteles líderes: 10 fundadores ($35k c/u) financian el 100%.</span>
+              </div>
+              <div class="win-box">
+                <strong>4. Soberanía VIP en su AWS</strong>
+                <span>Los padrones de huéspedes nunca salen del entorno AWS de la Asociación; cero lock-in.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- CIERRE -->
+          <div class="cta-bar">
+            <div>
+              <div class="title">No es teoría: <span>Hospitality PUI ID ya opera hoy y está listo para piloto de 4 semanas.</span></div>
+              <div class="sub">Siguiente paso: sesión técnica de 20 min con TI (Crowne Plaza / Safi) y confirmación de los 10 hoteles líderes ATDT.</div>
+            </div>
+            <a class="cta-badge" href="./index.html" target="_blank" rel="noopener">Demo Privada · Hospitality PUI ID</a>
+          </div>
+        </div>
+
+        <footer class="foot">
+          <span><strong>© 2026 Hospitality PUI ID</strong> · Software, tecnología y documentación propiedad exclusiva de Hospitality PUI ID</span>
+          <span>Art. 12 Bis y 43 Bis LGMDFP · ATDT Feb. 2026 · Todos los derechos reservados</span>
+        </footer>
+      </article>
+    </main>
+  </body>
+</html>
