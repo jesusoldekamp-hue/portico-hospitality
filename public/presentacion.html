@@ -357,6 +357,7 @@
         color: var(--navy);
         padding: 1px 5px;
         border-radius: 4px;
+        overflow-wrap: anywhere;
       }
 
       /* Retículas de contenido */
@@ -726,6 +727,113 @@
         color: #0b4a3e;
       }
 
+      /* Matriz competitiva (Slide 8) */
+      .comp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .comp-table th,
+      .comp-table td {
+        padding: 11px 13px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .comp-table th {
+        background: var(--navy);
+        color: #dce7f3;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 700;
+      }
+
+      .comp-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .comp-table tr.row-win td {
+        background: var(--emerald-soft);
+        color: #0a4238;
+        font-weight: 700;
+        border-top: 2px solid var(--emerald);
+      }
+
+      .comp-sub {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 400;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .comp-table tr.row-win .comp-sub {
+        color: #165c4f;
+        font-weight: 500;
+      }
+
+      .pill-win,
+      .pill-no,
+      .pill-warn {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .pill-win {
+        background: var(--emerald);
+        color: #ffffff;
+      }
+
+      .pill-no {
+        background: var(--crimson-soft);
+        color: var(--crimson);
+      }
+
+      .pill-warn {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      .win-strip {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .win-chip {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+
+      .win-chip strong {
+        display: block;
+        font-size: 12.5px;
+        color: var(--emerald);
+      }
+
+      .win-chip span {
+        display: block;
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 2px;
+        line-height: 1.35;
+      }
+
       .bar-compare {
         display: flex;
         flex-direction: column;
@@ -909,7 +1017,7 @@
       </div>
       <div class="deck-controls">
         <button type="button" class="bar-btn" id="btn-prev">← Anterior</button>
-        <span class="slide-counter" id="slide-counter">1 / 10</span>
+        <span class="slide-counter" id="slide-counter">1 / 11</span>
         <button type="button" class="bar-btn" id="btn-next">Siguiente →</button>
         <button type="button" class="bar-btn" id="btn-toggle-mode">Modo Presentación</button>
         <button type="button" class="bar-btn" id="btn-print-pdf">Guardar PDF 16:9</button>
@@ -999,7 +1107,7 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Marco legal DOF 16/07/2025, 27/11/2025 y 23/01/2026</span>
-          <span class="page-num">02 / 10</span>
+          <span class="page-num">02 / 11</span>
         </div>
       </section>
 
@@ -1044,11 +1152,11 @@
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </div>
-              <h3>Protección automática a menores</h3>
-              <p>Validador oficial de CURP RENAPO sin costo por consulta que detecta menores de 18 años al instante en mostrador.</p>
+              <h3>Menores LGT + Extranjeros MRZ</h3>
+              <p>Validador oficial de CURP RENAPO y lector óptico <strong>MRZ ICAO 9303 ($0 por escaneo)</strong> para pasaportes extranjeros e INE en mostrador.</p>
               <ul class="clean-list">
+                <li><span class="dot"></span>Detecta menores nacionales y extranjeros (&lt;18 años) al instante.</li>
                 <li><span class="dot"></span>Activa verificación obligatoria de parentesco (Ley General de Turismo).</li>
-                <li><span class="dot"></span>Registra evidencia auditable de cada validación.</li>
               </ul>
             </div>
 
@@ -1060,11 +1168,11 @@
                   <line x1="9" y1="15" x2="15" y2="15" />
                 </svg>
               </div>
-              <h3>Escudo de auditoría y activo propio</h3>
-              <p>Cada hotel descarga en un clic su <strong>Constancia Oficial PDF</strong> con sello criptográfico SHA-256 lista para inspecciones.</p>
+              <h3>Activo propio escalable a 1,000+ hoteles</h3>
+              <p>Constancia Oficial PDF con sello SHA-256 en un clic y arquitectura Multi-Asociación lista para crecer a todo México.</p>
               <ul class="clean-list">
-                <li><span class="dot"></span>Inversión única: la plataforma pertenece al gremio.</li>
-                <li><span class="dot"></span>Sin límite de hoteles ni rentas mensuales a terceros.</li>
+                <li><span class="dot"></span>Inversión única: 100% propiedad de la Asociación en su AWS.</li>
+                <li><span class="dot"></span>Sublicenciable a otras Asociaciones Estatales de Hoteles.</li>
               </ul>
             </div>
           </div>
@@ -1072,7 +1180,7 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Hospitality Trust &amp; Compliance</span>
-          <span class="page-num">03 / 10</span>
+          <span class="page-num">03 / 11</span>
         </div>
       </section>
 
@@ -1162,7 +1270,7 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Manual Técnico de Instituciones Diversas (DOF, 23 de enero de 2026)</span>
-          <span class="page-num">04 / 10</span>
+          <span class="page-num">04 / 11</span>
         </div>
       </section>
 
@@ -1235,7 +1343,7 @@
               </div>
               <div class="logo-tile">
                 <div class="logo-mark mark-oracle">O5</div>
-                <div class="logo-text"><strong>OPERA 5 / Local</strong><span>Agente CSV sin tocar Oracle</span></div>
+                <div class="logo-text"><strong>OPERA 5 / Local</strong><span>XML nativo + Instalador 1-Clic</span></div>
               </div>
               <div class="logo-tile">
                 <div class="logo-mark mark-navy">PMS</div>
@@ -1243,7 +1351,7 @@
               </div>
               <div class="logo-tile">
                 <div class="logo-mark mark-aws">AWS</div>
-                <div class="logo-text"><strong>Nube AWS Oficial</strong><span>RDS PostgreSQL · KMS · WAF</span></div>
+                <div class="logo-text"><strong>Nube AWS Oficial</strong><span>PostgreSQL 16 RLS · 1,000+ hoteles</span></div>
               </div>
             </div>
           </div>
@@ -1251,7 +1359,7 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Identificadores institucionales de referencia del ecosistema hotelero y normativo</span>
-          <span class="page-num">05 / 10</span>
+          <span class="page-num">05 / 11</span>
         </div>
       </section>
 
@@ -1324,18 +1432,18 @@
           </div>
 
           <div class="sec-strip">
+            <div class="sec-pill"><strong>IP Fija + WAF</strong><span>Lista blanca ATDT</span></div>
+            <div class="sec-pill"><strong>TLS + JWS/JWT</strong><span>Firma por transacción</span></div>
+            <div class="sec-pill"><strong>PostgreSQL RLS</strong><span>Aislamiento por RFC</span></div>
             <div class="sec-pill"><strong>AES-256-GCM</strong><span>CURPs cifradas</span></div>
-            <div class="sec-pill"><strong>JWT HS256</strong><span>Auth DOF por RFC</span></div>
-            <div class="sec-pill"><strong>scrypt</strong><span>Claves hasheadas</span></div>
-            <div class="sec-pill"><strong>SHA-256</strong><span>Cadena inmutable</span></div>
-            <div class="sec-pill"><strong>Outbox 8x</strong><span>Reintento SEGOB</span></div>
-            <div class="sec-pill"><strong>0 deps npm</strong><span>Auditoría SCA limpia</span></div>
+            <div class="sec-pill"><strong>MRZ ICAO $0</strong><span>INE y Pasaportes</span></div>
+            <div class="sec-pill"><strong>SHA-256 + ATDT</strong><span>Log + Protocolo Ciber</span></div>
           </div>
         </div>
 
         <div class="slide-foot">
-          <span>Portico Hospitality · Preparado para auditorías de seguridad SAST / DAST / SCA</span>
-          <span class="page-num">06 / 10</span>
+          <span>Portico Hospitality · Alineado a controles ATDT/SEGOB (Feb. 2026): IP fija, WAF, TLS, JWS/JWT y reporte a incidentesciber@transformaciondigital.gob.mx</span>
+          <span class="page-num">06 / 11</span>
         </div>
       </section>
 
@@ -1417,17 +1525,108 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Cálculo directo sobre 136 hoteles pagando $1,000 MXN/mes en herramienta rentada externa</span>
-          <span class="page-num">07 / 10</span>
+          <span class="page-num">07 / 11</span>
         </div>
       </section>
 
-      <!-- SLIDE 8: CRONOGRAMA 4 A 6 SEMANAS -->
+      <!-- SLIDE 8: COMPARATIVA VS COMPETENCIA Y TARIFA GRUPAL (-50%) -->
       <section class="slide" data-slide="8">
         <div class="slide-head">
           <div>
-            <h2>Hoja de ruta controlada: de piloto insignia a despliegue estatal</h2>
+            <h2>Por qué Portico supera al mercado — incluso frente a tarifas grupales (-50%)</h2>
             <p class="slide-lead">
-              El núcleo funcional de Portico Hospitality ya está programado y probado. La implementación productiva en AWS y piloto se completa en <strong>4 a 6 semanas</strong>.
+              Comparativa real a <strong>3 años para 136 hoteles</strong> (antes de IVA) frente a los proveedores PUI existentes en México y un escenario agresivo de descuento por volumen.
+            </p>
+          </div>
+          <div class="mini-brand">
+            <img src="./assets/portico-emblem.jpg" alt="" />
+            <span>Portico Hospitality</span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Alternativa en el mercado</th>
+                <th>Esquema real</th>
+                <th>Total 3 años (136 hoteles)</th>
+                <th>Sigilo + Menores LGT + MRZ</th>
+                <th>Propiedad y Datos VIP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>PUIhoteles</strong><span class="comp-sub">R2 OS / Rotamundos</span></td>
+                <td>$930/mes + $4,350 setup/hotel</td>
+                <td class="text-crimson"><strong>$5,144,880 MXN</strong></td>
+                <td><span class="pill-no">Sin LGT · Enfoque hostales</span></td>
+                <td><span class="pill-no">0% Asociación</span></td>
+              </tr>
+              <tr>
+                <td><strong>PUI México</strong><span class="comp-sub">PROLOG S.A. de C.V.</span></td>
+                <td>$800/mes o $8,500/año · Código referido</td>
+                <td class="text-crimson"><strong>$3,468,000 MXN</strong></td>
+                <td><span class="pill-warn">Alertas visibles · Sin LGT</span></td>
+                <td><span class="pill-no">0% Asociación</span></td>
+              </tr>
+              <tr>
+                <td><strong>Facto Identity / INNKEY</strong><span class="comp-sub">SaaS renta / Cambio de PMS</span></td>
+                <td>Renta anual por hab. / Obliga cambiar OPERA</td>
+                <td class="text-crimson"><strong>$3.0M – $4.5M MXN</strong></td>
+                <td><span class="pill-warn">Solo PUI / Rompe OPERA</span></td>
+                <td><span class="pill-no">0% Asociación</span></td>
+              </tr>
+              <tr>
+                <td><strong>Tarifa Grupal Negociada (-50%)</strong><span class="comp-sub">Escenario extremo de descuento externo</span></td>
+                <td>$450/mes por hotel (renta perpetua)</td>
+                <td><strong>$2,203,200 MXN</strong></td>
+                <td><span class="pill-warn">Depende de proveedor</span></td>
+                <td><span class="pill-no">Tercero · Lock-in</span></td>
+              </tr>
+              <tr class="row-win">
+                <td><strong>PORTICO HOSPITALITY</strong><span class="comp-sub">Propiedad de la Asociación · Escala 1,000+ hoteles</span></td>
+                <td>$350k único + AWS ($44/hotel) o Todo Incluido ($132/hotel)</td>
+                <td><strong>$566k AWS · $998k 24/7</strong><span class="comp-sub">2.2× a 9× más barato</span></td>
+                <td><span class="pill-win">Sigilo RBAC + LGT + MRZ $0</span></td>
+                <td><span class="pill-win">100% Asociación AWS</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="win-strip">
+            <div class="win-chip">
+              <strong>1. Imposible igualar en precio</strong>
+              <span>Ningún SaaS externo puede bajar a $44–$132/mes por hotel sin quebrar su modelo.</span>
+            </div>
+            <div class="win-chip">
+              <strong>2. Sublicenciable a otros estados</strong>
+              <span>La Asociación puede ofrecer su propia plataforma a otras asociaciones y generar utilidad.</span>
+            </div>
+            <div class="win-chip">
+              <strong>3. Paridad y superioridad técnica</strong>
+              <span>OPERA Cloud OHIP, OPERA 5 XML, Instalador 1-Clic, Extranjeros y MRZ ICAO $0.</span>
+            </div>
+            <div class="win-chip">
+              <strong>4. Cero códigos de referido</strong>
+              <span>El gremio no regala su base a terceros: conserva soberanía, marca e ingresos (+$336k/año).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span>Portico Hospitality · Comparativa verificada contra precios públicos del mercado PUI en México (2026)</span>
+          <span class="page-num">08 / 11</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: CRONOGRAMA 4 A 6 SEMANAS -->
+      <section class="slide" data-slide="9">
+        <div class="slide-head">
+          <div>
+            <h2>Hoja de ruta oficial: alineada al proceso de incorporación SEGOB / ATDT</h2>
+            <p class="slide-lead">
+              Seguimos paso a paso la guía oficial de <strong>Inscripción de Instituciones Privadas (Feb. 2026)</strong> en <code>plataformadebusqueda.gob.mx/inscripcion</code> para salir en producción en <strong>4 a 6 semanas</strong>.
             </p>
           </div>
           <div class="mini-brand">
@@ -1440,47 +1639,47 @@
           <div class="timeline-grid">
             <div class="step-card">
               <span class="step-badge">SEMANA 1</span>
-              <h3>Diagnóstico TI y AWS</h3>
-              <p>Sesión técnica con <strong>Crowne Plaza Monterrey</strong> para validar versión de OPERA (OHIP o Agente Local), apertura de cuenta AWS oficial de la Asociación y arranque de trámite Llave MX.</p>
+              <h3>Llave MX, e.firma y AWS</h3>
+              <p>Alta de Persona Moral en <strong>Llave MX</strong> con e.firma SAT vigente, descarga del Manual Técnico completo de ciberseguridad en portal ATDT y diagnóstico de OPERA en <strong>Crowne Plaza Monterrey</strong>.</p>
             </div>
 
             <div class="step-card">
               <span class="step-badge">SEMANAS 2 – 3</span>
-              <h3>Producción y Conector</h3>
-              <p>Despliegue en AWS con PostgreSQL RDS cifrado (KMS), HTTPS TLS 1.3 + WAF, construcción del conector piloto OPERA y pruebas de seguridad SAST / DAST / SCA.</p>
+              <h3>AWS + IP Fija + Conector</h3>
+              <p>Despliegue en cuenta AWS de la Asociación (PostgreSQL 16 + RLS, WAF, <strong>IP fija autorizada</strong>, JWS/JWT) e instalación 1-clic del conector OPERA 5 XML / OHIP.</p>
             </div>
 
             <div class="step-card">
               <span class="step-badge emerald">SEMANA 4</span>
-              <h3>Certificación y Piloto Vivo</h3>
-              <p>Validación en entorno oficial <strong>Sandbox de SEGOB</strong> (<code>/activar-reporte-prueba</code>, Fases 1–3) y salida en producción en <strong>Crowne Plaza Monterrey</strong>.</p>
+              <h3>Prueba de Webhook y Piloto</h3>
+              <p>Registro en el <strong>portal oficial PUI</strong> (IP + URL Webhook + usuario PUI), validación <strong>"Realizar prueba de webhook"</strong> (CURP + FUB + UUID4) y arranque en <strong>Crowne Plaza</strong>.</p>
             </div>
 
             <div class="step-card">
               <span class="step-badge emerald">SEMANAS 5 – 6</span>
-              <h3>Hoteles Safi y Asociación</h3>
-              <p>Alta de <strong>Safi Centro, Metropolitan y Valle</strong>, apertura del registro multi-RFC para los demás hoteles afiliados y capacitación a gerentes y equipos de TI.</p>
+              <h3>10 Fundadores y Asociación</h3>
+              <p>Incorporación de <strong>Hoteles Safi</strong> y los 10 hoteles insignia (como recomienda la ATDT), seguida del despliegue masivo al resto de afiliados con Constancia PDF SHA-256.</p>
             </div>
           </div>
 
           <div class="truth-bar" style="margin-top: 22px;">
-            <span><strong>Plan de continuidad integrado:</strong> si el corporativo de IHG / Oracle tarda en liberar API en Crowne Plaza, el hotel cumple desde Semana 4 vía Agente Local CSV — o se corre en paralelo con Hoteles Safi.</span>
+            <span><strong>Alineación oficial ATDT (Feb. 2026):</strong> El Gobierno de México recomienda arrancar en cada cámara con <strong>las 10 instituciones más representativas</strong> y Mesa de Atención ATDT dedicada.</span>
           </div>
         </div>
 
         <div class="slide-foot">
-          <span>Portico Hospitality · Cronograma técnico sujeto únicamente a tiempos externos de liberación de Llave MX / SEGOB</span>
-          <span class="page-num">08 / 10</span>
+          <span>Portico Hospitality · Proceso alineado a SEGOB / ATDT (Febrero 2026) · Plazo oficial de inscripción: 31 de marzo (regularización inmediata)</span>
+          <span class="page-num">09 / 11</span>
         </div>
       </section>
 
-      <!-- SLIDE 9: PROPUESTA DE INVERSIÓN -->
-      <section class="slide" data-slide="9">
+      <!-- SLIDE 10: PROPUESTA DE INVERSIÓN -->
+      <section class="slide" data-slide="10">
         <div class="slide-head">
           <div>
             <h2>Propuesta de inversión: pago único y esquema de cero desembolso</h2>
             <p class="slide-lead">
-              Tres caminos flexibles para que el Consejo apruebe sin riesgo técnico ni presión sobre la caja de la Asociación.
+              Tres caminos flexibles — incluyendo el esquema de <strong>10 Hoteles Fundadores</strong> que coincide exactamente con la estrategia oficial de arranque de la ATDT.
             </p>
           </div>
           <div class="mini-brand">
@@ -1497,21 +1696,21 @@
               <div class="price-tag">$350,000 MXN</div>
               <div class="price-sub">+ IVA · Inversión única llave en mano</div>
               <ul class="clean-list">
-                <li><span class="dot dot-mint"></span>Núcleo PUI DOF multi-RFC sin límite de hoteles.</li>
-                <li><span class="dot dot-mint"></span>Piloto Crowne Plaza + alta Hoteles Safi + Agente OPERA + CSV + Constancias PDF.</li>
-                <li><span class="dot dot-mint"></span><strong>Pagos por hitos:</strong> 30% inicio · 40% certificación Sandbox SEGOB · 30% entrega final.</li>
+                <li><span class="dot dot-mint"></span>Núcleo PUI DOF multi-RFC listo para escalar de 136 a 1,000+ hoteles.</li>
+                <li><span class="dot dot-mint"></span>Piloto Crowne Plaza + Hoteles Safi + OPERA XML/OHIP + MRZ $0 + Instalador 1-Clic + Constancias PDF.</li>
+                <li><span class="dot dot-mint"></span><strong>Pagos por hitos:</strong> 30% inicio · 40% prueba Webhook/Sandbox SEGOB · 30% entrega final.</li>
               </ul>
             </div>
 
             <div class="box-accent">
-              <span class="step-badge" style="margin-bottom: 10px;">$0 CAJA ASOCIACIÓN</span>
-              <h3>Socios Fundadores</h3>
+              <span class="step-badge" style="margin-bottom: 10px;">$0 CAJA ASOCIACIÓN · PLAN ATDT</span>
+              <h3>10 Socios Fundadores</h3>
               <div class="price-tag text-emerald">$35,000 MXN</div>
-              <div class="price-sub">Pago único por hotel fundador (10 hoteles)</div>
+              <div class="price-sub">Pago único por hotel fundador (10 líderes)</div>
               <ul class="clean-list">
-                <li><span class="dot"></span>10 hoteles líderes (ej. Crowne Plaza, Safi y 8 más) financian el desarrollo completo.</li>
-                <li><span class="dot"></span>Los fundadores quedan <strong>exentos de cuota por 3 años</strong>.</li>
-                <li><span class="dot"></span>La Asociación desembolsa <strong>$0 de tesorería</strong> y se queda con la plataforma para todos sus socios.</li>
+                <li><span class="dot"></span>Los <strong>10 hoteles más representativos</strong> (Crowne Plaza, Safi y 8 líderes) financian todo el proyecto.</li>
+                <li><span class="dot"></span>Quedan <strong>exentos de cuota por 3 años</strong> y encabezan el acompañamiento oficial ATDT.</li>
+                <li><span class="dot"></span>La Asociación desembolsa <strong>$0 de tesorería</strong> y se queda con el 100% del software.</li>
               </ul>
             </div>
 
@@ -1521,9 +1720,9 @@
               <div class="price-tag">$135,000 MXN</div>
               <div class="price-sub">+ IVA · Fase 1 Piloto Crowne Plaza</div>
               <ul class="clean-list">
-                <li><span class="dot"></span><strong>Fase 1:</strong> Núcleo DOF + Piloto Crowne Plaza + certificación Sandbox SEGOB.</li>
-                <li><span class="dot"></span><strong>Fase 2 ($215,000 + IVA):</strong> Se paga solo al comprobar éxito y liberar a Safi y a toda la Asociación.</li>
-                <li><span class="dot"></span><strong>Póliza opcional 24/7:</strong> $12k–$18k/mes total por toda la red (~$100/mes por hotel).</li>
+                <li><span class="dot"></span><strong>Fase 1:</strong> Núcleo DOF + Piloto Crowne Plaza + autorización de Webhook en SEGOB/ATDT.</li>
+                <li><span class="dot"></span><strong>Fase 2 ($215,000 + IVA):</strong> Se paga solo al comprobar éxito y liberar a Safi y toda la Asociación.</li>
+                <li><span class="dot"></span><strong>Póliza opcional 24/7:</strong> $12k–$18k/mes total red (~$88–$132/hotel con actualizaciones DOF).</li>
               </ul>
             </div>
           </div>
@@ -1531,17 +1730,17 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · No incluye trámites legales Llave MX, consumo directo AWS ni licencias propias de terceros (ej. Oracle OHIP)</span>
-          <span class="page-num">09 / 10</span>
+          <span class="page-num">10 / 11</span>
         </div>
       </section>
 
-      <!-- SLIDE 10: CIERRE Y DEMO EN VIVO -->
-      <section class="slide slide-dark" data-slide="10">
+      <!-- SLIDE 11: CIERRE Y DEMO EN VIVO -->
+      <section class="slide slide-dark" data-slide="11">
         <div class="slide-head">
           <div>
             <h2>No es una idea en papel: Portico Hospitality ya funciona hoy</h2>
             <p class="slide-lead">
-              Demostración interactiva disponible 24/7 para explorar con el Consejo y los directores de TI.
+              Demostración interactiva en vivo 24/7 para validar en esta misma sesión con el Consejo y los directores de TI.
             </p>
           </div>
           <div class="mini-brand">
@@ -1556,7 +1755,7 @@
               <img class="closing-crest" src="./assets/portico-emblem.jpg" alt="Emblema Portico Hospitality" />
               <h3 style="font-size: 28px; margin: 0 0 12px; color: #ffffff;">Siguiente paso inmediato</h3>
               <p style="font-size: 16px; color: #c4d3e4; line-height: 1.55; margin: 0;">
-                Agendar una sesión técnica de <strong>20 minutos con el responsable de TI del Crowne Plaza Monterrey</strong> para confirmar su versión exacta de OPERA y activar el plan piloto de 4 semanas.
+                1) Confirmar los <strong>10 hoteles líderes</strong> (arrancando con <strong>Crowne Plaza Monterrey</strong> y <strong>Hoteles Safi</strong>) y 2) agendar sesión de <strong>20 min con TI</strong> para descargar el Manual Técnico completo vía Llave MX y activar el piloto de 4 semanas.
               </p>
               <a class="closing-url" href="https://jesusoldekamp-hue.github.io/portico-hospitality/" target="_blank" rel="noopener">
                 https://jesusoldekamp-hue.github.io/portico-hospitality/
@@ -1566,11 +1765,11 @@
             <div class="box-dark">
               <h3 style="color: #6ee7cc;">Qué pueden probar en vivo ahora mismo</h3>
               <ul class="clean-list">
-                <li><span class="dot dot-mint"></span><strong>4 perfiles RBAC reales:</strong> Consejo Asociación, TI Crowne Plaza, TI Hoteles Safi y Recepción.</li>
-                <li><span class="dot dot-mint"></span><strong>Simulación completa SEGOB ↔ Crowne Plaza:</strong> alerta de menor desaparecido, sigilo en recepción y envío Fase 3.</li>
-                <li><span class="dot dot-mint"></span><strong>Importador masivo CSV</strong> con validación real de dígito verificador RENAPO.</li>
+                <li><span class="dot dot-mint"></span><strong>Simulador 10 → 1,000 hoteles</strong> vs. PUI México, PUIhoteles y Tarifa Grupal (-50%) + prueba de carga criptográfica (0 fugas RFC).</li>
+                <li><span class="dot dot-mint"></span><strong>Simulación completa SEGOB ↔ Crowne Plaza:</strong> alerta de menor desaparecido, sigilo RBAC en mostrador y envío Fase 3.</li>
+                <li><span class="dot dot-mint"></span><strong>Escáner óptico MRZ ICAO ($0)</strong> para Pasaportes extranjeros e INE + bloqueo automático de menores (LGT).</li>
+                <li><span class="dot dot-mint"></span><strong>Instalador 1-Clic Windows/Linux</strong> y prueba de importación <strong>XML nativo de Oracle OPERA 5</strong> y CSV.</li>
                 <li><span class="dot dot-mint"></span><strong>Constancia Oficial PDF</strong> imprimible con sello criptográfico SHA-256.</li>
-                <li><span class="dot dot-mint"></span><strong>Calculadora ROI</strong> interactiva para ajustar cuotas y Socios Fundadores.</li>
               </ul>
             </div>
           </div>
@@ -1578,7 +1777,7 @@
 
         <div class="slide-foot">
           <span>Portico Hospitality · Hospitality Trust &amp; Compliance · Nuevo León, México</span>
-          <span class="page-num">10 / 10</span>
+          <span class="page-num">11 / 11</span>
         </div>
       </section>
     </main>
