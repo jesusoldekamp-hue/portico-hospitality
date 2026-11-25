@@ -1,5 +1,5 @@
 /**
- * Portico Hospitality — Generador de Instalador 1-Clic del Agente PMS
+ * Hospitality PUI ID — Generador de Instalador 1-Clic del Agente PMS
  * Produce scripts listos para ejecutar en Windows Server (PowerShell / Scheduled Task)
  * o Linux / macOS (systemd / launchd) preconfigurados con el RFC, slug y API Key del hotel.
  */
@@ -29,7 +29,7 @@ export function buildWindowsInstallerScript({
   const safeDir = escapePs(watchDir);
 
   return `# ==============================================================================
-# Portico Hospitality — Instalador 1-Clic de Servicio Windows (OPERA 5 / Zeus)
+# Hospitality PUI ID — Instalador 1-Clic de Servicio Windows (OPERA 5 / Zeus)
 # Hotel: ${safeName} (RFC: ${safeRfc})
 # ==============================================================================
 # Ejecutar en PowerShell como Administrador:
@@ -46,7 +46,7 @@ $InstallDir = 'C:\\ProgramData\\PorticoHospitality\\Agent'
 $TaskName   = "PorticoHospitality-PMS-$HotelSlug"
 
 Write-Host ""
-Write-Host "=== Portico Hospitality · Instalador de Agente PMS ===" -ForegroundColor Cyan
+Write-Host "=== Hospitality PUI ID · Instalador de Agente PMS ===" -ForegroundColor Cyan
 Write-Host "Hotel: $HotelName ($HotelSlug)"
 Write-Host "Carpeta vigilada (CSV/XML OPERA): $WatchDir"
 
@@ -108,7 +108,7 @@ async function syncOnce() {
       fs.renameSync(src, path.join(targetDir, \`\${stamp}_\${name}\`));
       fs.writeFileSync(path.join(targetDir, \`\${stamp}_\${name}.json\`), JSON.stringify(out, null, 2));
     } catch (e) {
-      console.error('[Portico Agent] Error de red, se reintentará:', e.message);
+      console.error('[Hospitality PUI ID Agent] Error de red, se reintentará:', e.message);
     }
   }
 }
@@ -160,7 +160,7 @@ export function buildLinuxInstallerScript({
 
   return `#!/usr/bin/env bash
 # ==============================================================================
-# Portico Hospitality — Instalador 1-Clic systemd (Linux / Mac Server)
+# Hospitality PUI ID — Instalador 1-Clic systemd (Linux / Mac Server)
 # Hotel: ${safeName} (RFC: ${safeRfc})
 # ==============================================================================
 set -euo pipefail
@@ -172,7 +172,7 @@ WATCH_DIR='${safeDir}'
 INSTALL_DIR='/opt/portico-hospitality-agent'
 SERVICE_NAME="portico-pms-\${HOTEL_SLUG}"
 
-echo "=== Portico Hospitality · Instalador Agente PMS (\${HOTEL_SLUG}) ==="
+echo "=== Hospitality PUI ID · Instalador Agente PMS (\${HOTEL_SLUG}) ==="
 command -v node >/dev/null 2>&1 || { echo "Error: instala Node.js 20+ primero."; exit 1; }
 
 sudo mkdir -p "\${INSTALL_DIR}" "\${WATCH_DIR}/processed" "\${WATCH_DIR}/failed"
@@ -216,7 +216,7 @@ async function syncOnce() {
       fs.renameSync(src, path.join(targetDir, \`\${stamp}_\${name}\`));
       fs.writeFileSync(path.join(targetDir, \`\${stamp}_\${name}.json\`), JSON.stringify(out, null, 2));
     } catch (e) {
-      console.error('[Portico Agent] Error de red, se reintentará:', e.message);
+      console.error('[Hospitality PUI ID Agent] Error de red, se reintentará:', e.message);
     }
   }
 }
@@ -228,7 +228,7 @@ EOF
 if command -v systemctl >/dev/null 2>&1; then
   cat <<EOF | sudo tee "/etc/systemd/system/\${SERVICE_NAME}.service" >/dev/null
 [Unit]
-Description=Portico Hospitality PMS Sync Agent (\${HOTEL_SLUG})
+Description=Hospitality PUI ID PMS Sync Agent (\${HOTEL_SLUG})
 After=network-online.target
 
 [Service]

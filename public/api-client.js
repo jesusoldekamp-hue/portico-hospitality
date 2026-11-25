@@ -1,5 +1,5 @@
 /**
- * Capa dual de transporte para Portico Hospitality:
+ * Capa dual de transporte para Hospitality PUI ID:
  * - Si hay servidor Node.js / AWS activo, usa los endpoints reales `/api/*`.
  * - Si se despliega estáticamente en GitHub Pages (`*.github.io`), activa
  *   automáticamente el motor completo en navegador (CURP RENAPO real, RBAC,
@@ -339,11 +339,11 @@ function createInitialLocalState() {
         direccion: 'SISTEMA',
         endpoint: '/api/health',
         fase: 'INICIO',
-        resumen: 'Portico Hospitality en modo Demo Web 24/7 (GitHub Pages) con motor criptográfico SHA-256.',
+        resumen: 'Hospitality PUI ID en modo Demo Web 24/7 (GitHub Pages) con motor criptográfico SHA-256.',
         estatusHttp: 200,
         critico: false,
         payload: {
-          plataforma: 'Portico Hospitality — Hospitality Trust & Compliance',
+          plataforma: 'Hospitality PUI ID — Hospitality Trust & Compliance',
           estandar: 'Manual Técnico PUI — DOF (23/01/2026)',
           modo: 'GitHub Pages CDN 24/7 (Motor local en navegador)'
         },
@@ -487,7 +487,7 @@ export function openConstancia(hotelSlug) {
   <style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f6f8;color:#111d2e;margin:0;padding:1.5rem}.sheet{max-width:820px;margin:0 auto;background:#fff;border:1px solid #d5dce3;border-radius:10px;padding:2rem 2.25rem}h1{font-size:1.25rem;margin:.2rem 0}h2{font-size:.9rem;text-transform:uppercase;color:#0d6858;border-bottom:1px solid #d5dce3;padding-bottom:.25rem;margin-top:1.3rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.2rem;font-size:.88rem}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:.5rem}.kpi{border:1px solid #d5dce3;border-radius:6px;padding:.6rem}.kpi strong{display:block;font-size:1.2rem}.seal{margin-top:1.1rem;padding:.85rem;background:#eef8f5;border:1px solid #b5ddd4;border-radius:6px;font-size:.82rem;word-break:break-all}.btn{background:#0d6858;color:#fff;border:none;border-radius:6px;padding:.55rem 1rem;font-weight:600;cursor:pointer;margin-bottom:1rem}@media print{.btn{display:none}body{background:#fff;padding:0}.sheet{border:none;padding:0}}</style></head>
   <body><div style="max-width:820px;margin:0 auto"><button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button></div>
   <main class="sheet"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #111d2e;padding-bottom:.9rem;margin-bottom:1rem">
-  <div><strong style="font-size:1.3rem">Portico Hospitality</strong><div style="font-size:.84rem;color:#4b5868">Hospitality Trust &amp; Compliance · Asociación Mexicana de Hoteles de Nuevo León</div></div>
+  <div><strong style="font-size:1.3rem">Hospitality PUI ID</strong><div style="font-size:.84rem;color:#4b5868">Hospitality Trust &amp; Compliance · Asociación Mexicana de Hoteles de Nuevo León</div></div>
   <div style="text-align:right;font-size:.8rem">Folio: <strong>${folio}</strong></div></div>
   <h1>Constancia Técnica de Interconexión y Cumplimiento PUI</h1>
   <h2>1. Institución Obligada</h2><div class="grid">
@@ -783,7 +783,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       direccion: 'ASOCIACIÓN',
       endpoint: '/api/hotels',
       fase: 'ONBOARDING',
-      resumen: `Nuevo hotel dado de alta en Portico Hospitality (multi-RFC): ${nombre} (${rfc}).`,
+      resumen: `Nuevo hotel dado de alta en Hospitality PUI ID (multi-RFC): ${nombre} (${rfc}).`,
       estatusHttp: 201,
       payload: { slug, rfc, pms: hotel.pms }
     });
@@ -1022,7 +1022,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       }
       await addLocalAudit(st, {
         hotelSlug: slug,
-        direccion: 'PMS → PORTICO',
+        direccion: 'PMS → HOSPITALITY PUI ID',
         endpoint: `/api/pms/${slug}/import-csv`,
         fase: isXml ? 'IMPORTACION OPERA XML' : 'IMPORTACION CSV',
         resumen: `Lote ${isXml ? 'OPERA XML' : 'CSV'} procesado en ${hotel.nombre}: ${insertados} válidos, ${rechazados} rechazados.`,

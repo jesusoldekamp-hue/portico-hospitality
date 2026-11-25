@@ -454,7 +454,7 @@ function seedInitialData(database) {
 
   // Evento génesis de auditoría encadenada SHA-256
   const payload = {
-    plataforma: 'Portico Hospitality — Hospitality Trust & Compliance',
+    plataforma: 'Hospitality PUI ID — Hospitality Trust & Compliance',
     motor_bd: 'SQLite ACID (WAL) · Compatible AWS RDS PostgreSQL',
     estandar: 'Manual Técnico PUI — Instituciones Diversas (DOF 23/01/2026)',
     cifrado: 'AES-256-GCM + scrypt + JWT HS256',
@@ -467,7 +467,7 @@ function seedInitialData(database) {
     direccion: 'SISTEMA',
     endpoint: '/api/health',
     fase: 'INICIO',
-    resumen: 'Núcleo Portico Hospitality inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
+    resumen: 'Núcleo Hospitality PUI ID inicializado sobre base relacional ACID con cifrado AES-256-GCM y RBAC.',
     estatusHttp: 200,
     critico: false,
     payload

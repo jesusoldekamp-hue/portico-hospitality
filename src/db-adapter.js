@@ -1,5 +1,5 @@
 /**
- * Portico Hospitality — Adaptador Dual de Persistencia (SQLite WAL ↔ PostgreSQL 16 + RLS)
+ * Hospitality PUI ID — Adaptador Dual de Persistencia (SQLite WAL ↔ PostgreSQL 16 + RLS)
  *
  * - Sin `DATABASE_URL`: opera en modo embebido cero-dependencias sobre `node:sqlite` (WAL ACID)
  *   para desarrollo local, piloto rápido y pruebas unitarias.

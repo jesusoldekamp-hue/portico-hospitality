@@ -1,5 +1,5 @@
-# Portico Hospitality — Stack de Producción Escala Nacional (1,000+ Hoteles)
-# Incluye PostgreSQL 16 (con RLS + esquema automático), Redis 7 y API Portico escalable.
+# Hospitality PUI ID — Stack de Producción Escala Nacional (1,000+ Hoteles)
+# Incluye PostgreSQL 16 (con RLS + esquema automático), Redis 7 y API Hospitality PUI ID escalable.
 # Uso: docker compose -f docker-compose.prod.yml up -d --scale portico-api=3
 
 services:

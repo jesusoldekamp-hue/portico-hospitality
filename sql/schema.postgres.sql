@@ -1,4 +1,4 @@
--- Portico Hospitality — Esquema de Producción Escala Nacional (1,000+ Hoteles)
+-- Hospitality PUI ID — Esquema de Producción Escala Nacional (1,000+ Hoteles)
 -- PostgreSQL 16+ (AWS RDS Multi-AZ con cifrado KMS, Row-Level Security y particionamiento)
 -- Equivalente 1:1 del esquema SQLite embebido en src/db.js + capa Multi-Asociación
 

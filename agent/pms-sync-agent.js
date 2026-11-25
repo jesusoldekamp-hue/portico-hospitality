@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Portico Hospitality — Agente Local de Sincronización PMS (cero dependencias externas)
+ * Hospitality PUI ID — Agente Local de Sincronización PMS (cero dependencias externas)
  *
  * Diseñado para hoteles con PMS On-Premise (Oracle OPERA 5, Zeus, Frontdesk, etc.)
  * que exportan reportes CSV a una carpeta local sin exponer su base de datos.
@@ -95,7 +95,7 @@ export async function syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl, logge
         );
         summary.fallidos++;
         summary.resultados.push({ filename, ok: false, status: res.status, error: data.error });
-        logger.error(`[Portico Agent] Error en ${filename}: HTTP ${res.status} (${data.error || ''})`);
+        logger.error(`[Hospitality PUI ID Agent] Error en ${filename}: HTTP ${res.status} (${data.error || ''})`);
       } else {
         const dest = path.join(processedDir, `${stamp}_${filename}`);
         fs.renameSync(filePath, dest);
@@ -108,13 +108,13 @@ export async function syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl, logge
           rechazados: data.rechazados
         });
         logger.log(
-          `[Portico Agent] Sincronizado ${filename} → ${data.insertados} válidos, ${data.rechazados} rechazados.`
+          `[Hospitality PUI ID Agent] Sincronizado ${filename} → ${data.insertados} válidos, ${data.rechazados} rechazados.`
         );
       }
     } catch (err) {
       summary.fallidos++;
       summary.resultados.push({ filename, ok: false, error: err.message });
-      logger.error(`[Portico Agent] Fallo de red en ${filename}: ${err.message} (se reintentará)`);
+      logger.error(`[Hospitality PUI ID Agent] Fallo de red en ${filename}: ${err.message} (se reintentará)`);
     }
   }
 
@@ -137,11 +137,11 @@ if (isMain) {
     process.exit(1);
   }
 
-  console.log(`[Portico Agent] Vigilando ${path.resolve(dir)} para ${hotelSlug} → ${baseUrl}`);
+  console.log(`[Hospitality PUI ID Agent] Vigilando ${path.resolve(dir)} para ${hotelSlug} → ${baseUrl}`);
 
   if (cli.once) {
     const res = await syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl });
-    console.log('[Portico Agent] Resumen:', JSON.stringify(res));
+    console.log('[Hospitality PUI ID Agent] Resumen:', JSON.stringify(res));
     process.exit(res.fallidos > 0 ? 2 : 0);
   } else {
     const tick = async () => {

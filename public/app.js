@@ -1,5 +1,5 @@
 /**
- * Portico Hospitality — Hospitality Trust & Compliance
+ * Hospitality PUI ID — Hospitality Trust & Compliance
  * Frontend con autenticación RBAC real, terminal de recepción discreta,
  * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
  * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en GitHub Pages.
@@ -39,7 +39,7 @@ const ROLE_LABELS = {
 
 const VIEW_META = {
   resumen: {
-    title: 'Portico Hospitality — Resumen Ejecutivo y Retorno para la Asociación',
+    title: 'Hospitality PUI ID — Resumen Ejecutivo y Retorno para la Asociación',
     subtitle:
       'Cumplimiento PUI (SEGOB / RENAPO) y protección hotelera sobre arquitectura propia multi-RFC con aislamiento RBAC.'
   },
@@ -508,7 +508,7 @@ function updateRoiCalculator() {
         portico: false
       },
       {
-        name: 'Portico Hospitality (Nube AWS propia)',
+        name: 'Hospitality PUI ID (Nube AWS propia)',
         sub: `Pago único ${fmtMxn.format(devCost)} + AWS ${fmtMxn.format(sharedCloudMonthly)}/mes`,
         perHotel: `${fmtMxn.format(cloudPerHotel)} MXN`,
         total3y: porticoAws3y,
@@ -517,7 +517,7 @@ function updateRoiCalculator() {
         portico: true
       },
       {
-        name: 'Portico Hospitality (Todo Incluido 24/7)',
+        name: 'Hospitality PUI ID (Todo Incluido 24/7)',
         sub: `Incluye AWS + Póliza 24/7 y cambios DOF (${fmtMxn.format(supportMonthly)}/mes)`,
         perHotel: `${fmtMxn.format(porticoManagedPerHotel)} MXN`,
         total3y: porticoManaged3y,
@@ -670,7 +670,7 @@ function renderConnectorPanel(hotel) {
   keyEl.dataset.copyValue = key;
   document.getElementById('btn-toggle-key').textContent = revealApiKey ? 'Ocultar llave' : 'Mostrar llave';
 
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.porticohospitality.mx' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.hospitalitypui.id' : window.location.origin;
   const shownKey = revealApiKey ? key : '<TU_LLAVE_PMS>';
 
   document.getElementById('pms-agent-snippet').textContent = `# Ejecutar en servidor local de ${hotel.nombre} (Windows / Linux)
@@ -680,7 +680,7 @@ node agent/pms-sync-agent.js \\
   --key "${shownKey}" \\
   --url "${origin}"`;
 
-  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Portico Hospitality
+  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Hospitality PUI ID
 curl -s -X POST "${origin}/api/pms/${hotel.slug}/checkin" \\
   -H "Content-Type: application/json" \\
   -H "X-Portico-PMS-Key: ${shownKey}" \\
@@ -915,7 +915,7 @@ function renderUsersTable() {
 
 function renderDofSpec(hotel) {
   if (!hotel) return;
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.porticohospitality.mx' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.hospitalitypui.id' : window.location.origin;
   const slug = hotel.slug;
   const endpoints = [
     { method: 'POST', path: `/api/pui/${slug}/login`, desc: 'Emite token Bearer JWT (HS256)' },
@@ -1434,7 +1434,7 @@ function bindEvents() {
       window.location.href = `./api/pms/${encodeURIComponent(hotel.slug)}/installer?os=${os}`;
       return;
     }
-    const origin = 'https://api.porticohospitality.mx';
+    const origin = 'https://api.hospitalitypui.id';
     const isLinux = os === 'linux';
     const content = isLinux
       ? buildLinuxInstallerScript({
