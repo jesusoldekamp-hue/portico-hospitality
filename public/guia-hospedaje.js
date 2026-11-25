@@ -93,11 +93,11 @@
   document.addEventListener(
     'toggle',
     (event) => {
-      if (!event.target.matches('.accordion > details')) return;
+      if (!event.target.matches('.accordion details')) return;
       const accordion = event.target.closest('.accordion');
       const btn = accordion?.querySelector('[command="--toggle-all"]');
       if (!btn) return;
-      const items = accordion.querySelectorAll(':scope > details');
+      const items = accordion.querySelectorAll('details');
       btn.setAttribute('aria-expanded', String(Array.prototype.every.call(items, (d) => d.open)));
     },
     { capture: true }
@@ -106,13 +106,13 @@
   // 4. Expandir todas las preguntas automáticamente al imprimir o exportar PDF
   const previousOpenState = new WeakMap();
   function expandAllForPrint() {
-    for (const d of document.querySelectorAll('.accordion > details')) {
+    for (const d of document.querySelectorAll('.accordion details')) {
       if (!previousOpenState.has(d)) previousOpenState.set(d, d.open);
       d.open = true;
     }
   }
   function restoreAfterPrint() {
-    for (const d of document.querySelectorAll('.accordion > details')) {
+    for (const d of document.querySelectorAll('.accordion details')) {
       if (previousOpenState.has(d)) {
         d.open = previousOpenState.get(d);
         previousOpenState.delete(d);
