@@ -1,7 +1,7 @@
 /**
  * Capa dual de transporte para Hospitality PUI ID:
  * - Si hay servidor Node.js / AWS activo, usa los endpoints reales `/api/*`.
- * - Si se despliega estáticamente en GitHub Pages (`*.github.io`), activa
+ * - Si se despliega estáticamente en CDN (Cloudflare Pages, Vercel, etc.), activa
  *   automáticamente el motor completo en navegador (CURP RENAPO real, RBAC,
  *   Fases 1-3, CSV, Outbox y Constancia PDF con SHA-256 vía Web Crypto).
  */
@@ -339,13 +339,13 @@ function createInitialLocalState() {
         direccion: 'SISTEMA',
         endpoint: '/api/health',
         fase: 'INICIO',
-        resumen: 'Hospitality PUI ID en modo Demo Web 24/7 (GitHub Pages) con motor criptográfico SHA-256.',
+        resumen: 'Hospitality PUI ID en modo Demo Web 24/7 con motor criptográfico SHA-256.',
         estatusHttp: 200,
         critico: false,
         payload: {
           plataforma: 'Hospitality PUI ID — Hospitality Trust & Compliance',
           estandar: 'Manual Técnico PUI — DOF (23/01/2026)',
-          modo: 'GitHub Pages CDN 24/7 (Motor local en navegador)'
+          modo: 'Cloud CDN 24/7 (Motor local en navegador)'
         },
         hash: 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd38f214c70e2a4c6e91b80f3c1'
       }
@@ -441,7 +441,14 @@ function buildDemoCsv(incluirMenor) {
 
 export async function detectRuntimeMode() {
   if (runtimeMode) return runtimeMode;
-  if (location.hostname.endsWith('.github.io') || location.protocol === 'file:') {
+  if (
+    location.hostname.endsWith('.pages.dev') ||
+    location.hostname.endsWith('.workers.dev') ||
+    location.hostname.endsWith('.vercel.app') ||
+    location.hostname.endsWith('.netlify.app') ||
+    location.hostname.endsWith('.github.io') ||
+    location.protocol === 'file:'
+  ) {
     runtimeMode = 'static-pages';
     return runtimeMode;
   }
@@ -549,7 +556,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     return { ok: res.ok, status: res.status, data };
   }
 
-  // --- Motor estático completo para GitHub Pages ---
+  // --- Motor estático completo para despliegue en CDN ---
   const url = new URL(apiPath, 'http://local');
   const p = url.pathname;
   const st = loadLocalState();

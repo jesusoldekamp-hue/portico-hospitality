@@ -1,6 +1,6 @@
 /**
  * Generador cliente de Instalador 1-Clic del Agente PMS + Estimador de Escala AWS (10–1,000 hoteles).
- * Funciona igual en GitHub Pages estático que conectado al servidor Node/AWS.
+ * Funciona igual en modo estático CDN que conectado al servidor Node/AWS.
  */
 
 function escapePs(val) {

@@ -2,7 +2,7 @@
  * Hospitality PUI ID — Hospitality Trust & Compliance
  * Frontend con autenticación RBAC real, terminal de recepción discreta,
  * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
- * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en GitHub Pages.
+ * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en CDN estático.
  */
 
 import {
@@ -611,7 +611,7 @@ function renderAll() {
     ? 'Cadena SHA-256 íntegra'
     : 'Revisar integridad de bitácora';
   document.getElementById('sidebar-chain-status').textContent = isStatic
-    ? 'GitHub Pages 24/7 · SHA-256 íntegro'
+    ? 'Cloud CDN 24/7 · SHA-256 íntegro'
     : cadenaOk
       ? 'SQLite ACID · SHA-256 íntegro'
       : 'SQLite ACID · Revisar cadena';
