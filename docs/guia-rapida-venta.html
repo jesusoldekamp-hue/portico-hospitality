@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hospitality PUI ID — Guía Rápida de Venta (1 Hoja)</title>
+    <link rel="icon" type="image/svg+xml" href="../public/assets/favicon.svg" />
+    <style>
+      :root {
+        --navy: #0c1828;
+        --ink: #111c2b;
+        --soft: #364658;
+        --muted: #5a6a7d;
+        --line: #d8e0e8;
+        --canvas: #f6f7f5;
+        --white: #ffffff;
+        --emerald: #0d6b59;
+        --emerald-soft: #eaf5f1;
+        --emerald-line: #b2d8cb;
+        --gold: #c8a45d;
+        --gold-soft: #fdf7ea;
+        --gold-line: #e9d2a2;
+        --crimson: #9f2017;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      @page {
+        size: letter portrait;
+        margin: 0;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #dde3ea;
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page {
+        width: 8.5in;
+        height: 11in;
+        margin: 0 auto;
+        background: var(--white);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* HEADER */
+      .top-band {
+        flex: none;
+        background: var(--navy);
+        color: #ffffff;
+        padding: 15px 30px 14px;
+        border-bottom: 3px solid var(--gold);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+
+      .brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .brand-name {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-sub {
+        font-size: 9px;
+        color: #b7c8dc;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+
+      .pill {
+        background: #0d6b59;
+        color: #ffffff;
+        font-size: 8.8px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 5px 11px;
+        border-radius: 999px;
+      }
+
+      /* BODY */
+      .content {
+        flex: 1;
+        padding: 16px 30px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+
+      .intro {
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .intro h1 {
+        margin: 0 0 4px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 20px;
+        line-height: 1.15;
+        color: var(--navy);
+      }
+
+      .intro p {
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.44;
+        color: var(--soft);
+      }
+
+      .sec-label {
+        margin: 0 0 7px;
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--emerald);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .sec-label::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+
+      /* CHECKLIST TABLE: LO QUE PIDE LA LEY -> YA LO TENEMOS */
+      .check-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        font-size: 9.2px;
+      }
+
+      .check-table th {
+        background: var(--canvas);
+        color: var(--navy);
+        text-align: left;
+        padding: 7px 10px;
+        font-size: 8.2px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .check-table td {
+        padding: 7px 10px;
+        border-bottom: 1px solid #e7ecf1;
+        vertical-align: top;
+        line-height: 1.38;
+        color: var(--soft);
+      }
+
+      .check-table tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .check-table td:first-child {
+        width: 37%;
+        color: var(--navy);
+        font-weight: 700;
+      }
+
+      .check-table td:last-child {
+        width: 15%;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .ok-badge {
+        display: inline-block;
+        background: var(--emerald-soft);
+        color: var(--emerald);
+        border: 1px solid var(--emerald-line);
+        font-size: 8px;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      /* POR QUE SOMOS MEJORES QUE LA COMPETENCIA */
+      .win-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .win-card {
+        background: var(--canvas);
+        border: 1px solid var(--line);
+        border-left: 3.5px solid var(--emerald);
+        border-radius: 7px;
+        padding: 8px 11px;
+      }
+
+      .win-card strong {
+        display: block;
+        font-size: 9.8px;
+        color: var(--navy);
+        margin-bottom: 2px;
+      }
+
+      .win-card p {
+        margin: 0;
+        font-size: 8.8px;
+        line-height: 1.38;
+        color: var(--soft);
+      }
+
+      /* RESPUESTAS RAPIDAS EN JUNTA */
+      .qa-box {
+        background: var(--navy);
+        color: #e6eff8;
+        border-radius: 9px;
+        padding: 11px 14px;
+      }
+
+      .qa-box h2 {
+        margin: 0 0 8px;
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #e5c683;
+      }
+
+      .qa-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px 16px;
+      }
+
+      .qa-item strong {
+        display: block;
+        font-size: 9.1px;
+        color: #ffffff;
+        margin-bottom: 2px;
+      }
+
+      .qa-item p {
+        margin: 0;
+        font-size: 8.4px;
+        line-height: 1.38;
+        color: #c8d7e7;
+      }
+
+      /* FOOTER */
+      .footer {
+        flex: none;
+        background: var(--canvas);
+        border-top: 1px solid var(--line);
+        padding: 8px 30px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 7.9px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="top-band">
+        <div class="brand">
+          <img src="../public/assets/favicon.svg" alt="Hospitality PUI ID" />
+          <div>
+            <div class="brand-name">Hospitality PUI ID</div>
+            <div class="brand-sub">Guía Rápida de Venta · Lo que ya tenemos resuelto hoy</div>
+          </div>
+        </div>
+        <span class="pill">Lista para junta · 1 Hoja</span>
+      </header>
+
+      <main class="content">
+        <section class="intro">
+          <h1>Qué exige la ley, qué ya tenemos hecho hoy y por qué le ganamos a todos</h1>
+          <p>
+            <strong>Idea central para abrir la junta:</strong> “El Gobierno cobra <strong>$0 pesos</strong> por conectarse
+            a la PUI, pero multa con <strong>$1.17 a $2.34 millones por hotel</strong> si no cumplen. Otros proveedores
+            les quieren cobrar renta eterna cada mes; nosotros ya construimos la plataforma completa para que cumplan
+            con <strong>PUI + Ley de Menores</strong>, sin cambiar su sistema actual y ahorrando hasta 9 veces.”
+          </p>
+        </section>
+
+        <!-- BLOQUE 1: CHECKLIST DE LO QUE YA TENEMOS HECHO -->
+        <section>
+          <h2 class="sec-label">1. Lo que pide la ley vs. lo que ya tenemos resuelto hoy</h2>
+          <table class="check-table">
+            <thead>
+              <tr>
+                <th>Lo que exige la ley (DOF 2025–2026)</th>
+                <th>Lo que ya hace Hospitality PUI ID hoy</th>
+                <th style="text-align: center;">Estatus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Conexión oficial con la PUI de SEGOB (Manual Técnico DOF 23/01/2026)</td>
+                <td>Ya tenemos programados los 4 servicios oficiales que pide Gobernación (entrada, alertas reales, pruebas y baja), búsqueda histórica de hasta 12 años y monitoreo en cada check-in.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Validar CURP y pasaportes extranjeros sin frenar la recepción</td>
+                <td>Validamos la CURP oficial de RENAPO en milisegundos y leemos pasaportes extranjeros automáticamente <strong>sin cobrar ni un peso por escaneo</strong>.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Proteger al personal de recepción (sigilo en alertas)</td>
+                <td>En la pantalla del recepcionista <strong>jamás salen alarmas rojas</strong>. El aviso se envía en silencio a Gobernación para no poner en peligro al personal ni a los huéspedes.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Verificar parentesco de menores de edad (Ley de Turismo Art. 58)</td>
+                <td>Si el huésped es menor de 18 años (nacional o extranjero), el sistema exige acreditar parentesco o tutela del acompañante y bloquea el registro si no lo comprueba.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Cuidar la privacidad de los huéspedes (LFPDPPP)</td>
+                <td>Cada hotel tiene su propia bóveda cifrada por RFC (nadie ve huéspedes de otro hotel), cifrado bancario (AES-256) y borrado automático cuando vence la ley.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Demostrar cumplimiento en una inspección de SEGOB o Turismo</td>
+                <td>Con un clic cada hotel descarga su <strong>Constancia Oficial en PDF</strong> y su bitácora sellada (SHA-256) lista para enseñar a cualquier inspector.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+              <tr>
+                <td>Funcionar sin cambiar el sistema actual del hotel (OPERA, Zeus, etc.)</td>
+                <td>Se conecta por API (OPERA Cloud, Cloudbeds), por portal web o con nuestro <strong>instalador de 1 clic</strong> para OPERA 5 / Excel sin tocar la base de datos del hotel.</td>
+                <td><span class="ok-badge">✓ YA RESUELTO</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- BLOQUE 2: POR QUE SOMOS MEJORES QUE LA COMPETENCIA -->
+        <section>
+          <h2 class="sec-label">2. Por qué somos mejores que nuestra competencia</h2>
+          <div class="win-grid">
+            <div class="win-card">
+              <strong>1. De 2.2× a 9× más barato (sin rentas eternas)</strong>
+              <p>Competidores como PUIhoteles ($5.14M) o PUI México ($3.47M) cobran renta perpetua por hotel. Con nosotros la Asociación paga <strong>$350k una sola vez</strong> + servidor ($44/hotel): <strong>$566k en 3 años</strong>.</p>
+            </div>
+            <div class="win-card">
+              <strong>2. Dos leyes en una sola plataforma (ellos solo cubren una)</strong>
+              <p>KYC PUI (pui.com.mx), PUI México y PUIhoteles solo cubren la PUI básica. Nosotros cubrimos <strong>PUI + Menores (Art. 58 LGT) + Pasaportes MRZ a $0</strong> en una sola pantalla.</p>
+            </div>
+            <div class="win-card">
+              <strong>3. Seguridad real en recepción y nube privada</strong>
+              <p>PUI México muestra alertas visibles en su portal y otros suben datos a su propia nube. Nosotros damos <strong>sigilo total en mostrador</strong> y bóveda aislada por RFC en la nube de la Asociación.</p>
+            </div>
+            <div class="win-card">
+              <strong>4. Deja dinero a la Asociación (+$336,000 MXN/año)</strong>
+              <p>Con otros proveedores el 100% del dinero se va fuera. Aquí los hoteles bajan su cuota de $1,000 a $250/mes (-75%) y la Asociación genera utilidad neta cada año.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- BLOQUE 3: RESPUESTAS RAPIDAS PARA LA JUNTA -->
+        <section class="qa-box">
+          <h2>3. Respuestas rápidas para cerrar las 4 preguntas típicas en la junta</h2>
+          <div class="qa-grid">
+            <div class="qa-item">
+              <strong>“¿Y si la Asociación no tiene $350,000 en caja ahorita?”</strong>
+              <p>Arrancamos con <strong>10 Hoteles Fundadores</strong> ($35,000 una sola vez c/u, exentos 3 años) = <strong>$0 de caja para la Asociación</strong>, justo como recomienda el plan oficial de la ATDT.</p>
+            </div>
+            <div class="qa-item">
+              <strong>“¿Y si un competidor nos da 50% de descuento grupal?”</strong>
+              <p>Aun al -50% ($450/mes por hotel) les costaría <strong>$2.20 millones en 3 años</strong>, sigue siendo renta eterna que sube en año 2 y deja $0 a la Asociación. Nosotros seguimos siendo casi 4× más baratos.</p>
+            </div>
+            <div class="qa-item">
+              <strong>“¿Tenemos que cambiar OPERA o nuestro sistema actual?”</strong>
+              <p>No. Para OPERA 5 o Zeus ponemos un instalador de 1 clic que lee una carpeta sin tocar su servidor; para OPERA Cloud o Cloudbeds conectamos directo, y hoteles chicos usan el portal web.</p>
+            </div>
+            <div class="qa-item">
+              <strong>“¿Qué necesitan de nosotros para arrancar ya?”</strong>
+              <p>Solo 2 cosas: 1) que el representante legal haga su alta en <strong>Llave MX</strong> con la e.firma del hotel piloto, y 2) una llamada de <strong>20 minutos con TI</strong> para conectar y aprobar la prueba de SEGOB en 4–6 semanas.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span><strong>© 2026 Hospitality PUI ID</strong> · Propiedad exclusiva de Hospitality PUI ID · Guía de apoyo comercial</span>
+        <span>Todos los derechos reservados · Monterrey, N.L., México</span>
+      </footer>
+    </div>
+  </body>
+</html>
