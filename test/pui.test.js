@@ -428,4 +428,46 @@ describe('Portico Hospitality Producción — SQLite ACID, RBAC, PUI DOF, Outbox
     assert.equal(bench.hashesUnicosPorHotel, bench.operacionesRealesEjecutadas);
     assert.ok(bench.capacidadEstimadaCheckinsPorSegundo > 100);
   });
+
+  it('sincroniza sistemas heredados de hoteles centenarios (CSV punto y coma Latin-1, pipe Fidelio/FoxPro y reporte impreso .prn/.txt)', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'portico-legacy-pms-'));
+    try {
+      const curp1 = completarCurpValida('PENA810412HNLZRL0');
+      const curp2 = completarCurpValida('GARC750920MNLRCD0');
+      const curp3 = completarCurpValida('SADA680215HNLDLN0');
+
+      // 1) CSV mexicano con punto y coma, columnas divididas y codificación Latin-1 (Ñ / acentos)
+      const legacyCsv = `NOMBRE;APELLIDOS;CLAVE_CURP;HAB;F_LLEGADA\r\nJOSÉ PEÑA;GARZA;${curp1};204;2026-11-26T10:15:00Z\r\n`;
+      fs.writeFileSync(path.join(tmpDir, 'zeus_llegadas.csv'), Buffer.from(legacyCsv, 'latin1'));
+
+      // 2) Exportación con pipe (|) tipo Micros-Fidelio / FoxPro / AS400
+      const pipeTxt = `HUESPED|CURP|CUARTO\nMARIA GARCIA LOPEZ|${curp2}|318\n`;
+      fs.writeFileSync(path.join(tmpDir, 'fidelio_export.txt'), pipeTxt, 'utf8');
+
+      // 3) Reporte impreso a archivo (.prn) de sistema antiguo sin opción de exportar CSV/XML
+      const printReport = [
+        'HOTEL HISTORICO CENTRO - REPORTE DIARIO DE LLEGADAS',
+        '====================================================',
+        `HAB 105  ROBERTO SADA MONTEMAYOR   ${curp3}  2026-11-26`,
+        '----------------------------------------------------'
+      ].join('\r\n');
+      fs.writeFileSync(path.join(tmpDir, 'llegadas_impresora.prn'), printReport, 'utf8');
+
+      const crowne = getHotelBySlug('crowne-plaza-monterrey');
+      const resLegacy = await syncDirectoryOnce({
+        dir: tmpDir,
+        hotelSlug: 'crowne-plaza-monterrey',
+        apiKey: crowne.pmsApiKey,
+        baseUrl,
+        logger: { log() {}, error() {} }
+      });
+
+      assert.equal(resLegacy.archivosDetectados, 3);
+      assert.equal(resLegacy.exitosos, 3);
+      assert.equal(resLegacy.fallidos, 0);
+      assert.equal(resLegacy.resultados.reduce((acc, r) => acc + r.insertados, 0), 3);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
 });

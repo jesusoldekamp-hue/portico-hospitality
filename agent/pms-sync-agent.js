@@ -52,7 +52,13 @@ export async function syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl, logge
     .filter((d) => {
       if (!d.isFile()) return false;
       const lower = d.name.toLowerCase();
-      return lower.endsWith('.csv') || lower.endsWith('.xml');
+      return (
+        lower.endsWith('.csv') ||
+        lower.endsWith('.xml') ||
+        lower.endsWith('.tsv') ||
+        lower.endsWith('.txt') ||
+        lower.endsWith('.prn')
+      );
     })
     .map((d) => d.name)
     .sort();
@@ -66,7 +72,10 @@ export async function syncDirectoryOnce({ dir, hotelSlug, apiKey, baseUrl, logge
 
   for (const filename of entries) {
     const filePath = path.join(watchDir, filename);
-    const csvText = fs.readFileSync(filePath, 'utf8');
+    const rawBuf = fs.readFileSync(filePath);
+    // Autodetección UTF-8 vs Windows-1252/Latin-1 (sistemas heredados Windows 7/FoxPro/Zeus con acentos y Ñ)
+    const utf8Text = rawBuf.toString('utf8');
+    const csvText = utf8Text.includes('\uFFFD') ? rawBuf.toString('latin1') : utf8Text;
     const endpoint = `${baseUrl.replace(/\/$/, '')}/api/pms/${hotelSlug}/import-csv`;
 
     try {
