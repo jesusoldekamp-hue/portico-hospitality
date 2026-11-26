@@ -43,7 +43,7 @@ export function construirDatosConstancia(hotel) {
   return {
     folio,
     emitidaEn,
-    plataforma: 'Hospitality PUI ID — Hospitality Trust & Compliance',
+    plataforma: 'Certeza ID — Motor de Enlace PUI',
     asociacion: 'Asociación Mexicana de Hoteles de Nuevo León',
     marcoNormativo: [
       'Artículo 12 Bis y 43 Bis de la Ley General en Materia de Desaparición Forzada de Personas',
@@ -308,15 +308,15 @@ export function renderConstanciaHtml(datos) {
   </head>
   <body>
     <div class="toolbar">
-      <a class="btn-sec" href="/">Volver a Hospitality PUI ID</a>
+      <a class="btn-sec" href="/">Volver a Certeza ID</a>
       <button type="button" class="btn" id="btn-print-doc">Imprimir / Guardar como PDF</button>
     </div>
 
     <main class="sheet">
       <div class="doc-header">
         <div>
-          <div class="doc-brand">Hospitality PUI ID</div>
-          <div class="doc-sub">Hospitality Trust &amp; Compliance · ${escapeHtml(datos.asociacion)}</div>
+          <div class="doc-brand">Certeza ID</div>
+          <div class="doc-sub">Motor de Enlace PUI · Certeza ID Systems · ${escapeHtml(datos.asociacion)}</div>
         </div>
         <div class="folio-box">
           Folio de Evidencia
@@ -327,7 +327,7 @@ export function renderConstanciaHtml(datos) {
 
       <h1>Constancia Técnica de Interconexión y Cumplimiento PUI</h1>
       <p class="lead">
-        Evidencia auditable generada por Hospitality PUI ID para acreditar operación continua, aislamiento por RFC, cola de entrega a SEGOB y cumplimiento técnico del Manual de Instituciones Diversas (DOF, 23 de enero de 2026).
+        Evidencia auditable generada por Certeza ID para acreditar operación continua, aislamiento por RFC, cola de entrega a SEGOB y cumplimiento técnico del Manual de Instituciones Diversas (DOF, 23 de enero de 2026).
       </p>
 
       <h2>1. Datos de la Institución Obligada</h2>
@@ -389,7 +389,7 @@ export function renderConstanciaHtml(datos) {
       </div>
 
       <div class="doc-footer">
-        <span>Documento generado automáticamente por Hospitality PUI ID (sin exponer datos personales sensibles).</span>
+        <span>Documento generado automáticamente por Certeza ID (sin exponer datos personales sensibles).</span>
         <span>Art. 12 Bis y 43 Bis LGMDFP · Ley General de Turismo</span>
       </div>
     </main>

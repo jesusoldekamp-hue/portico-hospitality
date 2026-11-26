@@ -1,5 +1,5 @@
 /**
- * Hospitality PUI ID — Padrón Sintético de Pruebas (Sandbox DOF / PUI)
+ * Certeza ID — Padrón Sintético de Pruebas (Sandbox DOF / PUI)
  * 50 registros ficticios con CURP matemáticamente válida ante RENAPO (dígito verificador real),
  * casos de menores de edad (Art. 58 Ley General de Turismo) y pasaportes internacionales (MRZ).
  *

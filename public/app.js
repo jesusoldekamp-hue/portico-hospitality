@@ -1,5 +1,5 @@
 /**
- * Hospitality PUI ID — Hospitality Trust & Compliance
+ * Certeza ID — Motor de Enlace PUI
  * Frontend con autenticación RBAC real, terminal de recepción discreta,
  * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
  * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en CDN estático.
@@ -39,7 +39,7 @@ const ROLE_LABELS = {
 
 const VIEW_META = {
   resumen: {
-    title: 'Hospitality PUI ID — Resumen Ejecutivo y Retorno para la Asociación',
+    title: 'Certeza ID — Resumen Ejecutivo y Retorno para la Asociación',
     subtitle:
       'Cumplimiento PUI (SEGOB / RENAPO) y protección hotelera sobre arquitectura propia multi-RFC con aislamiento RBAC.'
   },
@@ -508,7 +508,7 @@ function updateRoiCalculator() {
         portico: false
       },
       {
-        name: 'Hospitality PUI ID (Nube AWS propia)',
+        name: 'Certeza ID (Nube AWS propia)',
         sub: `Pago único ${fmtMxn.format(devCost)} + AWS ${fmtMxn.format(sharedCloudMonthly)}/mes`,
         perHotel: `${fmtMxn.format(cloudPerHotel)} MXN`,
         total3y: porticoAws3y,
@@ -517,7 +517,7 @@ function updateRoiCalculator() {
         portico: true
       },
       {
-        name: 'Hospitality PUI ID (Todo Incluido 24/7)',
+        name: 'Certeza ID (Todo Incluido 24/7)',
         sub: `Incluye AWS + Póliza 24/7 y cambios DOF (${fmtMxn.format(supportMonthly)}/mes)`,
         perHotel: `${fmtMxn.format(porticoManagedPerHotel)} MXN`,
         total3y: porticoManaged3y,
@@ -680,7 +680,7 @@ node agent/pms-sync-agent.js \\
   --key "${shownKey}" \\
   --url "${origin}"`;
 
-  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Hospitality PUI ID
+  document.getElementById('pms-webhook-snippet').textContent = `# Webhook de Check-in desde ${hotel.pms} → Certeza ID
 curl -s -X POST "${origin}/api/pms/${hotel.slug}/checkin" \\
   -H "Content-Type: application/json" \\
   -H "X-Portico-PMS-Key: ${shownKey}" \\

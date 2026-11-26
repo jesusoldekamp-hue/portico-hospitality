@@ -1,4 +1,4 @@
-// Hospitality PUI ID — Motor Interactivo en Vivo + Navegación Adaptable + Acordeón FAQ
+// Certeza ID — Motor Interactivo en Vivo + Navegación Adaptable + Acordeón FAQ
 // Cumple CSP estricta (script-src 'self'), modern-web-guidance (navbar, accordion, responsive-table)
 
 (() => {
