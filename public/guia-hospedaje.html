@@ -858,6 +858,72 @@
         color: var(--text-muted);
       }
 
+      /* Etapas oficiales de habilitación (Anexo 2 y Sección 8) */
+      .stages-grid {
+        margin-block-start: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.1rem;
+      }
+
+      @media (max-width: 760px) {
+        .stages-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stage-card {
+        background: var(--surface);
+        border: 1px solid var(--line-strong);
+        border-radius: 12px;
+        padding: 1.35rem 1.45rem;
+      }
+
+      .stage-card.is-tech {
+        border-color: var(--emerald-line);
+      }
+
+      .stage-tag {
+        display: inline-block;
+        margin-block-end: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .stage-card.is-tech .stage-tag {
+        color: var(--emerald-bright);
+      }
+
+      .stage-card h3 {
+        margin: 0 0 0.65rem;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .stage-list {
+        margin: 0;
+        padding-inline-start: 1.15rem;
+        display: grid;
+        gap: 0.5rem;
+        font-size: 0.92rem;
+        color: var(--text-soft);
+      }
+
+      .stage-list strong {
+        color: #ffffff;
+      }
+
+      .stage-list code {
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        color: #93c5fd;
+      }
+
       #tabla-sandbox {
         --l2: 'Identificador';
         --l3: 'Estado / Tipo';
@@ -1433,11 +1499,12 @@
                   <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025" target="_blank" rel="noopener">Ver DOF 5774120 &#8599;</a></td>
                 </tr>
                 <tr>
-                  <th scope="row">Manual Técnico Instituciones Diversas<span class="cell-note">SEGOB / ATDT</span></th>
+                  <th scope="row">Manual Técnico Instituciones Diversas<span class="cell-note">SEGOB / ATDT (Anexo 2 y Sec. 8)</span></th>
                   <td>23 ene. 2026</td>
-                  <td>Especificación técnica de conexión, Llave MX, pruebas de webhook y plazo de 45 días hábiles.</td>
+                  <td>Endpoints obligatorios (<code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code>, <code>/desactivar-reporte</code>), histórico hasta 12 años, TLS 1.2+, JWT, AES-256-GCM y pruebas SAST/DAST/SCA.</td>
                   <td>
-                    <a href="https://dof.gob.mx/nota_detalle.php?codigo=5778798&amp;fecha=23/01/2026" target="_blank" rel="noopener">Ver DOF 5778798 &#8599;</a>
+                    <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf" target="_blank" rel="noopener">PDF Oficial DOF &#8599;</a>
+                    <span class="cell-note"><a href="https://dof.gob.mx/nota_detalle.php?codigo=5778798&amp;fecha=23/01/2026" target="_blank" rel="noopener">Nota DOF 5778798 &#8599;</a></span>
                     <span class="cell-note"><a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">Portal inscripción ATDT &#8599;</a></span>
                   </td>
                 </tr>
@@ -1455,6 +1522,28 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div class="stages-grid" aria-label="Etapas oficiales de inscripción e interconexión PUI">
+            <article class="stage-card">
+              <span class="stage-tag">Etapa 1 · Registro Administrativo</span>
+              <h3>Alta institucional con Llave MX y e.firma</h3>
+              <ul class="stage-list">
+                <li><strong>Requisitos previos:</strong> cuenta Llave MX personal del representante legal, RFC con homoclave y <strong>e.firma vigente de Persona Moral</strong> (<code>.cer</code>, <code>.key</code> y contraseña).</li>
+                <li><strong>Perfil Persona Moral:</strong> el representante da de alta la razón social en Llave MX cargando la e.firma institucional para validar vigencia e identidad.</li>
+                <li><strong>Inscripción PUI:</strong> inicia sesión en <a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">plataformadebusqueda.gob.mx/inscripcion</a> para registrar contacto y obtener acceso al ambiente oficial.</li>
+              </ul>
+            </article>
+
+            <article class="stage-card is-tech">
+              <span class="stage-tag">Etapa 2 · Interconexión Técnica (Ya resuelta)</span>
+              <h3>Anexo 2 y Sección 8 del Manual Técnico</h3>
+              <ul class="stage-list">
+                <li><strong>4 Endpoints obligatorios listos:</strong> <code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code> y <code>/desactivar-reporte</code> para las 3 fases (básica, <strong>histórica hasta 12 años</strong> y monitoreo continuo).</li>
+                <li><strong>Seguridad y cifrado:</strong> protocolo <strong>TLS 1.2+</strong>, autenticación <strong>Bearer/JWT</strong> y cifrado <strong>AES-256-GCM</strong> para datos sensibles y biométricos.</li>
+                <li><strong>Auditoría y Sandbox:</strong> arquitectura lista para reportes <strong>SAST, DAST y SCA</strong> sin hallazgos críticos, bitácoras SHA-256 y validación funcional en sandbox.</li>
+              </ul>
+            </article>
           </div>
         </div>
       </section>
