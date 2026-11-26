@@ -326,6 +326,18 @@
       segobPill.className = 'status-pill status-ok';
       segobPill.textContent = 'SIN COINCIDENCIA · 0 ENVÍOS';
     }
+
+    // 3) Actualizar cinta de ejecución en vivo (4 nodos)
+    const setPipe = (stepId, labelId, cls, txt) => {
+      const el = document.getElementById(stepId);
+      const lb = document.getElementById(labelId);
+      if (el) el.className = `pipe-step ${cls}`;
+      if (lb) lb.textContent = txt;
+    };
+    setPipe('pipe-step-1', 'pipe-s1', 'is-ok', 'OK ✓');
+    setPipe('pipe-step-2', 'pipe-s2', 'is-ok', 'RLS OK');
+    setPipe('pipe-step-3', 'pipe-s3', needsLgtBlock ? 'is-warn' : 'is-ok', needsLgtBlock ? 'BLOQUEO LGT' : 'SIGILO OK');
+    setPipe('pipe-step-4', 'pipe-s4', isHit ? 'is-alert' : 'is-ok', isHit ? 'FASE 3 · 200' : '0 ENVÍOS');
   }
 
   // Eventos del probador
