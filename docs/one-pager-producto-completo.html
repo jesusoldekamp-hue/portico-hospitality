@@ -19,6 +19,9 @@
         --soft: #4a4a50;
         --muted: #71717a;
         --line: #e4e4e7;
+        --gold: #96773a;
+        --gold-bright: #c6a769;
+        --gold-champagne: #e6d1a3;
         --signal: #0f766e;
         --danger: #b91c1c;
         --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
@@ -64,6 +67,7 @@
         align-items: center;
         padding-bottom: 11px;
         border-bottom: 1.5px solid var(--black);
+        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--gold-bright);
       }
 
       .brand {
@@ -191,15 +195,16 @@
       }
 
       .flow-step {
-        border-top: 1.5px solid var(--black);
+        border-top: 2px solid var(--gold-bright);
         padding-top: 6px;
       }
 
       .flow-step span {
         font-family: var(--font-mono);
         font-size: 7.1px;
+        font-weight: 600;
         letter-spacing: 0.08em;
-        color: var(--muted);
+        color: var(--gold);
       }
 
       .flow-step h3 {
@@ -307,6 +312,7 @@
         background: var(--black);
         color: #ffffff;
         padding: 13px 16px;
+        border-top: 2px solid var(--gold-bright);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -321,7 +327,7 @@
         font-weight: 600;
         letter-spacing: 0.09em;
         text-transform: uppercase;
-        color: #ffffff;
+        color: var(--gold-champagne);
       }
 
       .monolith-side ul {

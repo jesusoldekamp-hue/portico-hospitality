@@ -14,7 +14,7 @@
   --accent: #0a0a0b;
   --accent-hover: #27272a;
   --accent-soft: #f4f4f5;
-  --gold: #a1a1aa;
+  --gold: #c6a769;
   --danger: #b91c1c;
   --danger-hover: #991b1b;
   --danger-soft: #fef2f2;
@@ -95,7 +95,7 @@ textarea {
   display: grid;
   place-items: center;
   padding: 2rem 1.25rem;
-  background: radial-gradient(ellipse 65% 45% at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%), #0a0a0b;
+  background: radial-gradient(ellipse 65% 45% at 50% 0%, rgb(198 167 105 / 0.14), transparent 70%), #0a0a0b;
 }
 
 .auth-card {
@@ -103,7 +103,7 @@ textarea {
   max-inline-size: 620px;
   background: var(--surface);
   border: 1px solid #27272a;
-  border-top: 2px solid #0a0a0b;
+  border-top: 2px solid var(--gold);
   border-radius: 2px;
   padding: 2.25rem 2.4rem;
   box-shadow: var(--shadow-dialog);
@@ -307,8 +307,8 @@ textarea {
   background: #18181b;
   color: #ffffff;
   font-weight: 600;
-  border-color: #27272a;
-  box-shadow: inset 2px 0 0 #ffffff;
+  border-color: #2c2820;
+  box-shadow: inset 2px 0 0 var(--gold);
 }
 
 .sidebar-footer {

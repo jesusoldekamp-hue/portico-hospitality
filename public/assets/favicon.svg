@@ -1,7 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hospitality PUI ID">
   <rect width="64" height="64" rx="4" fill="#0a0a0b" />
-  <rect x="3" y="3" width="58" height="58" rx="2" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" />
-  <circle cx="32" cy="27" r="11" fill="none" stroke="#ffffff" stroke-width="3.2" />
-  <circle cx="32" cy="27" r="3" fill="#ffffff" />
-  <path d="M17 48 L32 41 L47 48" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" />
+  <rect x="3.5" y="3.5" width="57" height="57" rx="2" fill="none" stroke="#c6a769" stroke-opacity="0.65" stroke-width="1.2" />
+  <!-- Original architectural H-Portal monogram (Hospitality PUI ID) -->
+  <path d="M19 17V47M45 17V47" stroke="#ffffff" stroke-width="4.2" stroke-linecap="square" />
+  <line x1="19" y1="32" x2="45" y2="32" stroke="#c6a769" stroke-width="3.6" stroke-linecap="square" />
+  <line x1="15" y1="17" x2="23" y2="17" stroke="#c6a769" stroke-width="2" />
+  <line x1="41" y1="17" x2="49" y2="17" stroke="#c6a769" stroke-width="2" />
+  <line x1="15" y1="47" x2="23" y2="47" stroke="#c6a769" stroke-width="2" />
+  <line x1="41" y1="47" x2="49" y2="47" stroke="#c6a769" stroke-width="2" />
+  <rect x="30" y="21" width="4" height="4" fill="#c6a769" />
 </svg>

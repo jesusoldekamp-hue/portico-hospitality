@@ -20,6 +20,9 @@
         --muted: #71717a;
         --line: #e4e4e7;
         --line-strong: #18181b;
+        --gold: #96773a;
+        --gold-bright: #c6a769;
+        --gold-champagne: #e6d1a3;
         --signal: #0f766e;
         --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -70,6 +73,7 @@
         align-items: center;
         padding-bottom: 12px;
         border-bottom: 1.5px solid var(--black);
+        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--gold-bright);
       }
 
       .brand {
@@ -117,10 +121,10 @@
         margin: 0 0 8px;
         font-family: var(--font-mono);
         font-size: 7.8px;
-        font-weight: 500;
+        font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--muted);
+        color: var(--gold);
       }
 
       h1 {
@@ -242,7 +246,7 @@
         font-family: var(--font-mono);
         font-size: 8px;
         font-weight: 600;
-        color: var(--black);
+        color: var(--gold);
       }
 
       .p-stack {
@@ -280,6 +284,7 @@
         background: var(--black);
         color: #ffffff;
         padding: 16px 20px;
+        border-top: 2px solid var(--gold-bright);
       }
 
       .monolith-head {
@@ -296,14 +301,14 @@
         font-size: 11px;
         font-weight: 500;
         letter-spacing: -0.01em;
-        color: #ffffff;
+        color: var(--gold-champagne);
       }
 
       .monolith-head span {
         font-family: var(--font-mono);
         font-size: 7.4px;
         letter-spacing: 0.08em;
-        color: #a1a1aa;
+        color: var(--gold-bright);
         text-transform: uppercase;
       }
 
@@ -401,16 +406,17 @@
       }
 
       .wave {
-        border-top: 1.5px solid var(--black);
+        border-top: 2px solid var(--gold-bright);
         padding-top: 8px;
       }
 
       .wave-code {
         font-family: var(--font-mono);
         font-size: 7.4px;
+        font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--muted);
+        color: var(--gold);
       }
 
       .wave h3 {
@@ -430,7 +436,7 @@
 
       .summary-bar {
         background: var(--panel);
-        border-left: 3px solid var(--black);
+        border-left: 3px solid var(--gold-bright);
         padding: 11px 14px;
         font-size: 8.6px;
         line-height: 1.48;
