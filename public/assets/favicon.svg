@@ -1,22 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hospitality PUI ID">
-  <rect width="64" height="64" rx="14" fill="#0c1828" />
-  <rect x="3" y="3" width="58" height="58" rx="11.5" fill="none" stroke="#c8a45d" stroke-opacity="0.45" stroke-width="1.5" />
-  <!-- Architectural portico arch + verified shield core -->
-  <path
-    d="M18 47V29c0-7.73 6.27-14 14-14s14 6.27 14 14v18"
-    fill="none"
-    stroke="#ffffff"
-    stroke-width="3.2"
-    stroke-linecap="round"
-  />
-  <path
-    d="M24.5 47V30c0-4.14 3.36-7.5 7.5-7.5s7.5 3.36 7.5 7.5v17"
-    fill="none"
-    stroke="#25b094"
-    stroke-width="2.6"
-    stroke-linecap="round"
-  />
-  <line x1="14" y1="47.5" x2="50" y2="47.5" stroke="#c8a45d" stroke-width="2.8" stroke-linecap="round" />
-  <circle cx="32" cy="31" r="3.4" fill="#c8a45d" />
-  <path d="M32 34.4v7.6" stroke="#c8a45d" stroke-width="2.6" stroke-linecap="round" />
+  <rect width="64" height="64" rx="4" fill="#0a0a0b" />
+  <rect x="3" y="3" width="58" height="58" rx="2" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" />
+  <circle cx="32" cy="27" r="11" fill="none" stroke="#ffffff" stroke-width="3.2" />
+  <circle cx="32" cy="27" r="3" fill="#ffffff" />
+  <path d="M17 48 L32 41 L47 48" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" />
 </svg>

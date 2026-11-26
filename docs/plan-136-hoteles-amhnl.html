@@ -3,24 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hospitality PUI ID — Plan de Conexión 100% para los 136 Hoteles Socios AMHNL</title>
-    <link rel="icon" type="image/svg+xml" href="../public/assets/favicon.svg" />
+    <title>Hospitality PUI ID — Plan de Cobertura Universal · 136 Hoteles Socios AMHNL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --navy: #0c1828;
-        --ink: #111c2b;
-        --soft: #374759;
-        --muted: #5a6a7d;
-        --line: #d8e0e8;
-        --canvas: #f6f7f5;
-        --white: #ffffff;
-        --emerald: #0d6b59;
-        --emerald-soft: #eaf5f1;
-        --emerald-line: #b2d8cb;
-        --gold: #c8a45d;
-        --gold-ink: #7a5519;
-        --gold-soft: #fdf7ea;
-        --gold-line: #e9d2a2;
+        --bg: #ffffff;
+        --panel: #f7f7f8;
+        --black: #0a0a0b;
+        --ink: #111113;
+        --soft: #4a4a50;
+        --muted: #71717a;
+        --line: #e4e4e7;
+        --line-strong: #18181b;
+        --signal: #0f766e;
+        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -36,9 +38,9 @@
       body {
         margin: 0;
         padding: 0;
-        background: #dde3ea;
+        background: #d4d4d8;
         color: var(--ink);
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -48,7 +50,8 @@
         width: 8.5in;
         height: 11in;
         margin: 0 auto;
-        background: var(--white);
+        background: var(--bg);
+        padding: 0.54in 0.6in 0.44in;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -59,15 +62,14 @@
         page-break-after: auto;
       }
 
-      .top-band {
+      /* PALANTIR ARCHITECTURAL HEADER */
+      .topbar {
         flex: none;
-        background: var(--navy);
-        color: #ffffff;
-        padding: 14px 30px 13px;
-        border-bottom: 3px solid var(--gold);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 1.5px solid var(--black);
       }
 
       .brand {
@@ -77,507 +79,527 @@
       }
 
       .brand img {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
+        width: 24px;
+        height: 24px;
       }
 
       .brand-name {
-        font-size: 16px;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-
-      .brand-sub {
-        font-size: 8.6px;
-        color: #b7c8dc;
-        letter-spacing: 0.04em;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        margin-top: 2px;
+        color: var(--black);
       }
 
-      .top-right {
+      .doc-meta {
+        font-family: var(--font-mono);
+        font-size: 7.8px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
         text-align: right;
       }
 
-      .pill {
-        display: inline-block;
-        background: #0d6b59;
-        color: #ffffff;
-        font-size: 8.3px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        padding: 4px 10px;
-        border-radius: 999px;
+      .doc-meta strong {
+        color: var(--black);
+        font-weight: 600;
       }
 
-      .top-meta {
-        margin-top: 3px;
-        font-size: 8.3px;
-        color: #cddae8;
-      }
-
-      .content {
+      .body {
         flex: 1;
-        padding: 15px 30px 12px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 17px;
+        padding-top: 20px;
       }
 
-      .hero {
-        padding-bottom: 10px;
+      .mono-tag {
+        margin: 0 0 8px;
+        font-family: var(--font-mono);
+        font-size: 7.8px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      h1 {
+        margin: 0 0 9px;
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 1.09;
+        letter-spacing: -0.035em;
+        color: var(--black);
+        max-width: 96%;
+      }
+
+      h1 strong {
+        font-weight: 600;
+      }
+
+      .lead {
+        margin: 0;
+        font-size: 9.4px;
+        line-height: 1.54;
+        color: var(--soft);
+        max-width: 94%;
+      }
+
+      /* ARCHITECTURAL KPI STRIP (ZERO ROUNDED BOXES) */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--black);
         border-bottom: 1px solid var(--line);
       }
 
-      .hero h1 {
-        margin: 0 0 5px;
-        font-family: Georgia, 'Times New Roman', serif;
-        font-size: 19.5px;
-        line-height: 1.15;
-        color: var(--navy);
+      .kpi {
+        padding: 12px 12px 12px 0;
+        border-right: 1px solid var(--line);
+        padding-left: 12px;
       }
 
-      .hero p {
+      .kpi:first-child {
+        padding-left: 0;
+      }
+
+      .kpi:last-child {
+        border-right: 0;
+        padding-right: 0;
+      }
+
+      .kpi-val {
+        display: block;
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        color: var(--black);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .kpi-lbl {
+        display: block;
+        margin-top: 3px;
+        font-size: 7.9px;
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      /* SECTION RULE */
+      .sec-rule {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .sec-rule h2 {
         margin: 0;
-        font-size: 9.5px;
+        font-family: var(--font-mono);
+        font-size: 8px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--black);
+      }
+
+      .sec-rule span {
+        font-family: var(--font-mono);
+        font-size: 7.5px;
+        color: var(--muted);
+      }
+
+      /* 2x2 ARCHITECTURAL PROFILES */
+      .profiles {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px 26px;
+      }
+
+      .profile {
+        padding-bottom: 11px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .p-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+      }
+
+      .p-head h3 {
+        margin: 0;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--black);
+      }
+
+      .p-count {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        font-weight: 600;
+        color: var(--black);
+      }
+
+      .p-stack {
+        margin: 0 0 5px;
+        font-family: var(--font-mono);
+        font-size: 7.4px;
+        color: var(--muted);
+      }
+
+      .profile p {
+        margin: 0 0 4px;
+        font-size: 8.3px;
         line-height: 1.44;
         color: var(--soft);
       }
 
-      .sec-title {
-        margin: 0 0 6px;
-        font-size: 9px;
-        font-weight: 800;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        color: var(--emerald);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .sec-title::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--line);
-      }
-
-      .kpi-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-
-      .kpi {
-        background: var(--canvas);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 8px 10px;
-      }
-
-      .kpi.is-emerald {
-        background: var(--emerald-soft);
-        border-color: var(--emerald-line);
-      }
-
-      .kpi strong {
-        display: block;
-        font-size: 14px;
-        font-weight: 800;
-        color: var(--navy);
-      }
-
-      .kpi.is-emerald strong {
-        color: var(--emerald);
-      }
-
-      .kpi span {
-        display: block;
-        font-size: 7.9px;
-        line-height: 1.3;
-        color: var(--muted);
-        margin-top: 2px;
-      }
-
-      /* 4 PERFILES DE LOS 136 HOTELES */
-      .tier-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 9px;
-      }
-
-      .tier-card {
-        border: 1px solid var(--line);
-        border-top: 3px solid var(--navy);
-        border-radius: 9px;
-        padding: 9px 11px;
-        background: var(--white);
-      }
-
-      .tier-card.is-legacy {
-        border-top-color: var(--gold);
-        background: var(--gold-soft);
-        border-color: var(--gold-line);
-      }
-
-      .tier-card.is-emerald {
-        border-top-color: var(--emerald);
-      }
-
-      .tier-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 6px;
-        margin-bottom: 4px;
-      }
-
-      .tier-head h3 {
-        margin: 0;
-        font-size: 10px;
-        font-weight: 800;
-        color: var(--navy);
-      }
-
-      .tier-count {
-        font-size: 8px;
-        font-weight: 800;
-        padding: 2px 7px;
-        border-radius: 999px;
-        background: var(--canvas);
-        color: var(--navy);
-        border: 1px solid var(--line);
-        white-space: nowrap;
-      }
-
-      .tier-card.is-legacy .tier-count {
-        background: #ffffff;
-        color: var(--gold-ink);
-        border-color: var(--gold-line);
-      }
-
-      .tier-pms {
-        font-size: 8.2px;
-        font-weight: 700;
-        color: var(--emerald);
-        margin: 0 0 4px;
-      }
-
-      .tier-card.is-legacy .tier-pms {
-        color: var(--gold-ink);
-      }
-
-      .tier-card p {
-        margin: 0 0 4px;
-        font-size: 8.3px;
-        line-height: 1.38;
-        color: var(--soft);
-      }
-
-      .tier-card p:last-child {
+      .profile p:last-child {
         margin-bottom: 0;
       }
 
-      .legacy-box {
-        background: var(--navy);
-        color: #e6eff8;
-        border-radius: 9px;
-        padding: 11px 14px;
+      .profile strong {
+        color: var(--black);
       }
 
-      .legacy-box h3 {
-        margin: 0 0 6px;
-        font-size: 10px;
-        font-weight: 800;
-        color: #e5c683;
-        letter-spacing: 0.02em;
+      code {
+        font-family: var(--font-mono);
+        font-size: 7.5px;
+        background: #f1f1f3;
+        color: var(--black);
+        padding: 0 3px;
       }
 
-      .legacy-cols {
+      /* PALANTIR BLACK MONOLITH CALLOUT (0px CORNERS) */
+      .monolith {
+        background: var(--black);
+        color: #ffffff;
+        padding: 16px 20px;
+      }
+
+      .monolith-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #27272a;
+      }
+
+      .monolith-head h3 {
+        margin: 0;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        color: #ffffff;
+      }
+
+      .monolith-head span {
+        font-family: var(--font-mono);
+        font-size: 7.4px;
+        letter-spacing: 0.08em;
+        color: #a1a1aa;
+        text-transform: uppercase;
+      }
+
+      .monolith-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        gap: 16px;
       }
 
-      .legacy-item strong {
+      .m-col {
+        border-left: 1px solid #27272a;
+        padding-left: 12px;
+      }
+
+      .m-col:first-child {
+        border-left: 0;
+        padding-left: 0;
+      }
+
+      .m-col strong {
         display: block;
-        font-size: 8.8px;
+        font-size: 8.5px;
+        font-weight: 600;
         color: #ffffff;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
       }
 
-      .legacy-item p {
+      .m-col p {
         margin: 0;
-        font-size: 8.1px;
-        line-height: 1.38;
-        color: #cad8e8;
+        font-size: 8px;
+        line-height: 1.44;
+        color: #a1a1aa;
       }
 
-      /* PAGE 2 TABLES & TIMELINE */
-      .matrix-table {
+      .m-col code {
+        background: #1c1c20;
+        color: #e4e4e7;
+      }
+
+      /* DATA TABLES (PALANTIR PRECISION) */
+      .spec-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 8.4px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        overflow: hidden;
       }
 
-      .matrix-table th {
-        background: var(--canvas);
-        color: var(--navy);
+      .spec-table thead th {
         text-align: left;
-        padding: 6.5px 8px;
-        font-size: 7.7px;
+        padding: 0 8px 7px 0;
+        font-family: var(--font-mono);
+        font-size: 7.2px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        border-bottom: 1.5px solid var(--black);
       }
 
-      .matrix-table td {
-        padding: 6.5px 8px;
-        border-bottom: 1px solid #e7ecf1;
+      .spec-table tbody td {
+        padding: 8.5px 10px 8.5px 0;
+        border-bottom: 1px solid var(--line);
         vertical-align: top;
         color: var(--soft);
-        line-height: 1.36;
+        line-height: 1.4;
       }
 
-      .matrix-table tr:last-child td {
-        border-bottom: 0;
+      .spec-table td:first-child {
+        color: var(--black);
+        font-weight: 600;
       }
 
-      .matrix-table td:first-child {
-        color: var(--navy);
-        font-weight: 700;
-      }
-
-      .tag-ok {
-        display: inline-block;
-        background: var(--emerald-soft);
-        color: var(--emerald);
-        border: 1px solid var(--emerald-line);
-        font-size: 7.5px;
-        font-weight: 800;
-        padding: 2px 6px;
-        border-radius: 999px;
+      .status-ready {
+        font-family: var(--font-mono);
+        font-size: 7.4px;
+        font-weight: 600;
+        color: var(--black);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         white-space: nowrap;
       }
 
-      .waves-grid {
+      .status-ready::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        background: var(--signal);
+      }
+
+      /* 3 WAVES */
+      .waves {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 9px;
+        gap: 18px;
       }
 
-      .wave-card {
-        background: var(--canvas);
-        border: 1px solid var(--line);
-        border-left: 3.5px solid var(--emerald);
-        border-radius: 8px;
-        padding: 9px 11px;
+      .wave {
+        border-top: 1.5px solid var(--black);
+        padding-top: 8px;
       }
 
-      .wave-tag {
-        font-size: 7.8px;
-        font-weight: 800;
+      .wave-code {
+        font-family: var(--font-mono);
+        font-size: 7.4px;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--emerald);
+        color: var(--muted);
       }
 
-      .wave-card h3 {
-        margin: 3px 0 4px;
-        font-size: 9.8px;
-        color: var(--navy);
+      .wave h3 {
+        margin: 4px 0 5px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--black);
       }
 
-      .wave-card p {
+      .wave p {
         margin: 0;
-        font-size: 8.3px;
-        line-height: 1.38;
+        font-size: 8.2px;
+        line-height: 1.45;
         color: var(--soft);
       }
 
-      .note-bar {
-        background: var(--emerald-soft);
-        border: 1px solid var(--emerald-line);
-        border-radius: 8px;
-        padding: 9px 12px;
+      .summary-bar {
+        background: var(--panel);
+        border-left: 3px solid var(--black);
+        padding: 11px 14px;
         font-size: 8.6px;
-        line-height: 1.42;
-        color: #0b4136;
-      }
-
-      .note-bar strong {
-        color: var(--emerald);
+        line-height: 1.48;
+        color: var(--ink);
       }
 
       .footer {
         flex: none;
-        background: var(--canvas);
+        margin-top: auto;
+        padding-top: 10px;
         border-top: 1px solid var(--line);
-        padding: 8px 30px;
         display: flex;
         justify-content: space-between;
-        font-size: 7.8px;
+        font-family: var(--font-mono);
+        font-size: 7.2px;
+        letter-spacing: 0.05em;
         color: var(--muted);
       }
     </style>
   </head>
   <body>
-    <!-- PÁGINA 1: DIAGNÓSTICO DE LOS 136 SOCIOS AMHNL + SOLUCIÓN HOTELES CENTENARIOS -->
+    <!-- PÁGINA 1 -->
     <div class="page">
-      <header class="top-band">
+      <header class="topbar">
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Hospitality PUI ID" />
-          <div>
-            <div class="brand-name">Hospitality PUI ID</div>
-            <div class="brand-sub">Plan Técnico de Cobertura Universal · 136 Hoteles Socios AMHNL</div>
-          </div>
+          <span class="brand-name">Hospitality PUI ID</span>
         </div>
-        <div class="top-right">
-          <span class="pill">136 / 136 Hoteles Conectables (100%)</span>
-          <div class="top-meta">Basado en directorio oficial hotelesmonterrey.org · Página 1 de 2</div>
+        <div class="doc-meta">
+          <strong>DOC // AMHNL-136</strong> &nbsp;|&nbsp; INTEGRACIÓN UNIVERSAL PMS &nbsp;|&nbsp; 01 / 02
         </div>
       </header>
 
-      <main class="content">
-        <section class="hero">
-          <h1>Garantía de conexión 100% para los 136 hoteles socios — incluidos hoteles centenarios y sistemas heredados sin API</h1>
-          <p>
-            Tras analizar el padrón público de socios de la Asociación Mexicana de Hoteles de Nuevo León
-            (<strong>hotelesmonterrey.org/hoteles-socios/</strong>), diseñamos una arquitectura de
-            <strong>5 niveles de conectividad universal</strong> para que ningún hotel quede fuera — desde cadenas
-            internacionales con PMS corporativo cerrado hasta propiedades históricas con más de 100 años y sistemas
-            antiguos sin integración web. <strong>Ningún hotel tiene que cambiar su sistema actual.</strong>
+      <main class="body">
+        <section>
+          <p class="mono-tag">ASOCIACIÓN MEXICANA DE HOTELES DE NUEVO LEÓN · HOTELESMONTERREY.ORG</p>
+          <h1>Conexión garantizada para los <strong>136 hoteles socios</strong> — incluidos hoteles centenarios y sistemas sin API.</h1>
+          <p class="lead">
+            A partir del directorio oficial de socios de la AMHNL, diseñamos una arquitectura de
+            <strong>cinco niveles de interoperabilidad</strong> que integra desde cadenas internacionales con PMS
+            corporativo cerrado hasta propiedades históricas con más de 100 años y software heredado. Ningún hotel
+            requiere sustituir su sistema actual ni exponer su base de datos.
           </p>
         </section>
 
-        <section class="kpi-row">
-          <div class="kpi is-emerald">
-            <strong>136 / 136 (100%)</strong>
-            <span>Cobertura total garantizada sin sustituir ningún PMS</span>
+        <section class="kpi-grid">
+          <div class="kpi">
+            <span class="kpi-val">136 / 136</span>
+            <span class="kpi-lbl">100% de cobertura del padrón sin cambiar ningún PMS</span>
           </div>
           <div class="kpi">
-            <strong>5 modos de enlace</strong>
-            <span>API, XML/CSV, Texto/Impresión, ODBC y Portal Web</span>
+            <span class="kpi-val">05 Niveles</span>
+            <span class="kpi-lbl">API, XML/CSV, Parser heredado, Impresión .PRN y Web</span>
           </div>
           <div class="kpi">
-            <strong>0 toques al PMS</strong>
-            <span>No modifica bases de datos ni rompe garantías</span>
+            <span class="kpi-val">0 Toques</span>
+            <span class="kpi-lbl">Cero intervención en la base de datos del PMS</span>
           </div>
           <div class="kpi">
-            <strong>12 años histórico</strong>
-            <span>Importador masivo + respaldo documental DOF</span>
+            <span class="kpi-val">12 Años</span>
+            <span class="kpi-lbl">Cobertura histórica conforme al Anexo 2 DOF</span>
           </div>
         </section>
 
         <section>
-          <h2 class="sec-title">Radiografía técnica del directorio AMHNL (plan de conexión propuesto por perfil)</h2>
-          <div class="tier-grid">
-            <article class="tier-card is-emerald">
-              <div class="tier-head">
-                <h3>1. Cadenas Internacionales y Nacionales</h3>
-                <span class="tier-count">~72 hoteles</span>
+          <div class="sec-rule">
+            <h2>01 // Radiografía técnica del padrón AMHNL (plan de enlace propuesto)</h2>
+            <span>DIRECTORIO PÚBLICO · 4 PERFILES</span>
+          </div>
+
+          <div class="profiles">
+            <article class="profile">
+              <div class="p-head">
+                <h3>Cadenas Internacionales y Nacionales</h3>
+                <span class="p-count">~72 HOTELES</span>
               </div>
-              <p class="tier-pms">PMS típico: OPERA Cloud / OnQ / FOSSE / Concerto / Posadas / Accor</p>
+              <p class="p-stack">OPERA CLOUD · ONQ · FOSSE · CONCERTO · POSADAS · ACCOR</p>
               <p>
-                <strong>Socios en directorio AMHNL:</strong> IHG (Crowne Plaza, Holiday Inn, Staybridge, Presidente),
-                Marriott y City Express (JW, Westin, AC, Courtyard, Four Points, City Express), Hilton (Hampton, Garden
-                Inn, Homewood, Tru, Curio), Grupo Posadas (Fiesta Americana, Live AQUA, Fiesta Inn, ONE, Gamma),
-                Wyndham, Choice, Accor (Ibis/Novotel), Hyatt, NH, Best Western, Camino Real, Barceló.
+                <strong>Socios en directorio:</strong> IHG (Crowne Plaza, Holiday Inn, Staybridge, Presidente), Marriott
+                y City Express (JW, Westin, AC, Courtyard, Four Points), Hilton (Hampton, Garden Inn, Homewood, Tru,
+                Curio), Posadas (Fiesta Americana, Live AQUA, Fiesta Inn, ONE, Gamma), Wyndham, Choice, Accor, Hyatt, NH,
+                Best Western, Camino Real y Barceló.
               </p>
               <p>
-                <strong>Cómo nos conectamos:</strong> API Cloud (OHIP/REST) o <strong>Agente Local 1-Clic</strong> que
-                lee el reporte de llegadas XML/CSV sin tocar el PMS corporativo global.
+                <strong>Enlace:</strong> API Cloud (OHIP/REST) o Agente Local 1-Clic sobre reportes de llegadas XML/CSV
+                sin tocar el sistema corporativo global.
               </p>
             </article>
 
-            <article class="tier-card is-emerald">
-              <div class="tier-head">
-                <h3>2. Grupos Regionales con PMS On-Premise</h3>
-                <span class="tier-count">~18 hoteles</span>
+            <article class="profile">
+              <div class="p-head">
+                <h3>Grupos Regionales On-Premise</h3>
+                <span class="p-count">~18 HOTELES</span>
               </div>
-              <p class="tier-pms">PMS típico: Oracle OPERA 5 / Zeus Hoteles / Front2000 / Infor HMS</p>
+              <p class="p-stack">ORACLE OPERA 5 · ZEUS HOTELES · FRONT2000 · INFOR HMS</p>
               <p>
-                <strong>Socios en directorio AMHNL:</strong> Hoteles Safi (Centro, Metropolitan, Valle), CHN Monterrey
+                <strong>Socios en directorio:</strong> Hoteles Safi (Centro, Metropolitan, Valle), CHN Monterrey
                 (Aeropuerto, Centro, Norte, Santa Fe), Antaris (Cintermex, Galerías, Valle), Krystal / Krystal Urban,
-                Galería Plaza, iStay Histórico, Travohotel, Kavia, SJ Grand, Centria.
+                Galería Plaza, iStay Histórico, Travohotel, Kavia, SJ Grand y Centria.
               </p>
               <p>
-                <strong>Cómo nos conectamos:</strong> <strong>Instalador automático en 1 clic</strong> (Windows <code>.ps1</code> o
-                Linux <code>.sh</code>) que sincroniza exportaciones <code>.xml</code>, <code>.csv</code> (<code>,</code>, <code>;</code>, <code>|</code>, tab) cada 15 segundos sin
-                tocar el servidor del PMS.
-              </p>
-            </article>
-
-            <article class="tier-card is-legacy">
-              <div class="tier-head">
-                <h3>3. Hoteles Históricos (+100 años) y Sistemas Viejos</h3>
-                <span class="tier-count">~26 hoteles</span>
-              </div>
-              <p class="tier-pms">Sistemas heredados: Windows 7/Server viejo, FoxPro, Fidelio, Access, DOS o sin API</p>
-              <p>
-                <strong>Socios en directorio AMHNL:</strong> Gran Hotel Ancira (1912), Colonial, Monterrey Macroplaza,
-                Ambassador Centro, Fastos, Royalty, Plaza del Arco / Express, Nader, Garcia’s Suites (3), Plaza Calzada,
-                Plaza de Oro, Plaza las Américas, Son Mar, Guidi Linares, Hacienda Cola de Caballo, Bahía Escondida,
-                Chipinque, Termas de San Joaquín.
-              </p>
-              <p>
-                <strong>Cómo nos conectamos (garantizado):</strong> Parser universal heredado (<code>;</code>,
-                <code>|</code>, Latin-1/Ñ), <strong>Captura de Impresión a Archivo (<code>.txt</code>/<code>.prn</code>)</strong> o vista SQL
-                de solo lectura. ¡Aunque el PMS tenga 25 años y no tenga API, se conecta!
+                <strong>Enlace:</strong> Instalador 1-Clic (<code>.ps1</code> / <code>.sh</code>) que sincroniza
+                exportaciones <code>.xml</code> y <code>.csv</code> cada 15 s hacia su bóveda aislada por RFC.
               </p>
             </article>
 
-            <article class="tier-card">
-              <div class="tier-head">
-                <h3>4. Independientes, Boutique y Operación Ligera</h3>
-                <span class="tier-count">~20 hoteles</span>
+            <article class="profile">
+              <div class="p-head">
+                <h3>Hoteles Centenarios y Sistemas Heredados</h3>
+                <span class="p-count">~26 HOTELES</span>
               </div>
-              <p class="tier-pms">Operación actual: Cloudbeds, software básico, Excel o registro manual</p>
+              <p class="p-stack">WINDOWS VIEJO · FOXPRO · FIDELIO · ACCESS · DOS · SIN API</p>
               <p>
-                <strong>Socios en directorio AMHNL:</strong> 5a. Avenida, Hotel 25, Ejecutivo Plus, Fiesta Álamo, Fiesta
+                <strong>Socios en directorio:</strong> Gran Hotel Ancira (1912), Colonial, Monterrey Macroplaza,
+                Ambassador Centro, Fastos, Royalty, Plaza del Arco, Nader, Garcia’s Suites, Plaza Calzada, Plaza de Oro,
+                Plaza las Américas, Son Mar, Guidi Linares, Hacienda Cola de Caballo, Bahía Escondida, Chipinque y Termas
+                de San Joaquín.
+              </p>
+              <p>
+                <strong>Enlace garantizado:</strong> Parser heredado (<code>;</code>, <code>|</code>, Latin-1/Ñ) y
+                <strong>captura de impresión a archivo</strong> (<code>.txt</code>/<code>.prn</code>) para sistemas con
+                más de 25 años.
+              </p>
+            </article>
+
+            <article class="profile">
+              <div class="p-head">
+                <h3>Independientes y Operación Ligera</h3>
+                <span class="p-count">~20 HOTELES</span>
+              </div>
+              <p class="p-stack">CLOUDBEDS · SOFTWARE BÁSICO · EXCEL · REGISTRO MANUAL</p>
+              <p>
+                <strong>Socios en directorio:</strong> 5a. Avenida, Hotel 25, Ejecutivo Plus, Fiesta Álamo, Fiesta
                 Versalles, GB Montemorelos, Jandal, Le-Gar, Madero Express, Maria Luisa Inn, Palmas, Parque Central,
-                Premier, Victoria, VN Hotel, Ecovergel (2), Los Vientos de García.
+                Premier, Victoria, VN Hotel, Ecovergel y Los Vientos de García.
               </p>
               <p>
-                <strong>Cómo nos conectamos:</strong> En <strong>15 minutos y cero TI</strong> usando nuestra
-                <strong>Terminal Web Ligera</strong> en cualquier navegador/tablet (con escáner INE/Pasaporte MRZ a $0)
-                o subiendo su Excel/CSV diario en 1 clic.
+                <strong>Enlace:</strong> Alta en 15 minutos y cero TI vía Terminal Web Ligera (escáner INE y pasaporte
+                MRZ a $0) o carga de Excel en 1 clic.
               </p>
             </article>
           </div>
         </section>
 
-        <section class="legacy-box">
-          <h3>¿Cómo garantizamos 100% cumplimiento en hoteles con más de 100 años y sistemas prácticamente obsoletos?</h3>
-          <div class="legacy-cols">
-            <div class="legacy-item">
-              <strong>1. Captura de Impresión a Archivo (.txt / .prn)</strong>
+        <section class="monolith">
+          <div class="monolith-head">
+            <h3>Garantía de ingeniería para hoteles con más de 100 años y software obsoleto</h3>
+            <span>LEGACY INTEROPERABILITY // VERIFIED</span>
+          </div>
+          <div class="monolith-grid">
+            <div class="m-col">
+              <strong>01 // Captura de Impresión (.TXT / .PRN)</strong>
               <p>
-                Si un PMS de los años 90 (DOS, FoxPro, Windows viejo) no sabe exportar CSV ni XML, siempre sabe
-                <em>imprimir</em> su lista de llegadas. Configuramos una impresora virtual local a archivo de texto y
-                nuestro agente extrae nombre, CURP y habitación automáticamente.
+                Si un PMS heredado (DOS, FoxPro, Windows antiguo) carece de exportación CSV/XML, siempre imprime listas de
+                llegadas. Una impresora virtual guarda el texto y nuestro motor extrae CURP, nombre y habitación.
               </p>
             </div>
-            <div class="legacy-item">
-              <strong>2. Autodetección de formatos viejos (Latin-1 / ;)</strong>
+            <div class="m-col">
+              <strong>02 // Parser Nativo Heredado (Latin-1)</strong>
               <p>
-                Nuestro motor ya soporta de fábrica separadores de Excel México (<code>;</code>), pipes de Fidelio/AS400
-                (<code>|</code>), nombres divididos en 3 columnas y codificación Windows-1252/Latin-1 (para que la
-                <code>Ñ</code> y acentos nunca fallen).
+                Detección automática de Excel México (<code>;</code>), pipes de Fidelio/AS400 (<code>|</code>), apellidos
+                en columnas separadas y codificación Windows-1252 para no corromper la <code>Ñ</code> ni acentos.
               </p>
             </div>
-            <div class="legacy-item">
-              <strong>3. Histórico de 12 años sin bloquear al hotel</strong>
+            <div class="m-col">
+              <strong>03 // Histórico de 12 Años (Anexo 2 DOF)</strong>
               <p>
-                Importamos sus archivos digitales históricos (CSV, Excel, respaldos) a su bóveda por RFC. Si años
-                antiguos solo existen en libros de papel, la bitácora oficial documenta el alcance digital conforme a los
-                Lineamientos DOF.
+                Ingestamos respaldos digitales existentes en su bóveda por RFC. Para periodos previos en libros de papel,
+                la bitácora oficial documenta formalmente el alcance digital ante la autoridad.
               </p>
             </div>
           </div>
@@ -585,158 +607,161 @@
       </main>
 
       <footer class="footer">
-        <span><strong>© 2026 Hospitality PUI ID</strong> · Propiedad exclusiva de Hospitality PUI ID · Directorio público AMHNL usado solo como referencia de alcance técnico</span>
-        <span>Página 1 de 2 · Todos los derechos reservados</span>
+        <span>© 2026 HOSPITALITY PUI ID · PROPIEDAD EXCLUSIVA DE HOSPITALITY PUI ID · REFERENCIA TÉCNICA SOBRE DIRECTORIO PÚBLICO AMHNL</span>
+        <span>01 / 02</span>
       </footer>
     </div>
 
-    <!-- PÁGINA 2: MATRIZ DE 5 NIVELES + DESPLIEGUE POR OLAS (10 FUNDADORES -> 136 SOCIOS) -->
+    <!-- PÁGINA 2 -->
     <div class="page">
-      <header class="top-band">
+      <header class="topbar">
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Hospitality PUI ID" />
-          <div>
-            <div class="brand-name">Hospitality PUI ID</div>
-            <div class="brand-sub">Matriz Técnica de Integración Universal y Plan de Despliegue AMHNL</div>
-          </div>
+          <span class="brand-name">Hospitality PUI ID</span>
         </div>
-        <div class="top-right">
-          <span class="pill">Cero Hoteles Excluidos · Manual DOF 23/01/2026</span>
-          <div class="top-meta">Anexo 2 y Sección 8 · Página 2 de 2</div>
+        <div class="doc-meta">
+          <strong>DOC // AMHNL-136</strong> &nbsp;|&nbsp; MATRIZ DE 5 NIVELES &amp; DESPLIEGUE &nbsp;|&nbsp; 02 / 02
         </div>
       </header>
 
-      <main class="content">
+      <main class="body">
         <section>
-          <h2 class="sec-title">Matriz universal de 5 niveles de conexión (ningún sistema se queda atrás)</h2>
-          <table class="matrix-table">
+          <div class="sec-rule">
+            <h2>02 // Matriz universal de interoperabilidad (5 niveles probados)</h2>
+            <span>MANUAL TÉCNICO DOF 23/01/2026 · ANEXO 2</span>
+          </div>
+
+          <table class="spec-table">
             <thead>
               <tr>
-                <th style="width: 19%;">Nivel de conexión</th>
-                <th style="width: 24%;">Sistemas / PMS que cubre</th>
-                <th style="width: 31%;">Cómo se integra sin riesgo operativo</th>
-                <th style="width: 14%;">Tiempo de alta</th>
-                <th style="width: 12%;">Estado hoy</th>
+                <th style="width: 21%;">Nivel</th>
+                <th style="width: 25%;">Sistemas cubiertos</th>
+                <th style="width: 31%;">Mecanismo sin intervención al PMS</th>
+                <th style="width: 12%;">Alta</th>
+                <th style="width: 11%;">Estado</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Nivel 1 · API Cloud</td>
+                <td>Nivel 01 · API Cloud</td>
                 <td>Oracle OPERA Cloud (OHIP), Cloudbeds, Mews, Little Hotelier</td>
-                <td>Webhook / API REST cifrada TLS 1.3 con Bearer/JWT directo a la bóveda del RFC del hotel.</td>
-                <td>1 a 2 horas</td>
-                <td><span class="tag-ok">✓ LISTO</span></td>
+                <td>Conexión REST/Webhook TLS 1.3 + Bearer/JWT directa a la bóveda por RFC.</td>
+                <td>1–2 h</td>
+                <td><span class="status-ready">READY</span></td>
               </tr>
               <tr>
-                <td>Nivel 2 · Agente XML / CSV (1-Clic)</td>
+                <td>Nivel 02 · Agente XML / CSV</td>
                 <td>OPERA 5, Hilton OnQ, Marriott FOSSE, IHG Concerto, Posadas, Zeus</td>
-                <td>Instalador automático (<code>.ps1</code> / <code>.sh</code>) vigila carpeta local de llegadas cada 15 s. Cero acceso a la BD del PMS.</td>
-                <td>20 minutos</td>
-                <td><span class="tag-ok">✓ LISTO</span></td>
+                <td>Instalador 1-clic (<code>.ps1</code> / <code>.sh</code>) sincroniza carpeta local cada 15 s sin tocar la BD.</td>
+                <td>20 min</td>
+                <td><span class="status-ready">READY</span></td>
               </tr>
               <tr>
-                <td>Nivel 3 · Parser Heredado Universal</td>
-                <td>Front2000, Micros-Fidelio, FoxPro, Excel México (<code>;</code>), AS400 (<code>|</code>)</td>
-                <td>Autodetecta delimitador (<code>,</code> <code>;</code> <code>|</code> tab), nombres en varias columnas y codificación Windows-1252 (<code>Ñ</code>).</td>
-                <td>30 minutos</td>
-                <td><span class="tag-ok">✓ LISTO</span></td>
+                <td>Nivel 03 · Parser Heredado</td>
+                <td>Front2000, Micros-Fidelio, FoxPro, Excel México (<code>;</code>), AS400</td>
+                <td>Autodetecta separadores (<code>,</code> <code>;</code> <code>|</code> tab), nombres divididos y Latin-1 (<code>Ñ</code>).</td>
+                <td>30 min</td>
+                <td><span class="status-ready">READY</span></td>
               </tr>
               <tr>
-                <td>Nivel 4 · Captura de Impresión (.txt/.prn)</td>
-                <td>Sistemas centenarios / DOS / Windows viejo sin opción de exportar</td>
-                <td>Impresora virtual local guarda el reporte de llegadas en <code>.txt</code>/<code>.prn</code>; el agente extrae CURP, nombre y habitación.</td>
-                <td>30 minutos</td>
-                <td><span class="tag-ok">✓ LISTO</span></td>
+                <td>Nivel 04 · Captura Impresión</td>
+                <td>Sistemas centenarios / DOS / Windows antiguo sin exportación</td>
+                <td>Impresora virtual local genera <code>.txt</code>/<code>.prn</code>; el motor extrae CURP, nombre y habitación.</td>
+                <td>30 min</td>
+                <td><span class="status-ready">READY</span></td>
               </tr>
               <tr>
-                <td>Nivel 5 · Terminal Web Cero-TI</td>
-                <td>Hoteles independientes, Excel manual o registro en papel</td>
-                <td>Acceso desde cualquier navegador/tablet en recepción con escáner INE/Pasaporte MRZ a $0 y protocolo Menores Art. 58 LGT.</td>
-                <td>15 minutos</td>
-                <td><span class="tag-ok">✓ LISTO</span></td>
+                <td>Nivel 05 · Terminal Web</td>
+                <td>Hoteles independientes, Excel manual o registro físico</td>
+                <td>Navegador o tablet con escáner INE/Pasaporte MRZ a $0 y protocolo Menores Art. 58 LGT.</td>
+                <td>15 min</td>
+                <td><span class="status-ready">READY</span></td>
               </tr>
             </tbody>
           </table>
         </section>
 
         <section>
-          <h2 class="sec-title">Plan de despliegue ordenado para los 136 hoteles socios (sin detener operaciones)</h2>
-          <div class="waves-grid">
-            <article class="wave-card">
-              <span class="wave-tag">Ola 1 · Semanas 1 a 4</span>
-              <h3>10 Hoteles Fundadores (Piloto ATDT)</h3>
+          <div class="sec-rule">
+            <h2>03 // Plan de despliegue en tres olas (del piloto a los 136 socios)</h2>
+            <span>EJECUCIÓN SIN DETENER OPERACIÓN</span>
+          </div>
+
+          <div class="waves">
+            <article class="wave">
+              <span class="wave-code">OLA 01 // SEMANAS 01–04</span>
+              <h3>10 Hoteles Fundadores</h3>
               <p>
-                Alineado al plan oficial de la ATDT (iniciar con las 10 instituciones más representativas). Incluimos
-                <strong>3 perfiles distintos</strong> en el piloto: cadena internacional (OPERA/corporativo), grupo
-                regional (OPERA 5/Zeus) y <strong>1 hotel histórico heredado</strong> para validar los 5 niveles desde
-                el día 1.
+                Alineado al plan oficial de la ATDT. Integramos a propósito <strong>1 cadena internacional, 1 grupo
+                regional y 1 hotel histórico heredado</strong> dentro del piloto para validar los 5 niveles desde el mes 1.
               </p>
             </article>
 
-            <article class="wave-card">
-              <span class="wave-tag">Ola 2 · Semanas 5 a 8</span>
-              <h3>Cadenas y Grupos Regionales (~80 hoteles)</h3>
+            <article class="wave">
+              <span class="wave-code">OLA 02 // SEMANAS 05–08</span>
+              <h3>Cadenas y Grupos (~80)</h3>
               <p>
-                Una vez validada la primera propiedad de cada cadena o grupo (Safi, CHN, Antaris, IHG, Posadas,
-                Marriott, Hilton, Wyndham), replicamos el instalador 1-clic al resto de sus sucursales en minutos con
-                bóvedas independientes por RFC.
+                Certificada la primera propiedad de cada grupo (Safi, CHN, Antaris, IHG, Posadas, Marriott, Hilton,
+                Wyndham), replicamos el instalador 1-clic a cada sucursal con bóvedas aisladas por RFC.
               </p>
             </article>
 
-            <article class="wave-card">
-              <span class="wave-tag">Ola 3 · Semanas 9 a 12</span>
-              <h3>Históricos e Independientes (100% — 136 socios)</h3>
+            <article class="wave">
+              <span class="wave-code">OLA 03 // SEMANAS 09–12</span>
+              <h3>Cobertura Total (136 Socios)</h3>
               <p>
-                Sesiones guiadas de 20 minutos para activar Nivel 3, Nivel 4 (impresión a archivo) o Nivel 5 (Terminal
-                Web + escáner MRZ $0). Cada propiedad recibe su <strong>Constancia Oficial PDF SHA-256</strong> lista
-                para inspección de SEGOB y Turismo.
+                Sesiones técnicas de 20 minutos para activar Niveles 3, 4 y 5. Cada propiedad recibe su
+                <strong>Constancia Oficial PDF sellada con SHA-256</strong> lista para inspección de SEGOB y Turismo.
               </p>
             </article>
           </div>
         </section>
 
         <section>
-          <h2 class="sec-title">Qué necesita entregar cada hotel para conectarse (checklist simple de 3 pasos)</h2>
-          <table class="matrix-table">
+          <div class="sec-rule">
+            <h2>04 // Protocolo de incorporación por hotel (3 pasos)</h2>
+            <span>CHECKLIST OPERATIVO</span>
+          </div>
+
+          <table class="spec-table">
             <thead>
               <tr>
-                <th style="width: 28%;">Paso</th>
-                <th style="width: 47%;">Responsable y acción exacta</th>
-                <th style="width: 25%;">Tiempo estimado</th>
+                <th style="width: 26%;">Etapa</th>
+                <th style="width: 54%;">Acción requerida por el establecimiento</th>
+                <th style="width: 20%;">Tiempo</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>1. Censo rápido de PMS (1 minuto)</td>
-                <td>Cada socio responde 3 preguntas: nombre de su PMS (o Excel/papel), si corre en Windows o nube, y nombre del responsable de TI/recepción.</td>
-                <td>1 minuto por hotel</td>
+                <td>01 · Censo rápido de PMS</td>
+                <td>Indicar sistema actual (o Excel/papel), modalidad nube o Windows local y contacto de TI/recepción.</td>
+                <td>1 minuto</td>
               </tr>
               <tr>
-                <td>2. Registro Llave MX (Etapa 1 DOF)</td>
-                <td>El representante legal da de alta la Persona Moral con su e.firma vigente (<code>.cer</code>/<code>.key</code>) en <code>plataformadebusqueda.gob.mx/inscripcion</code>.</td>
-                <td>15 minutos (una sola vez)</td>
+                <td>02 · Alta Llave MX (Etapa 1)</td>
+                <td>El representante legal registra la Persona Moral con e.firma vigente en <code>plataformadebusqueda.gob.mx/inscripcion</code>.</td>
+                <td>15 minutos</td>
               </tr>
               <tr>
-                <td>3. Activación técnica asistida</td>
-                <td>Nuestro equipo instala el conector correspondiente (Nivel 1 al 5), corre la prueba oficial <code>/activar-reporte-prueba</code> y entrega la Constancia PDF.</td>
-                <td>15 a 30 minutos por hotel</td>
+                <td>03 · Enlace y validación ATDT</td>
+                <td>Instalamos el conector (Niveles 1–5), aprobamos <code>/activar-reporte-prueba</code> y emitimos Constancia PDF.</td>
+                <td>15–30 min</td>
               </tr>
             </tbody>
           </table>
         </section>
 
-        <div class="note-bar">
-          <strong>Resumen ejecutivo para el Consejo de la AMHNL:</strong> Sin importar si un socio opera con Oracle OPERA
-          Cloud de última generación o con un sistema de hace 25 años en un hotel centenario del Centro de Monterrey,
-          <strong>Hospitality PUI ID conecta a los 136 socios al 100%</strong> sin cambiar su PMS, cumpliendo PUI (DOF
-          23/01/2026) + Menores (Art. 58 LGT), reduciendo su costo mensual 75% (de $1,000 a $250/mes) y generando
-          <strong>+$336,000 MXN/año</strong> netos para la Asociación.
+        <div class="summary-bar">
+          <strong>Síntesis ejecutiva para el Consejo AMHNL:</strong> Tanto un hotel internacional con OPERA Cloud como un
+          hotel centenario con software de hace 25 años quedan integrados al <strong>100% sin cambiar su PMS</strong>,
+          cumpliendo PUI (DOF 23/01/2026) y Menores (Art. 58 LGT), reduciendo el costo mensual en <strong>75%</strong>
+          (de $1,000 a $250/mes) y generando <strong>+$336,000 MXN/año</strong> netos para la Asociación.
         </div>
       </main>
 
       <footer class="footer">
-        <span><strong>© 2026 Hospitality PUI ID</strong> · Software, arquitectura y proyecto propiedad exclusiva de Hospitality PUI ID</span>
-        <span>Página 2 de 2 · Monterrey, Nuevo León, México</span>
+        <span>© 2026 HOSPITALITY PUI ID · PROPIEDAD EXCLUSIVA DE HOSPITALITY PUI ID · MONTERREY, NUEVO LEÓN, MÉXICO</span>
+        <span>02 / 02</span>
       </footer>
     </div>
   </body>

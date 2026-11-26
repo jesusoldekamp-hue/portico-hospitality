@@ -3,44 +3,43 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hospitality PUI ID — Simulador PUI en Vivo y Guía Oficial para Hoteles</title>
+    <title>Hospitality PUI ID — Plataforma PUI &amp; Verificación en Tiempo Real</title>
     <meta
       name="description"
-      content="Prueba en vivo el motor PUI de Hospitality PUI ID con 50 folios sintéticos RENAPO, sigilo en recepción, protección de menores (Art. 58 LGT) y marco legal DOF."
+      content="Simulador PUI en vivo con 50 folios sintéticos RENAPO, sigilo en recepción, protección de menores (Art. 58 LGT) y conectividad universal para hoteles."
     />
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
     <link rel="apple-touch-icon" href="./assets/portico-emblem.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         color-scheme: dark;
-        --bg: #070d16;
-        --surface: #0d1626;
-        --surface-2: #121f35;
-        --surface-3: #172742;
-        --line: #1f314d;
-        --line-strong: #2d4568;
-        --text: #f1f5f9;
-        --text-soft: #b8c7da;
-        --text-muted: #8fa3bc;
-        --emerald: #0d6b59;
-        --emerald-hover: #0a5446;
-        --emerald-bright: #34d399;
-        --emerald-bg: #0a2923;
-        --emerald-line: #18574a;
-        --gold: #e5be70;
-        --gold-bg: #261e0d;
-        --gold-line: #5b451c;
-        --crimson-bright: #fca5a5;
-        --crimson-bg: #2d1215;
-        --crimson-line: #6b242b;
-        --font-display: 'Newsreader', Georgia, serif;
-        --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --bg: #0a0a0b;
+        --surface: #111113;
+        --surface-2: #18181b;
+        --surface-3: #222226;
+        --line: #232327;
+        --line-strong: #36363c;
+        --text: #ffffff;
+        --text-soft: #a1a1aa;
+        --text-muted: #8b8b94;
+        --accent: #ffffff;
+        --accent-ink: #0a0a0b;
+        --ok: #34d399;
+        --ok-bg: #0d1f1a;
+        --ok-line: #1d4d3e;
+        --warn: #fbbf24;
+        --warn-bg: #20190c;
+        --warn-line: #544019;
+        --alert: #f87171;
+        --alert-bg: #241112;
+        --alert-line: #5e2226;
+        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
@@ -52,7 +51,7 @@
 
       html {
         scroll-behavior: smooth;
-        scrollbar-color: #2d4568 #070d16;
+        scrollbar-color: #36363c #0a0a0b;
         overflow-x: clip;
       }
 
@@ -60,9 +59,9 @@
         margin: 0;
         background: var(--bg);
         color: var(--text);
-        font-family: var(--font-body);
-        font-size: 1.02rem;
-        line-height: 1.62;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        line-height: 1.6;
         overflow-x: clip;
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
@@ -71,27 +70,27 @@
       }
 
       :focus-visible {
-        outline: 2px solid var(--emerald-bright);
+        outline: 1.5px solid #ffffff;
         outline-offset: 2px;
-        border-radius: 4px;
       }
 
       a {
-        color: var(--emerald-bright);
-        text-underline-offset: 0.2em;
+        color: #ffffff;
+        text-underline-offset: 0.25em;
         text-decoration-thickness: 1px;
+        text-decoration-color: #52525b;
       }
 
       a:hover {
-        color: #6ee7b7;
+        text-decoration-color: #ffffff;
       }
 
-      /* ===== HEADER & RESPONSIVE NAVBAR (modern-web-guidance: navbar) ===== */
+      /* ===== PALANTIR MINIMAL HEADER (modern-web-guidance: navbar) ===== */
       .site-header {
         position: sticky;
         inset-block-start: 0;
         z-index: 40;
-        background: #070d16;
+        background: #0a0a0b;
         border-block-end: 1px solid var(--line);
         overflow-x: clip;
       }
@@ -101,10 +100,10 @@
       }
 
       .header-inner {
-        max-inline-size: 74rem;
+        max-inline-size: 76rem;
         margin-inline: auto;
-        padding-inline: 1.5rem;
-        min-block-size: 4.25rem;
+        padding-inline: 1.75rem;
+        min-block-size: 4.2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -119,21 +118,21 @@
       .site-logo {
         display: inline-flex;
         align-items: center;
-        gap: 0.65rem;
+        gap: 0.7rem;
         text-decoration: none;
-        color: var(--text);
+        color: #ffffff;
       }
 
       .site-logo img {
-        inline-size: 32px;
-        block-size: 32px;
-        border-radius: 8px;
+        inline-size: 26px;
+        block-size: 26px;
       }
 
       .site-logo-text {
-        font-weight: 700;
-        font-size: 1rem;
-        letter-spacing: -0.02em;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
       }
 
       .site-nav {
@@ -149,23 +148,21 @@
         gap: 0.45rem;
         padding: 0.48rem 0.85rem;
         border: 1px solid var(--line-strong);
-        border-radius: 7px;
+        border-radius: 2px;
         background: var(--surface);
-        color: var(--text);
+        color: #ffffff;
         font: inherit;
-        font-size: 0.88rem;
-        font-weight: 600;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
         cursor: pointer;
-      }
-
-      .menu-button:hover {
-        background: var(--surface-2);
       }
 
       .site-menu {
         position: fixed;
         inset: auto;
-        inset-block-start: 4.5rem;
+        inset-block-start: 4.4rem;
         inset-block-start: anchor(--menu-button bottom);
         inset-inline-end: 1rem;
         inline-size: min(84dvw, 20rem);
@@ -173,12 +170,11 @@
         block-size: fit-content;
         max-block-size: calc(100dvh - 6rem);
         margin: 0.4rem 0 0;
-        padding: 0.65rem;
+        padding: 0.6rem;
         list-style: none;
         background: var(--surface);
         border: 1px solid var(--line-strong);
-        border-radius: 10px;
-        box-shadow: 0 18px 40px rgb(0 0 0 / 0.5);
+        border-radius: 2px;
         overflow: auto;
       }
 
@@ -195,37 +191,36 @@
       .site-menu a {
         display: block;
         inline-size: 100%;
-        padding: 0.55rem 0.8rem;
-        border-radius: 6px;
+        padding: 0.55rem 0.75rem;
         color: var(--text-soft);
-        font-size: 0.9rem;
+        font-size: 0.84rem;
         font-weight: 500;
         text-decoration: none;
       }
 
       .site-menu a:hover {
-        background: var(--surface-2);
-        color: var(--text);
+        color: #ffffff;
       }
 
       .site-menu a[aria-current='page'] {
-        color: var(--emerald-bright);
-        font-weight: 700;
+        color: #ffffff;
         text-decoration: underline;
-        text-underline-offset: 0.35em;
-        text-decoration-thickness: 2px;
+        text-underline-offset: 0.4em;
+        text-decoration-thickness: 1.5px;
       }
 
       .site-menu .nav-cta {
-        background: var(--emerald);
-        color: #ffffff;
+        background: #ffffff;
+        color: #0a0a0b;
         font-weight: 600;
+        border-radius: 2px;
         text-align: center;
       }
 
       .site-menu .nav-cta:hover {
-        background: var(--emerald-hover);
-        color: #ffffff;
+        background: #e4e4e7;
+        color: #0a0a0b;
+        text-decoration: none;
       }
 
       .site-header.is-wide .menu-button {
@@ -236,7 +231,7 @@
         position: static;
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.35rem;
         inline-size: auto;
         max-inline-size: none;
         block-size: auto;
@@ -246,7 +241,6 @@
         padding: 0;
         border: 0;
         background: transparent;
-        box-shadow: none;
       }
 
       .site-header.is-wide .site-menu::backdrop {
@@ -255,30 +249,23 @@
 
       .site-header.is-wide .site-menu a {
         inline-size: auto;
-        padding: 0.42rem 0.72rem;
+        padding: 0.42rem 0.75rem;
       }
 
       .site-header.is-wide .site-menu .nav-cta {
-        margin-inline-start: 0.4rem;
-        padding-inline: 0.95rem;
+        margin-inline-start: 0.5rem;
+        padding: 0.46rem 0.95rem;
       }
 
       /* ===== LAYOUT ===== */
       .container {
-        max-inline-size: 74rem;
+        max-inline-size: 76rem;
         margin-inline: auto;
-        padding-inline: 1.5rem;
-      }
-
-      @media (max-width: 640px) {
-        .header-inner,
-        .container {
-          padding-inline: 1rem;
-        }
+        padding-inline: 1.75rem;
       }
 
       .section {
-        padding: 3.25rem 1.5rem;
+        padding: 4rem 1.75rem;
         border-block-end: 1px solid var(--line);
       }
 
@@ -286,114 +273,140 @@
         padding-inline: 0;
       }
 
+      .section-alt {
+        background: #0d0d0f;
+      }
+
       @media (max-width: 640px) {
+        .header-inner,
+        .container {
+          padding-inline: 1rem;
+        }
         .section {
-          padding: 2.5rem 1rem;
+          padding: 2.75rem 1rem;
         }
       }
 
-      .section-alt {
-        background: #0a1220;
-      }
-
+      /* ===== HERO STAGE (PURE PALANTIR MONOCHROME) ===== */
       .hero-stage {
-        padding-block: 2.4rem 3.4rem;
+        padding: 3.2rem 1.75rem 3.8rem;
         border-block-end: 1px solid var(--line);
-        background:
-          radial-gradient(ellipse 75% 50% at 50% -10%, rgb(13 107 89 / 0.28), transparent 70%),
-          radial-gradient(circle at 88% 12%, rgb(229 190 112 / 0.09), transparent 42%),
-          #070d16;
+        background: radial-gradient(ellipse 65% 45% at 50% -12%, rgb(255 255 255 / 0.06), transparent 72%), #0a0a0b;
       }
 
-      .hero-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        margin-block-end: 1.5rem;
+      .hero-stage .container {
+        padding-inline: 0;
+      }
+
+      @media (max-width: 640px) {
+        .hero-stage {
+          padding: 2.2rem 1rem 2.8rem;
+        }
       }
 
       .hero-kicker {
-        margin: 0 0 0.55rem;
+        margin: 0 0 0.85rem;
         font-family: var(--font-mono);
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+        font-size: 0.74rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--text-muted);
       }
 
       h1 {
         margin: 0;
-        font-family: var(--font-display);
-        font-size: 2.55rem;
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
+        font-family: var(--font-sans);
+        font-size: 2.75rem;
+        font-weight: 300;
+        line-height: 1.07;
+        letter-spacing: -0.035em;
         color: #ffffff;
-        max-inline-size: 24ch;
+        max-inline-size: 22ch;
+      }
+
+      h1 strong {
+        font-weight: 600;
       }
 
       @media (max-width: 640px) {
         h1 {
-          font-size: 1.85rem;
+          font-size: 1.95rem;
         }
       }
 
       .hero-sub {
-        margin: 0.75rem 0 0;
+        margin: 1rem 0 0;
         max-inline-size: 62ch;
-        font-size: 1.06rem;
+        font-size: 1.02rem;
         color: var(--text-soft);
       }
 
+      .hero-sub strong {
+        color: #ffffff;
+        font-weight: 500;
+      }
+
+      /* ARCHITECTURAL TELEMETRY STRIP (NO FLOATING BOXES) */
       .hero-metrics {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
+        margin-block: 2rem 2.25rem;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-block: 1px solid var(--line);
+      }
+
+      @media (max-width: 680px) {
+        .hero-metrics {
+          grid-template-columns: 1fr;
+        }
       }
 
       .metric-box {
-        background: var(--surface);
-        border: 1px solid var(--line-strong);
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        min-inline-size: 9.5rem;
+        padding: 1rem 1.25rem;
+        border-inline-end: 1px solid var(--line);
+      }
+
+      .metric-box:first-child {
+        padding-inline-start: 0;
+      }
+
+      .metric-box:last-child {
+        border-inline-end: 0;
+      }
+
+      @media (max-width: 680px) {
+        .metric-box {
+          padding: 0.85rem 0;
+          border-inline-end: 0;
+          border-block-end: 1px solid var(--line);
+        }
+        .metric-box:last-child {
+          border-block-end: 0;
+        }
       }
 
       .metric-val {
         display: block;
         font-family: var(--font-mono);
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: var(--emerald-bright);
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #ffffff;
         font-variant-numeric: tabular-nums;
-      }
-
-      .metric-val.is-gold {
-        color: var(--gold);
-      }
-
-      .metric-val.is-crimson {
-        color: var(--crimson-bright);
       }
 
       .metric-lbl {
         display: block;
+        margin-block-start: 0.2rem;
         font-size: 0.78rem;
         color: var(--text-muted);
       }
 
-      /* ===== LIVE INTERACTIVE SPLIT-SCREEN SIMULATOR ===== */
+      /* ===== PALANTIR CONSOLE SIMULATOR (ZERO BORDER SOUP) ===== */
       .sim-shell {
-        background: linear-gradient(180deg, #0f1a2d 0%, #0b1423 100%);
+        background: var(--surface);
         border: 1px solid var(--line-strong);
-        border-radius: 16px;
-        padding: 1.35rem 1.45rem 1.45rem;
-        box-shadow:
-          inset 0 1px 0 rgb(255 255 255 / 0.07),
-          0 28px 70px rgb(0 0 0 / 0.58);
+        border-radius: 2px;
+        padding: 1.5rem;
       }
 
       .sim-chrome {
@@ -402,169 +415,82 @@
         align-items: center;
         gap: 0.75rem;
         flex-wrap: wrap;
-        padding-block-end: 0.9rem;
-        margin-block-end: 1rem;
+        padding-block-end: 1rem;
+        margin-block-end: 1.15rem;
         border-block-end: 1px solid var(--line);
         font-family: var(--font-mono);
-        font-size: 0.74rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
         color: var(--text-muted);
-      }
-
-      .sim-chrome-left {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-      }
-
-      .sim-dots {
-        display: inline-flex;
-        gap: 0.35rem;
-      }
-
-      .sim-dots i {
-        inline-size: 9px;
-        block-size: 9px;
-        border-radius: 999px;
-        background: #2b3f5e;
-        display: block;
-      }
-
-      .sim-dots i:first-child {
-        background: #e5be70;
-      }
-
-      .sim-dots i:nth-child(2) {
-        background: #34d399;
       }
 
       .live-dot {
         display: inline-flex;
         align-items: center;
-        gap: 0.45rem;
-        color: var(--emerald-bright);
-        font-weight: 600;
+        gap: 0.5rem;
+        color: #ffffff;
+        font-weight: 500;
       }
 
       .live-dot::before {
         content: '';
-        inline-size: 8px;
-        block-size: 8px;
-        border-radius: 999px;
-        background: var(--emerald-bright);
-        box-shadow: 0 0 0 4px rgb(52 211 153 / 0.18);
-      }
-
-      .pipeline-ribbon {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.6rem;
-        margin-block-start: 1rem;
-      }
-
-      @media (max-width: 780px) {
-        .pipeline-ribbon {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      .pipe-step {
-        background: #08101c;
-        border: 1px solid var(--line);
-        border-radius: 9px;
-        padding: 0.6rem 0.8rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-        font-size: 0.8rem;
-        color: var(--text-soft);
-        transition: border-color 180ms ease, background-color 180ms ease;
-      }
-
-      .pipe-step strong {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        color: var(--text-muted);
-      }
-
-      .pipe-step.is-ok {
-        border-color: var(--emerald-line);
-        background: rgb(10 41 35 / 0.55);
-        color: #d1fae5;
-      }
-
-      .pipe-step.is-ok strong {
-        color: var(--emerald-bright);
-      }
-
-      .pipe-step.is-warn {
-        border-color: var(--gold-line);
-        background: rgb(38 30 13 / 0.75);
-        color: #fef3c7;
-      }
-
-      .pipe-step.is-warn strong {
-        color: var(--gold);
-      }
-
-      .pipe-step.is-alert {
-        border-color: var(--crimson-line);
-        background: rgb(45 18 21 / 0.75);
-        color: #fee2e2;
-      }
-
-      .pipe-step.is-alert strong {
-        color: var(--crimson-bright);
+        inline-size: 6px;
+        block-size: 6px;
+        background: var(--ok);
       }
 
       .sim-toolbar {
         display: grid;
         gap: 0.9rem;
-        padding-block-end: 1.15rem;
+        padding-block-end: 1.2rem;
         border-block-end: 1px solid var(--line);
       }
 
       .scenario-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.55rem;
+        gap: 0.45rem;
         align-items: center;
       }
 
       .scenario-label {
-        font-size: 0.82rem;
-        font-weight: 600;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         color: var(--text-muted);
-        margin-inline-end: 0.25rem;
+        margin-inline-end: 0.35rem;
       }
 
       .chip-btn {
-        border: 1px solid var(--line-strong);
-        background: var(--surface-2);
+        border: 1px solid var(--line);
+        background: transparent;
         color: var(--text-soft);
-        border-radius: 7px;
+        border-radius: 2px;
         padding: 0.42rem 0.78rem;
         font: inherit;
-        font-size: 0.84rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 500;
         cursor: pointer;
+        transition: border-color 140ms ease, color 140ms ease, background-color 140ms ease;
       }
 
       .chip-btn:hover {
-        background: var(--surface-3);
+        border-color: var(--line-strong);
         color: #ffffff;
       }
 
       .chip-btn.is-active {
-        background: var(--emerald-bg);
-        border-color: var(--emerald-bright);
-        color: var(--emerald-bright);
+        background: #ffffff;
+        border-color: #ffffff;
+        color: #0a0a0b;
+        font-weight: 600;
       }
 
       .query-form {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto auto;
-        gap: 0.65rem;
+        gap: 0.6rem;
       }
 
       @media (max-width: 720px) {
@@ -575,76 +501,136 @@
 
       .query-input {
         inline-size: 100%;
-        padding: 0.72rem 0.95rem;
-        border-radius: 8px;
+        padding: 0.74rem 0.95rem;
+        border-radius: 2px;
         border: 1px solid var(--line-strong);
-        background: #08101c;
+        background: #0a0a0b;
         color: #ffffff;
         font-family: var(--font-mono);
-        font-size: 0.92rem;
+        font-size: 0.9rem;
       }
 
       .query-input::placeholder {
-        color: #7c92ad;
-        font-family: var(--font-body);
+        color: #8b8b94;
+        font-family: var(--font-sans);
       }
 
       .btn-primary {
-        border: 1px solid var(--emerald);
-        background: var(--emerald);
-        color: #ffffff;
-        border-radius: 8px;
-        padding: 0.72rem 1.2rem;
-        font: inherit;
-        font-size: 0.92rem;
-        font-weight: 700;
-        cursor: pointer;
-        white-space: nowrap;
-      }
-
-      .btn-primary:hover {
-        background: var(--emerald-hover);
-        border-color: var(--emerald-hover);
-      }
-
-      .btn-secondary {
-        border: 1px solid var(--line-strong);
-        background: var(--surface-2);
-        color: var(--text);
-        border-radius: 8px;
-        padding: 0.72rem 1rem;
+        border: 1px solid #ffffff;
+        background: #ffffff;
+        color: #0a0a0b;
+        border-radius: 2px;
+        padding: 0.74rem 1.25rem;
         font: inherit;
         font-size: 0.88rem;
         font-weight: 600;
         cursor: pointer;
         white-space: nowrap;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-primary:hover {
+        background: #e4e4e7;
+        border-color: #e4e4e7;
+        color: #0a0a0b;
+      }
+
+      .btn-secondary {
+        border: 1px solid var(--line-strong);
+        background: transparent;
+        color: #ffffff;
+        border-radius: 2px;
+        padding: 0.74rem 1rem;
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
       }
 
       .btn-secondary:hover {
-        background: var(--surface-3);
+        background: var(--surface-2);
       }
 
+      /* CRISP SINGLE-LINE PIPELINE STRIP */
+      .pipeline-ribbon {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border-block-end: 1px solid var(--line);
+      }
+
+      @media (max-width: 820px) {
+        .pipeline-ribbon {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .pipe-step {
+        padding: 0.8rem 0.85rem;
+        border-inline-end: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        color: var(--text-soft);
+      }
+
+      .pipe-step:first-child {
+        padding-inline-start: 0;
+      }
+
+      .pipe-step:last-child {
+        border-inline-end: 0;
+      }
+
+      .pipe-step span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .pipe-step strong {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+
+      .pipe-step.is-ok strong {
+        color: var(--ok);
+      }
+
+      .pipe-step.is-warn strong {
+        color: var(--warn);
+      }
+
+      .pipe-step.is-alert strong {
+        color: var(--alert);
+      }
+
+      /* SPLIT MONITORS (CLEAN ARCHITECTURAL DIVIDER, NO NESTED CARD SOUP) */
       .split-monitors {
-        margin-block-start: 1.2rem;
+        margin-block-start: 1.35rem;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.1rem;
+        gap: 2rem;
       }
 
       @media (max-width: 880px) {
         .split-monitors {
           grid-template-columns: 1fr;
+          gap: 1.5rem;
         }
       }
 
       .monitor {
-        background: #08101c;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 1.15rem 1.25rem;
         display: flex;
         flex-direction: column;
-        gap: 0.9rem;
+        gap: 1rem;
         min-inline-size: 0;
       }
 
@@ -654,93 +640,53 @@
         align-items: center;
         gap: 0.75rem;
         flex-wrap: wrap;
-        padding-block-end: 0.75rem;
+        padding-block-end: 0.7rem;
         border-block-end: 1px solid var(--line);
       }
 
       .monitor-title {
         font-family: var(--font-mono);
-        font-size: 0.78rem;
+        font-size: 0.74rem;
         font-weight: 600;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--text-muted);
+        color: #ffffff;
       }
 
       .status-pill {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        padding: 0.25rem 0.65rem;
-        border-radius: 999px;
+        padding: 0.22rem 0.55rem;
+        border-radius: 2px;
         font-family: var(--font-mono);
-        font-size: 0.74rem;
+        font-size: 0.72rem;
         font-weight: 600;
+        letter-spacing: 0.05em;
       }
 
       .status-ok {
-        background: var(--emerald-bg);
-        border: 1px solid var(--emerald-line);
-        color: var(--emerald-bright);
+        background: var(--ok-bg);
+        border: 1px solid var(--ok-line);
+        color: var(--ok);
       }
 
       .status-warn {
-        background: var(--gold-bg);
-        border: 1px solid var(--gold-line);
-        color: var(--gold);
+        background: var(--warn-bg);
+        border: 1px solid var(--warn-line);
+        color: var(--warn);
       }
 
       .status-alert {
-        background: var(--crimson-bg);
-        border: 1px solid var(--crimson-line);
-        color: var(--crimson-bright);
-      }
-
-      .guest-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.65rem;
-      }
-
-      @media (max-width: 520px) {
-        .guest-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .kv-card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 0.65rem 0.8rem;
-      }
-
-      .kv-label {
-        display: block;
-        font-size: 0.74rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-muted);
-      }
-
-      .kv-value {
-        display: block;
-        margin-block-start: 0.15rem;
-        font-weight: 600;
-        font-size: 0.92rem;
-        color: #ffffff;
-        overflow-wrap: anywhere;
-      }
-
-      .kv-value.is-mono {
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
+        background: var(--alert-bg);
+        border: 1px solid var(--alert-line);
+        color: var(--alert);
       }
 
       .desk-banner {
-        border-radius: 9px;
-        padding: 0.95rem 1.05rem;
-        font-size: 0.92rem;
+        padding: 0.9rem 1rem;
+        border-radius: 2px;
+        font-size: 0.88rem;
         line-height: 1.5;
       }
 
@@ -750,33 +696,73 @@
       }
 
       .desk-banner.is-ok {
-        background: var(--emerald-bg);
-        border: 1px solid var(--emerald-line);
+        background: var(--ok-bg);
+        border-inline-start: 2px solid var(--ok);
         color: #d1fae5;
       }
 
       .desk-banner.is-lgt {
-        background: var(--gold-bg);
-        border: 1px solid var(--gold-line);
+        background: var(--warn-bg);
+        border-inline-start: 2px solid var(--warn);
         color: #fef3c7;
       }
 
       .desk-banner.is-error {
-        background: var(--crimson-bg);
-        border: 1px solid var(--crimson-line);
+        background: var(--alert-bg);
+        border-inline-start: 2px solid var(--alert);
         color: #fee2e2;
+      }
+
+      .guest-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem 1.25rem;
+      }
+
+      @media (max-width: 520px) {
+        .guest-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .kv-card {
+        padding-block-end: 0.65rem;
+        border-block-end: 1px solid var(--line);
+      }
+
+      .kv-label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+      }
+
+      .kv-value {
+        display: block;
+        margin-block-start: 0.22rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #ffffff;
+        overflow-wrap: anywhere;
+      }
+
+      .kv-value.is-mono {
+        font-family: var(--font-mono);
+        font-size: 0.84rem;
       }
 
       .json-box {
         margin: 0;
-        padding: 0.95rem 1rem;
-        border-radius: 8px;
+        padding: 1rem 1.1rem;
         border: 1px solid var(--line);
-        background: #050a12;
-        color: #c9d8ec;
+        border-radius: 2px;
+        background: #070708;
+        color: #d4d4d8;
         font-family: var(--font-mono);
-        font-size: 0.79rem;
-        line-height: 1.52;
+        font-size: 0.78rem;
+        line-height: 1.55;
         overflow: auto;
         max-block-size: 16.5rem;
       }
@@ -788,59 +774,57 @@
         gap: 0.75rem;
         flex-wrap: wrap;
         font-family: var(--font-mono);
-        font-size: 0.76rem;
+        font-size: 0.74rem;
         color: var(--text-muted);
       }
 
       .copy-btn {
         border: 1px solid var(--line-strong);
-        background: var(--surface-2);
-        color: var(--text);
-        border-radius: 6px;
-        padding: 0.35rem 0.7rem;
+        background: transparent;
+        color: #ffffff;
+        border-radius: 2px;
+        padding: 0.36rem 0.7rem;
         font: inherit;
-        font-size: 0.76rem;
-        font-weight: 600;
+        font-size: 0.74rem;
+        font-weight: 500;
         cursor: pointer;
       }
 
       .copy-btn:hover {
-        background: var(--surface-3);
+        background: var(--surface-2);
       }
 
-      /* ===== HEADINGS & COPY ===== */
+      /* ===== HEADINGS & SECTIONS ===== */
       h2 {
         margin: 0 0 0.75rem;
-        font-family: var(--font-display);
-        font-size: clamp(1.55rem, 2.8vw, 2.05rem);
-        font-weight: 700;
-        line-height: 1.18;
-        letter-spacing: -0.02em;
+        font-family: var(--font-sans);
+        font-size: 1.95rem;
+        font-weight: 300;
+        line-height: 1.14;
+        letter-spacing: -0.03em;
         color: #ffffff;
         scroll-margin-top: 5.2rem;
       }
 
       .section-lead {
-        margin: 0 0 1.4rem;
+        margin: 0 0 1.65rem;
         max-inline-size: 68ch;
         color: var(--text-soft);
       }
 
       .legal-disclaimer {
-        margin-block-end: 1.25rem;
+        margin-block-end: 1.4rem;
         padding: 0.9rem 1.1rem;
-        border-radius: 9px;
         background: var(--surface);
-        border: 1px solid var(--line-strong);
-        font-size: 0.9rem;
+        border-inline-start: 2px solid #ffffff;
+        font-size: 0.88rem;
         color: var(--text-soft);
       }
 
       .legal-disclaimer strong {
-        color: var(--gold);
+        color: #ffffff;
       }
 
-      /* ===== SANDBOX EXPLORER CONTROLS ===== */
       .explorer-bar {
         display: flex;
         justify-content: space-between;
@@ -859,12 +843,12 @@
       .search-box {
         inline-size: min(100%, 22rem);
         padding: 0.58rem 0.85rem;
-        border-radius: 8px;
+        border-radius: 2px;
         border: 1px solid var(--line-strong);
         background: var(--surface);
         color: #ffffff;
         font: inherit;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
       }
 
       .search-box::placeholder {
@@ -877,8 +861,7 @@
         max-inline-size: 100%;
         container-type: inline-size;
         background: var(--surface);
-        border: 1px solid var(--line-strong);
-        border-radius: 10px;
+        border: 1px solid var(--line);
         padding: 0.75rem;
       }
 
@@ -886,7 +869,7 @@
         inline-size: 100%;
         border-collapse: separate;
         border-spacing: 0;
-        font-size: 0.9rem;
+        font-size: 0.89rem;
         font-variant-numeric: tabular-nums;
       }
 
@@ -894,21 +877,22 @@
         position: sticky;
         inset-block-start: 0;
         z-index: 2;
-        background: var(--surface-2);
-        color: var(--text);
-        font-size: 0.76rem;
-        font-weight: 700;
+        background: var(--surface);
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
         text-align: start;
-        padding: 0.78rem 0.85rem;
+        padding: 0.75rem 0.85rem;
         border-block-end: 1px solid var(--line-strong);
         white-space: nowrap;
       }
 
       .data-table tbody th,
       .data-table tbody td {
-        padding: 0.8rem 0.85rem;
+        padding: 0.85rem;
         border-block-end: 1px solid var(--line);
         vertical-align: middle;
         text-align: start;
@@ -927,50 +911,41 @@
 
       .data-table tr.is-winner th,
       .data-table tr.is-winner td {
-        background: var(--emerald-bg);
-        color: #d1fae5;
-        border-block-start: 1.5px solid var(--emerald-bright);
-      }
-
-      .data-table tr.is-winner th {
+        background: #18181b;
         color: #ffffff;
+        border-block-start: 1.5px solid #ffffff;
       }
 
       .mono-cell {
         font-family: var(--font-mono);
         font-size: 0.82rem;
-        color: #dbeafe;
+        color: #e4e4e7;
         white-space: nowrap;
       }
 
       .cell-note {
         display: block;
-        margin-block-start: 0.18rem;
-        font-size: 0.79rem;
+        margin-block-start: 0.2rem;
+        font-size: 0.78rem;
         font-weight: 400;
         color: var(--text-muted);
       }
 
-      .is-winner .cell-note {
-        color: #a7f3d0;
-      }
-
       .row-test-btn {
-        border: 1px solid var(--emerald-line);
-        background: var(--emerald-bg);
-        color: var(--emerald-bright);
-        border-radius: 6px;
-        padding: 0.36rem 0.68rem;
-        font: inherit;
-        font-size: 0.8rem;
-        font-weight: 600;
+        border: 1px solid var(--line-strong);
+        background: transparent;
+        color: #ffffff;
+        border-radius: 2px;
+        padding: 0.36rem 0.7rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
         cursor: pointer;
         white-space: nowrap;
       }
 
       .row-test-btn:hover {
-        background: var(--emerald);
-        color: #ffffff;
+        background: #ffffff;
+        color: #0a0a0b;
       }
 
       .explorer-foot {
@@ -980,16 +955,17 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 0.75rem;
-        font-size: 0.86rem;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
         color: var(--text-muted);
       }
 
-      /* Etapas oficiales de habilitación (Anexo 2 y Sección 8) */
+      /* 2 STAGES GRID */
       .stages-grid {
-        margin-block-start: 1.5rem;
+        margin-block-start: 1.8rem;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.1rem;
+        gap: 1.5rem;
       }
 
       @media (max-width: 760px) {
@@ -1000,43 +976,38 @@
 
       .stage-card {
         background: var(--surface);
-        border: 1px solid var(--line-strong);
-        border-radius: 12px;
-        padding: 1.35rem 1.45rem;
+        border: 1px solid var(--line);
+        border-block-start: 2px solid var(--line-strong);
+        padding: 1.4rem 1.5rem;
       }
 
       .stage-card.is-tech {
-        border-color: var(--emerald-line);
+        border-block-start-color: #ffffff;
       }
 
       .stage-tag {
         display: inline-block;
         margin-block-end: 0.5rem;
         font-family: var(--font-mono);
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--gold);
-      }
-
-      .stage-card.is-tech .stage-tag {
-        color: var(--emerald-bright);
+        color: var(--text-muted);
       }
 
       .stage-card h3 {
-        margin: 0 0 0.65rem;
+        margin: 0 0 0.7rem;
         font-size: 1.08rem;
-        font-weight: 700;
+        font-weight: 600;
         color: #ffffff;
       }
 
       .stage-list {
         margin: 0;
-        padding-inline-start: 1.15rem;
+        padding-inline-start: 1.1rem;
         display: grid;
         gap: 0.5rem;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         color: var(--text-soft);
       }
 
@@ -1044,10 +1015,13 @@
         color: #ffffff;
       }
 
-      .stage-list code {
+      .stage-list code,
+      .data-table code {
         font-family: var(--font-mono);
-        font-size: 0.82rem;
-        color: #93c5fd;
+        font-size: 0.8rem;
+        color: #e4e4e7;
+        background: #1c1c20;
+        padding: 0 4px;
       }
 
       #tabla-sandbox {
@@ -1095,7 +1069,7 @@
         }
         .data-table tbody td::before {
           font-weight: 600;
-          color: var(--text);
+          color: #ffffff;
         }
         .data-table td:nth-child(2)::before {
           content: var(--l2) ': ';
@@ -1111,24 +1085,22 @@
         }
       }
 
-      /* ===== COST COMPARISON BARS ===== */
+      /* COST BARS (MONOCHROME ARCHITECTURAL) */
       .cost-bars {
-        margin-block-end: 1.5rem;
-        padding: 1.35rem 1.5rem;
+        margin-block-end: 1.65rem;
+        padding: 1.5rem;
         background: var(--surface);
-        border: 1px solid var(--line-strong);
-        border-radius: 12px;
+        border: 1px solid var(--line);
         display: grid;
-        gap: 0.95rem;
+        gap: 1rem;
       }
 
       .cost-bars-title {
         margin: 0;
         font-family: var(--font-mono);
-        font-size: 0.78rem;
-        font-weight: 600;
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
         color: var(--text-muted);
       }
 
@@ -1141,71 +1113,63 @@
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         font-variant-numeric: tabular-nums;
       }
 
       .bar-name {
-        font-weight: 600;
-        color: var(--text);
+        color: var(--text-soft);
       }
 
       .bar-amount {
         font-family: var(--font-mono);
-        font-weight: 600;
         color: var(--text-soft);
         white-space: nowrap;
       }
 
       .bar-row.is-best .bar-name,
       .bar-row.is-best .bar-amount {
-        color: var(--emerald-bright);
+        color: #ffffff;
+        font-weight: 600;
       }
 
       .bar-track {
-        block-size: 10px;
-        background: #08101c;
-        border-radius: 999px;
+        block-size: 6px;
+        background: #1c1c20;
         overflow: hidden;
       }
 
       .bar-fill {
         block-size: 100%;
-        border-radius: 999px;
-      }
-
-      .bar-fill.is-high {
-        background: #dc2626;
-      }
-
-      .bar-fill.is-mid {
-        background: #d97706;
+        background: #52525b;
       }
 
       .bar-fill.is-best {
-        background: var(--emerald-bright);
+        background: #ffffff;
       }
 
       .num-red {
-        color: var(--crimson-bright);
-        font-weight: 700;
+        color: var(--alert);
+        font-family: var(--font-mono);
+        font-weight: 600;
         white-space: nowrap;
       }
 
       .num-green {
-        color: var(--emerald-bright);
-        font-weight: 700;
+        color: var(--ok);
+        font-family: var(--font-mono);
+        font-weight: 600;
         white-space: nowrap;
       }
 
-      /* ===== FAQ ACCORDION (modern-web-guidance: accordion) ===== */
+      /* FAQ ACCORDION */
       .faq-header {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
         gap: 1rem;
         flex-wrap: wrap;
-        margin-block-end: 1rem;
+        margin-block-end: 1.1rem;
       }
 
       .faq-header h2 {
@@ -1219,9 +1183,8 @@
 
       .accordion-list {
         background: var(--surface);
-        border: 1px solid var(--line-strong);
-        border-radius: 12px;
-        padding: 0.5rem 1.35rem;
+        border: 1px solid var(--line);
+        padding: 0.5rem 1.4rem;
       }
 
       .accordion details {
@@ -1237,9 +1200,9 @@
         display: flex;
         align-items: center;
         gap: 0.7rem;
-        padding-block: 1.05rem;
-        font-size: 1rem;
-        font-weight: 600;
+        padding-block: 1.1rem;
+        font-size: 0.98rem;
+        font-weight: 500;
         color: #ffffff;
         cursor: pointer;
       }
@@ -1248,14 +1211,10 @@
         display: none;
       }
 
-      .accordion summary:hover {
-        color: var(--emerald-bright);
-      }
-
       .accordion summary::before {
         content: '';
-        inline-size: 1em;
-        block-size: 1em;
+        inline-size: 0.95em;
+        block-size: 0.95em;
         flex-shrink: 0;
         background-color: currentColor;
         mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
@@ -1278,8 +1237,8 @@
       }
 
       .faq-answer {
-        padding: 0 0 1.15rem 1.7rem;
-        font-size: 0.95rem;
+        padding: 0 0 1.2rem 1.65rem;
+        font-size: 0.93rem;
         color: var(--text-soft);
         max-inline-size: 72ch;
       }
@@ -1296,13 +1255,11 @@
         }
       }
 
-      /* ===== CLOSING & FOOTER ===== */
       .closing-band {
-        padding: 2rem 2.25rem;
-        border-radius: 14px;
+        padding: 2.25rem 2.5rem;
         background: var(--surface);
         border: 1px solid var(--line-strong);
-        border-block-start: 3px solid var(--gold);
+        border-block-start: 2px solid #ffffff;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1323,15 +1280,17 @@
       }
 
       .site-footer {
-        background: #050a12;
+        background: #070708;
+        border-block-end: 0;
         border-block-start: 1px solid var(--line);
-        padding: 1.75rem 1.5rem;
-        font-size: 0.84rem;
+        padding: 1.75rem;
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
         color: var(--text-muted);
       }
 
       .footer-inner {
-        max-inline-size: 74rem;
+        max-inline-size: 76rem;
         margin-inline: auto;
         display: flex;
         justify-content: space-between;
@@ -1344,9 +1303,6 @@
           size: letter;
           margin: 0.45in;
         }
-        body {
-          font-size: 9.2pt;
-        }
         .site-header,
         .sim-toolbar,
         .explorer-bar,
@@ -1356,9 +1312,6 @@
         .closing-actions,
         #btn-toggle-faq {
           display: none !important;
-        }
-        .json-box {
-          max-block-size: none;
         }
         .table-wrapper {
           overflow: visible;
@@ -1398,7 +1351,7 @@
             popovertargetaction="toggle"
             aria-controls="site-menu"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
               <line x1="4" y1="7" x2="20" y2="7" />
               <line x1="4" y1="12" x2="20" y2="12" />
               <line x1="4" y1="17" x2="20" y2="17" />
@@ -1407,59 +1360,53 @@
           </button>
 
           <ul id="site-menu" class="site-menu" popover="auto">
-            <li><a href="#inicio" aria-current="page">Probador en vivo</a></li>
+            <li><a href="#inicio" aria-current="page">Probador</a></li>
             <li><a href="#padron-sandbox">Padrón (50)</a></li>
             <li><a href="#marco-legal">Leyes DOF</a></li>
+            <li><a href="#compatibilidad-pms">PMS (5 Niveles)</a></li>
             <li><a href="#comparativa">Comparativa</a></li>
-            <li><a href="#preguntas">Preguntas</a></li>
-            <li><a class="nav-cta" href="./index.html">Plataforma Completa</a></li>
+            <li><a class="nav-cta" href="./index.html">Abrir Consola</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
     <main id="inicio">
-      <!-- HERO INTERACTIVO EN PANTALLA PARTIDA -->
+      <!-- HERO INTERACTIVO PALANTIR -->
       <section class="hero-stage">
         <div class="container">
-          <div class="hero-top">
-            <div>
-              <p class="hero-kicker">Sandbox PUI / DOF en vivo · Motor RENAPO + SHA-256</p>
-              <h1>Prueba en vivo el motor PUI para hoteles</h1>
-              <p class="hero-sub">
-                Elige cualquiera de los <strong>50 registros sintéticos precargados</strong> o escribe una CURP válida
-                de 18 caracteres para ejecutar un check-in real y ver al instante el <strong>sigilo en recepción</strong>
-                frente al <strong>envío silencioso a SEGOB</strong>.
-              </p>
+          <p class="hero-kicker">HOSPITALITY PUI ID // MOTOR PUI ANEXO 2 DOF · RENAPO · SHA-256</p>
+          <h1>Inteligencia operativa PUI para <strong>hoteles en México</strong>.</h1>
+          <p class="hero-sub">
+            Ejecuta un check-in real contra <strong>50 folios sintéticos RENAPO</strong> o cualquier CURP de 18
+            caracteres y verifica en milisegundos el <strong>sigilo en mostrador</strong>, el bloqueo de
+            <strong>menores Art. 58 LGT</strong> y el envío cifrado a SEGOB.
+          </p>
+
+          <div class="hero-metrics" aria-label="Telemetría del entorno">
+            <div class="metric-box">
+              <span class="metric-val" id="metric-registry-count">50 folios</span>
+              <span class="metric-lbl">Padrón sintético con dígito RENAPO real</span>
             </div>
-            <div class="hero-metrics" aria-label="Indicadores del entorno de pruebas">
-              <div class="metric-box">
-                <span class="metric-val" id="metric-registry-count">50 folios</span>
-                <span class="metric-lbl">Padrón sintético RENAPO</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-val is-gold" id="metric-latency">-- ms</span>
-                <span class="metric-lbl">Latencia real de cruce</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-val is-crimson">$1.17M–$2.34M</span>
-                <span class="metric-lbl">Multa Art. 43 Bis evitada</span>
-              </div>
+            <div class="metric-box">
+              <span class="metric-val" id="metric-latency">-- ms</span>
+              <span class="metric-lbl">Latencia real de verificación criptográfica</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-val">$1.17M – $2.34M</span>
+              <span class="metric-lbl">Multa Art. 43 Bis evitada por propiedad</span>
             </div>
           </div>
 
           <div class="sim-shell" aria-label="Probador interactivo de check-in y cruce PUI">
             <div class="sim-chrome">
-              <span class="sim-chrome-left">
-                <span class="sim-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span>HOSPITALITY-PUI-CORE · ANEXO 2 DOF · TLS 1.3 · AES-256-GCM</span>
-              </span>
-              <span class="live-dot">MOTOR ACTIVO · 50 FOLIOS RENAPO</span>
+              <span>HOSPITALITY-PUI-CORE // ANEXO 2 DOF · TLS 1.3 · AES-256-GCM</span>
+              <span class="live-dot">LIVE ENGINE · 50 RECORDS</span>
             </div>
 
             <div class="sim-toolbar">
-              <div class="scenario-row" role="group" aria-label="Escenarios rápidos de prueba">
-                <span class="scenario-label">Prueba rápida:</span>
+              <div class="scenario-row" role="group" aria-label="Escenarios rápidos">
+                <span class="scenario-label">Caso rápido //</span>
                 <button type="button" class="chip-btn is-active" data-quick-id="SBX-001">Menor + Alerta AMBER (LGT + PUI)</button>
                 <button type="button" class="chip-btn" data-quick-id="SBX-013">Adulto con alerta PUI (Sigilo)</button>
                 <button type="button" class="chip-btn" data-quick-id="SBX-035">Menor extranjero Pasaporte MRZ</button>
@@ -1468,7 +1415,7 @@
 
               <form class="query-form" id="live-sim-form">
                 <label for="sim-input" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
-                  CURP de 18 caracteres, número de pasaporte o folio FUB de prueba
+                  CURP de 18 caracteres, número de pasaporte o folio FUB
                 </label>
                 <input
                   id="sim-input"
@@ -1476,25 +1423,24 @@
                   type="text"
                   autocomplete="off"
                   spellcheck="false"
-                  placeholder="Escribe una CURP (18 caracteres), pasaporte (ej. US548920114) o folio FUB..."
+                  placeholder="CURP (18 caracteres), pasaporte (ej. US548920114) o folio FUB..."
                 />
-                <button type="submit" class="btn-primary">Ejecutar Check-in y Cruce PUI</button>
-                <button type="button" class="btn-secondary" id="btn-random-case">Caso aleatorio</button>
+                <button type="submit" class="btn-primary">Ejecutar Check-in</button>
+                <button type="button" class="btn-secondary" id="btn-random-case">Aleatorio</button>
               </form>
             </div>
 
-            <div class="pipeline-ribbon" aria-label="Estado de ejecución por etapa">
-              <div class="pipe-step is-ok" id="pipe-step-1"><span>1. Validador RENAPO/MRZ</span><strong id="pipe-s1">LISTO</strong></div>
-              <div class="pipe-step is-ok" id="pipe-step-2"><span>2. Bóveda aislada RFC</span><strong id="pipe-s2">AISLADA</strong></div>
-              <div class="pipe-step is-ok" id="pipe-step-3"><span>3. Sigilo / Menores LGT</span><strong id="pipe-s3">ACTIVO</strong></div>
-              <div class="pipe-step is-ok" id="pipe-step-4"><span>4. Webhook SEGOB SHA-256</span><strong id="pipe-s4">LISTO</strong></div>
+            <div class="pipeline-ribbon" aria-label="Etapas de ejecución">
+              <div class="pipe-step is-ok" id="pipe-step-1"><span>01 · Validador RENAPO</span><strong id="pipe-s1">OK</strong></div>
+              <div class="pipe-step is-ok" id="pipe-step-2"><span>02 · Bóveda RFC</span><strong id="pipe-s2">RLS OK</strong></div>
+              <div class="pipe-step is-ok" id="pipe-step-3"><span>03 · Sigilo / LGT</span><strong id="pipe-s3">ACTIVO</strong></div>
+              <div class="pipe-step is-ok" id="pipe-step-4"><span>04 · SEGOB SHA-256</span><strong id="pipe-s4">READY</strong></div>
             </div>
 
             <div class="split-monitors">
-              <!-- MONITOR IZQUIERDO: RECEPCIÓN DEL HOTEL -->
-              <section class="monitor" aria-label="Pantalla de recepción del hotel">
+              <section class="monitor" aria-label="Pantalla de recepción">
                 <div class="monitor-head">
-                  <span class="monitor-title">Pantalla Recepción (Sigilo RBAC)</span>
+                  <span class="monitor-title">01 // Terminal Recepción (Sigilo RBAC)</span>
                   <span class="status-pill status-ok" id="desk-status-pill">LISTO</span>
                 </div>
 
@@ -1505,7 +1451,7 @@
 
                 <div class="guest-grid">
                   <div class="kv-card">
-                    <span class="kv-label">Huésped / Registro</span>
+                    <span class="kv-label">Huésped</span>
                     <span class="kv-value" id="desk-name">—</span>
                   </div>
                   <div class="kv-card">
@@ -1517,21 +1463,20 @@
                     <span class="kv-value" id="desk-validation">—</span>
                   </div>
                   <div class="kv-card">
-                    <span class="kv-label">Edad y Protocolo Menores (LGT)</span>
+                    <span class="kv-label">Edad y Protocolo LGT</span>
                     <span class="kv-value" id="desk-minor">—</span>
                   </div>
                 </div>
 
                 <div class="monitor-foot">
-                  <span>Visibilidad de alertas SEGOB en mostrador: <strong>BLOQUEADA (0%)</strong></span>
-                  <span id="desk-room">Habitación asignada: —</span>
+                  <span>ALERTAS SEGOB EN MOSTRADOR: <strong>BLOQUEADAS (0%)</strong></span>
+                  <span id="desk-room">HAB: —</span>
                 </div>
               </section>
 
-              <!-- MONITOR DERECHO: CANAL SILENCIOSO SEGOB / PUI -->
-              <section class="monitor" aria-label="Canal silencioso hacia SEGOB PUI">
+              <section class="monitor" aria-label="Canal silencioso SEGOB PUI">
                 <div class="monitor-head">
-                  <span class="monitor-title">Canal Silencioso SEGOB / PUI (Fase 2/3)</span>
+                  <span class="monitor-title">02 // Canal Silencioso SEGOB (Fase 2/3)</span>
                   <span class="status-pill status-ok" id="segob-status-pill">EN ESPERA</span>
                 </div>
 
@@ -1549,24 +1494,22 @@
         </div>
       </section>
 
-      <!-- EXPLORADOR DEL PADRÓN SANDBOX (50 REGISTROS CARGADOS) -->
+      <!-- PADRÓN SANDBOX (50 REGISTROS) -->
       <section class="section section-alt" id="padron-sandbox">
         <div class="container">
-          <h2>Padrón Sandbox PUI precargado (50 registros verificables)</h2>
+          <h2>Padrón Sandbox PUI precargado (50 registros)</h2>
           <p class="section-lead">
-            Explora los 50 casos cargados en el motor de pruebas (34 reportes PUI nacionales con CURP RENAPO válida, 8
-            pasaportes internacionales MRZ y 8 controles sin alerta) y haz clic en <strong>Probar en vivo</strong> en
-            cualquier fila para disparar el check-in real arriba.
+            Catálogo interactivo con 42 CURPs matemáticamente válidas ante RENAPO y 8 pasaportes internacionales MRZ.
+            Haz clic en <strong>Probar</strong> en cualquier fila para disparar el check-in real arriba.
           </p>
 
           <div class="legal-disclaimer">
-            <strong>Transparencia legal (DOF 27/11/2025 y LFPDPPP):</strong> Ningún privado puede descargar ni almacenar
-            el padrón real del RNPDNO. Este catálogo contiene <strong>50 registros 100% sintéticos</strong> con dígito
-            verificador RENAPO auténtico para demostrar el funcionamiento real del motor sin exponer datos de víctimas.
+            <strong>Cumplimiento normativo (DOF 27/11/2025 y LFPDPPP):</strong> Por ley ningún privado puede descargar
+            el padrón real del RNPDNO. Estos 50 registros son 100% sintéticos con dígito verificador RENAPO real.
           </div>
 
           <div class="explorer-bar">
-            <div class="filter-group" role="group" aria-label="Filtrar padrón de pruebas">
+            <div class="filter-group" role="group" aria-label="Filtrar padrón">
               <button type="button" class="chip-btn is-active" data-filter="ALL">Todos (50)</button>
               <button type="button" class="chip-btn" data-filter="MENOR_PUI">Menores PUI (12)</button>
               <button type="button" class="chip-btn" data-filter="ADULTO_PUI">Adultos PUI (22)</button>
@@ -1580,14 +1523,14 @@
               id="registry-search"
               class="search-box"
               type="search"
-              placeholder="Filtrar por nombre, CURP, FUB o estado..."
+              placeholder="Buscar por nombre, CURP, FUB o estado..."
             />
           </div>
 
           <div tabindex="0" role="region" aria-labelledby="sandbox-caption" class="table-wrapper">
             <table class="data-table" id="tabla-sandbox">
               <caption id="sandbox-caption" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
-                Catálogo de 50 registros sintéticos precargados para pruebas PUI y Ley General de Turismo
+                Catálogo de 50 registros sintéticos precargados para pruebas PUI y LGT
               </caption>
               <thead>
                 <tr>
@@ -1595,7 +1538,7 @@
                   <th scope="col">CURP / Pasaporte</th>
                   <th scope="col">Entidad y Perfil</th>
                   <th scope="col">Folio FUB Sandbox</th>
-                  <th scope="col">Probar</th>
+                  <th scope="col">Acción</th>
                 </tr>
               </thead>
               <tbody id="sandbox-table-body"></tbody>
@@ -1604,31 +1547,30 @@
 
           <div class="explorer-foot">
             <span id="sandbox-count-label">Mostrando 12 de 50 registros sintéticos</span>
-            <button type="button" class="btn-secondary" id="btn-toggle-all-rows">Ver los 50 registros completos</button>
+            <button type="button" class="btn-secondary" id="btn-toggle-all-rows">Ver los 50 registros</button>
           </div>
         </div>
       </section>
 
-      <!-- MARCO LEGAL OFICIAL DOF -->
+      <!-- MARCO LEGAL + 2 ETAPAS -->
       <section class="section" id="marco-legal">
         <div class="container">
-          <h2>Marco legal oficial (enlaces directos al DOF)</h2>
+          <h2>Marco normativo oficial (DOF 2025–2026)</h2>
           <p class="section-lead">
-            Aplica a todo hotel, motel, resort, hostal o establecimiento de hospedaje en México que recabe datos de
-            identidad. Consulta directamente cada publicación oficial vigente:
+            Aplica a todo hotel, motel, resort o establecimiento de hospedaje que recabe identidad de huéspedes en México.
           </p>
 
           <div tabindex="0" role="region" aria-labelledby="leyes-caption" class="table-wrapper">
             <table class="data-table" id="tabla-leyes">
               <caption id="leyes-caption" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
-                Leyes, lineamientos y manuales oficiales publicados en el DOF que regulan la PUI y el hospedaje
+                Leyes, lineamientos y manuales oficiales publicados en el DOF
               </caption>
               <thead>
                 <tr>
                   <th scope="col">Instrumento legal</th>
-                  <th scope="col">Fecha oficial</th>
+                  <th scope="col">Fecha</th>
                   <th scope="col">Qué establece</th>
-                  <th scope="col">Consulta directa</th>
+                  <th scope="col">Documento oficial</th>
                 </tr>
               </thead>
               <tbody>
@@ -1636,58 +1578,57 @@
                   <th scope="row">Reforma LGMDFP y LGP<span class="cell-note">Arts. 12 Bis y 43 Bis</span></th>
                   <td>16 jul. 2025</td>
                   <td>Crea la PUI, obliga a privados con registros de personas y fija multas de 10,000 a 20,000 UMAs ($1.17M–$2.34M MXN).</td>
-                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5763157&amp;fecha=16/07/2025" target="_blank" rel="noopener">Ver DOF 5763157 &#8599;</a></td>
+                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5763157&amp;fecha=16/07/2025" target="_blank" rel="noopener">DOF 5763157 &#8599;</a></td>
                 </tr>
                 <tr>
                   <th scope="row">Lineamientos de Operación PUI<span class="cell-note">SEGOB / RENAPO</span></th>
                   <td>27 nov. 2025</td>
                   <td>Seguimiento continuo de CURP, alertas en tiempo real, cifrado, sigilo y bitácora auditable.</td>
-                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025" target="_blank" rel="noopener">Ver DOF 5774120 &#8599;</a></td>
+                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025" target="_blank" rel="noopener">DOF 5774120 &#8599;</a></td>
                 </tr>
                 <tr>
-                  <th scope="row">Manual Técnico Instituciones Diversas<span class="cell-note">SEGOB / ATDT (Anexo 2 y Sec. 8)</span></th>
+                  <th scope="row">Manual Técnico Instituciones Diversas<span class="cell-note">Anexo 2 y Sección 8</span></th>
                   <td>23 ene. 2026</td>
-                  <td>Endpoints obligatorios (<code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code>, <code>/desactivar-reporte</code>), histórico hasta 12 años, TLS 1.2+, JWT, AES-256-GCM y pruebas SAST/DAST/SCA.</td>
+                  <td>Endpoints <code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code>, <code>/desactivar-reporte</code>, histórico 12 años, TLS 1.2+, JWT, AES-256-GCM y SAST/DAST/SCA.</td>
                   <td>
                     <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf" target="_blank" rel="noopener">PDF Oficial DOF &#8599;</a>
-                    <span class="cell-note"><a href="https://dof.gob.mx/nota_detalle.php?codigo=5778798&amp;fecha=23/01/2026" target="_blank" rel="noopener">Nota DOF 5778798 &#8599;</a></span>
-                    <span class="cell-note"><a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">Portal inscripción ATDT &#8599;</a></span>
+                    <span class="cell-note"><a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">Portal ATDT &#8599;</a></span>
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">Ley General de Turismo<span class="cell-note">Art. 58, fracc. X Bis y X Ter</span></th>
+                  <th scope="row">Ley General de Turismo<span class="cell-note">Art. 58 X Bis y X Ter</span></th>
                   <td>13 nov. 2026</td>
                   <td>Obliga a hoteles a comprobar parentesco o tutela de menores; sin acreditación, negar hospedaje y avisar.</td>
-                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5803838&amp;fecha=13/11/2026" target="_blank" rel="noopener">Ver DOF 5803838 &#8599;</a></td>
+                  <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5803838&amp;fecha=13/11/2026" target="_blank" rel="noopener">DOF 5803838 &#8599;</a></td>
                 </tr>
                 <tr>
                   <th scope="row">Protección de Datos (LFPDPPP)<span class="cell-note">Privacidad vigente</span></th>
                   <td>Vigente</td>
-                  <td>Bóveda cifrada e independiente por hotel (RFC); solo reporta coincidencias oficiales ante SEGOB.</td>
+                  <td>Bóveda cifrada e independiente por RFC; solo reporta coincidencias oficiales ante SEGOB.</td>
                   <td><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPDPPP.pdf" target="_blank" rel="noopener">PDF Oficial &#8599;</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="stages-grid" aria-label="Etapas oficiales de inscripción e interconexión PUI">
+          <div class="stages-grid" aria-label="Etapas oficiales de habilitación">
             <article class="stage-card">
-              <span class="stage-tag">Etapa 1 · Registro Administrativo</span>
+              <span class="stage-tag">ETAPA 01 // REGISTRO ADMINISTRATIVO</span>
               <h3>Alta institucional con Llave MX y e.firma</h3>
               <ul class="stage-list">
-                <li><strong>Requisitos previos:</strong> cuenta Llave MX personal del representante legal, RFC con homoclave y <strong>e.firma vigente de Persona Moral</strong> (<code>.cer</code>, <code>.key</code> y contraseña).</li>
-                <li><strong>Perfil Persona Moral:</strong> el representante da de alta la razón social en Llave MX cargando la e.firma institucional para validar vigencia e identidad.</li>
-                <li><strong>Inscripción PUI:</strong> inicia sesión en <a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">plataformadebusqueda.gob.mx/inscripcion</a> para registrar contacto y obtener acceso al ambiente oficial.</li>
+                <li><strong>Requisitos:</strong> Llave MX personal del representante legal, RFC y <strong>e.firma vigente de Persona Moral</strong> (<code>.cer</code>, <code>.key</code> y contraseña).</li>
+                <li><strong>Perfil Persona Moral:</strong> validación de identidad institucional en Llave MX.</li>
+                <li><strong>Inscripción PUI:</strong> registro en <a href="https://www.plataformadebusqueda.gob.mx/inscripcion" target="_blank" rel="noopener">plataformadebusqueda.gob.mx/inscripcion</a>.</li>
               </ul>
             </article>
 
             <article class="stage-card is-tech">
-              <span class="stage-tag">Etapa 2 · Interconexión Técnica (Ya resuelta)</span>
+              <span class="stage-tag">ETAPA 02 // INTERCONEXIÓN TÉCNICA (RESUELTA)</span>
               <h3>Anexo 2 y Sección 8 del Manual Técnico</h3>
               <ul class="stage-list">
-                <li><strong>4 Endpoints obligatorios listos:</strong> <code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code> y <code>/desactivar-reporte</code> para las 3 fases (básica, <strong>histórica hasta 12 años</strong> y monitoreo continuo).</li>
-                <li><strong>Seguridad y cifrado:</strong> protocolo <strong>TLS 1.2+</strong>, autenticación <strong>Bearer/JWT</strong> y cifrado <strong>AES-256-GCM</strong> para datos sensibles y biométricos.</li>
-                <li><strong>Auditoría y Sandbox:</strong> arquitectura lista para reportes <strong>SAST, DAST y SCA</strong> sin hallazgos críticos, bitácoras SHA-256 y validación funcional en sandbox.</li>
+                <li><strong>4 Endpoints obligatorios:</strong> <code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code> y <code>/desactivar-reporte</code> (Fases 1–3, histórico hasta <strong>12 años</strong>).</li>
+                <li><strong>Cifrado bancario:</strong> <strong>TLS 1.2+</strong>, <strong>Bearer/JWT</strong> y <strong>AES-256-GCM</strong>.</li>
+                <li><strong>Auditoría:</strong> listo para reportes <strong>SAST, DAST y SCA</strong> sin hallazgos críticos, bitácoras SHA-256 y sandbox.</li>
               </ul>
             </article>
           </div>
@@ -1695,58 +1636,57 @@
       </section>
 
       <!-- COMPATIBILIDAD UNIVERSAL PMS (5 NIVELES) -->
-      <section class="section" id="compatibilidad-pms">
+      <section class="section section-alt" id="compatibilidad-pms">
         <div class="container">
-          <h2>Conectividad universal para cualquier hotel — incluidos sistemas centenarios sin API</h2>
+          <h2>Conectividad universal en 5 niveles — incluidos hoteles centenarios sin API</h2>
           <p class="section-lead">
-            Ningún hotel tiene que cambiar su PMS ni exponer su base de datos. <strong>Hospitality PUI ID</strong> cubre
-            desde cadenas internacionales con PMS corporativo cerrado hasta hoteles históricos con sistemas antiguos en
-            Windows viejo, FoxPro, Excel o registro manual:
+            Ningún hotel tiene que sustituir su sistema actual ni exponer su base de datos. Cubrimos desde cadenas
+            internacionales cerradas hasta software heredado de los años 90.
           </p>
 
           <div tabindex="0" role="region" aria-labelledby="pms-caption" class="table-wrapper">
             <table class="data-table" id="tabla-pms">
               <caption id="pms-caption" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
-                Cinco niveles de conectividad PMS de Hospitality PUI ID para todo tipo de hoteles en México
+                Cinco niveles de conectividad PMS de Hospitality PUI ID
               </caption>
               <thead>
                 <tr>
                   <th scope="col">Nivel</th>
-                  <th scope="col">Sistemas / PMS compatibles</th>
-                  <th scope="col">Cómo se conecta sin tocar el PMS</th>
-                  <th scope="col">Tiempo de alta</th>
+                  <th scope="col">Sistemas / PMS</th>
+                  <th scope="col">Mecanismo sin intervención al PMS</th>
+                  <th scope="col">Alta</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">Nivel 1 · API Cloud</th>
-                  <td>Oracle OPERA Cloud (OHIP), Cloudbeds, Mews, Little Hotelier</td>
+                  <th scope="row">Nivel 01 · API Cloud</th>
+                  <td>OPERA Cloud (OHIP), Cloudbeds, Mews, Little Hotelier</td>
                   <td>Conexión REST/Webhook cifrada TLS 1.3 + Bearer/JWT directa a la bóveda por RFC.</td>
-                  <td>1–2 horas</td>
+                  <td>1–2 h</td>
                 </tr>
                 <tr>
-                  <th scope="row">Nivel 2 · Agente XML / CSV</th>
+                  <th scope="row">Nivel 02 · Agente XML / CSV</th>
                   <td>OPERA 5, Hilton OnQ, Marriott FOSSE, IHG Concerto, Posadas, Zeus</td>
-                  <td>Instalador 1-clic (Windows/Linux) vigila la carpeta de llegadas cada 15 s sin tocar la base de datos.</td>
-                  <td>20 minutos</td>
+                  <td>Instalador 1-clic (<code>.ps1</code> / <code>.sh</code>) sincroniza carpeta de llegadas cada 15 s sin tocar la BD.</td>
+                  <td>20 min</td>
                 </tr>
                 <tr>
-                  <th scope="row">Nivel 3 · Parser Heredado</th>
+                  <th scope="row">Nivel 03 · Parser Heredado</th>
                   <td>Front2000, Micros-Fidelio, FoxPro, Excel México (<code>;</code>), AS400 (<code>|</code>)</td>
-                  <td>Autodetecta separadores (<code>,</code> <code>;</code> <code>|</code> tab), columnas divididas y codificación Latin-1 (<code>Ñ</code>).</td>
-                  <td>30 minutos</td>
+                  <td>Autodetecta separadores (<code>,</code> <code>;</code> <code>|</code> tab), apellidos divididos y Latin-1 (<code>Ñ</code>).</td>
+                  <td>30 min</td>
                 </tr>
                 <tr>
-                  <th scope="row">Nivel 4 · Impresión a Archivo</th>
-                  <td>Sistemas antiguos (DOS / Windows viejo) sin opción de exportar CSV/XML</td>
-                  <td>Impresora virtual local guarda el reporte de llegadas en <code>.txt</code>/<code>.prn</code> y el agente extrae CURP y habitación.</td>
-                  <td>30 minutos</td>
+                  <th scope="row">Nivel 04 · Impresión a Archivo</th>
+                  <td>Sistemas centenarios / DOS / Windows antiguo sin exportación</td>
+                  <td>Impresora virtual local genera <code>.txt</code>/<code>.prn</code>; el motor extrae CURP, nombre y habitación.</td>
+                  <td>30 min</td>
                 </tr>
                 <tr class="is-winner">
-                  <th scope="row">Nivel 5 · Terminal Web Cero-TI</th>
+                  <th scope="row">Nivel 05 · Terminal Web</th>
                   <td>Hoteles independientes, Excel manual o registro en papel</td>
-                  <td>Funciona en cualquier navegador o tablet con escáner INE/Pasaporte MRZ a $0 y protocolo Menores Art. 58 LGT.</td>
-                  <td>15 minutos</td>
+                  <td>Navegador o tablet con escáner INE/Pasaporte MRZ a $0 y protocolo Menores Art. 58 LGT.</td>
+                  <td>15 min</td>
                 </tr>
               </tbody>
             </table>
@@ -1754,38 +1694,38 @@
         </div>
       </section>
 
-      <!-- COMPARATIVA REAL CONTRA COMPETENCIA -->
-      <section class="section section-alt" id="comparativa">
+      <!-- COMPARATIVA -->
+      <section class="section" id="comparativa">
         <div class="container">
-          <h2>Por qué Hospitality PUI ID supera a toda la competencia</h2>
+          <h2>Benchmark financiero y técnico (136 hoteles · 3 años)</h2>
           <p class="section-lead">
-            Conectarse ante Gobernación cuesta <strong>$0 pesos</strong>. El gasto de ~$1,000 MXN/mes por hotel va a
-            proveedores SaaS que rentan software mes tras mes. Para una Asociación de <strong>136 hoteles</strong>,
-            incluso contra una tarifa grupal al -50%, somos de <strong>2.2× a 9× más económicos</strong>:
+            Conectarse ante Gobernación cuesta <strong>$0 pesos</strong>. Incluso frente a un descuento grupal del -50%,
+            <strong>Hospitality PUI ID</strong> es de <strong>2.2× a 9× más económica</strong> y deja utilidad neta a la
+            Asociación.
           </p>
 
-          <div class="cost-bars" aria-label="Gasto total a 3 años para 136 hoteles">
-            <p class="cost-bars-title">Gasto total acumulado a 3 años · 136 hoteles (MXN antes de IVA)</p>
+          <div class="cost-bars" aria-label="Gasto acumulado a 3 años para 136 hoteles">
+            <p class="cost-bars-title">GASTO TOTAL ACUMULADO A 3 AÑOS // 136 HOTELES (MXN ANTES DE IVA)</p>
             <div class="bar-row">
               <div class="bar-meta">
                 <span class="bar-name">PUIhoteles (R2 OS / Rotamundos)</span>
                 <span class="bar-amount">$5,144,880 MXN</span>
               </div>
-              <div class="bar-track"><div class="bar-fill is-high" style="inline-size: 100%"></div></div>
+              <div class="bar-track"><div class="bar-fill" style="inline-size: 100%"></div></div>
             </div>
             <div class="bar-row">
               <div class="bar-meta">
                 <span class="bar-name">PUI México (PROLOG S.A. de C.V.)</span>
                 <span class="bar-amount">$3,468,000 MXN</span>
               </div>
-              <div class="bar-track"><div class="bar-fill is-high" style="inline-size: 67.4%"></div></div>
+              <div class="bar-track"><div class="bar-fill" style="inline-size: 67.4%"></div></div>
             </div>
             <div class="bar-row">
               <div class="bar-meta">
                 <span class="bar-name">Tarifa grupal negociada (-50%)</span>
                 <span class="bar-amount">$2,203,200 MXN</span>
               </div>
-              <div class="bar-track"><div class="bar-fill is-mid" style="inline-size: 42.8%"></div></div>
+              <div class="bar-track"><div class="bar-fill" style="inline-size: 42.8%"></div></div>
             </div>
             <div class="bar-row is-best">
               <div class="bar-meta">
@@ -1799,13 +1739,13 @@
           <div tabindex="0" role="region" aria-labelledby="comp-caption" class="table-wrapper">
             <table class="data-table" id="tabla-comparativa">
               <caption id="comp-caption" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
-                Comparativa técnica y financiera a 3 años para 136 hoteles entre proveedores PUI y Hospitality PUI ID
+                Comparativa técnica y financiera a 3 años para 136 hoteles
               </caption>
               <thead>
                 <tr>
-                  <th scope="col">Opción evaluada</th>
-                  <th scope="col">Cómo cobran</th>
-                  <th scope="col">Gasto 3 años (136)</th>
+                  <th scope="col">Opción</th>
+                  <th scope="col">Esquema</th>
+                  <th scope="col">Total 3 años</th>
                   <th scope="col">Limitaciones vs. ventaja real</th>
                 </tr>
               </thead>
@@ -1814,37 +1754,31 @@
                   <th scope="row">KYC PUI<span class="cell-note">pui.com.mx / KYC Systems</span></th>
                   <td>Renta SaaS en nube del proveedor</td>
                   <td><strong>Renta perpetua</strong></td>
-                  <td>Solo puente PUI; sin protocolo de menores (LGT), sin instalador 1-clic OPERA 5 y $0 para la Asociación.</td>
+                  <td>Solo puente PUI; sin protocolo menores LGT, sin instalador OPERA 5 y $0 para la Asociación.</td>
                 </tr>
                 <tr>
                   <th scope="row">PUIhoteles<span class="cell-note">R2 OS / Rotamundos</span></th>
-                  <td>$930/mes + $4,350 entrada por hotel</td>
-                  <td class="num-red">$5,144,880 MXN</td>
-                  <td>Más costoso; enfocado en hostales, sin menores LGT y $0 para la Asociación.</td>
+                  <td>$930/mes + $4,350 entrada</td>
+                  <td class="num-red">$5,144,880</td>
+                  <td>Más costoso; sin protocolo menores LGT ni captura heredada y $0 gremial.</td>
                 </tr>
                 <tr>
                   <th scope="row">PUI México<span class="cell-note">PROLOG S.A. de C.V.</span></th>
-                  <td>$800/mes o $8,500/año por hotel</td>
-                  <td class="num-red">$3,468,000 MXN</td>
-                  <td>Renta perpetua, alertas visibles en portal, sin menores LGT y $0 gremial.</td>
+                  <td>$800/mes o $8,500/año</td>
+                  <td class="num-red">$3,468,000</td>
+                  <td>Alertas visibles en portal, sin menores LGT y $0 para la Asociación.</td>
                 </tr>
                 <tr>
-                  <th scope="row">Facto Identity / INNKEY<span class="cell-note">SaaS o cambio de PMS</span></th>
-                  <td>Renta anual o cambiar PMS</td>
-                  <td class="num-red">$3.0M – $4.5M MXN</td>
-                  <td>Nube ajena o exige sustituir el sistema actual del hotel (inviable en OPERA).</td>
-                </tr>
-                <tr>
-                  <th scope="row">Tarifa grupal (-50%)<span class="cell-note">Descuento extremo externo</span></th>
+                  <th scope="row">Tarifa grupal (-50%)<span class="cell-note">Descuento externo extremo</span></th>
                   <td>$450/mes por hotel</td>
-                  <td><strong>$2,203,200 MXN</strong></td>
-                  <td>Renta perpetua expuesta a aumentos en año 2 y $0 para la Asociación.</td>
+                  <td><strong>$2,203,200</strong></td>
+                  <td>Renta eterna sujeta a incrementos en año 2 y $0 de utilidad para la Asociación.</td>
                 </tr>
                 <tr class="is-winner">
                   <th scope="row">Hospitality PUI ID<span class="cell-note">Propiedad exclusiva de Hospitality PUI ID</span></th>
-                  <td>$350,000 pago único + AWS ($44/hotel) o póliza 24/7 ($132/hotel)</td>
-                  <td class="num-green">$566,000 MXN<span class="cell-note">($998k con soporte 24/7)</span></td>
-                  <td><strong>De 2.2× a 9× más barato.</strong> Único con sigilo absoluto + menores LGT + pasaportes MRZ $0 + OPERA 5 en 1 clic + <strong>+$336,000 MXN/año</strong> de utilidad para la Asociación.</td>
+                  <td>$350,000 pago único + AWS ($44/hotel)</td>
+                  <td class="num-green">$566,000 MXN</td>
+                  <td><strong>2.2× a 9× más barato.</strong> Sigilo total + Menores LGT + Pasaportes MRZ $0 + 5 niveles PMS + <strong>+$336,000 MXN/año</strong> netos para la Asociación.</td>
                 </tr>
               </tbody>
             </table>
@@ -1853,7 +1787,7 @@
       </section>
 
       <!-- PREGUNTAS FRECUENTES -->
-      <section class="section accordion" id="preguntas" aria-labelledby="faq-heading">
+      <section class="section section-alt accordion" id="preguntas" aria-labelledby="faq-heading">
         <div class="container">
           <div class="faq-header">
             <h2 id="faq-heading">Preguntas frecuentes</h2>
@@ -1872,38 +1806,27 @@
 
           <div class="accordion-list" id="faq-list">
             <details open>
-              <summary>¿Por qué el padrón de este demo usa 50 registros sintéticos en lugar de datos reales del RNPDNO?</summary>
+              <summary>¿Por qué el simulador usa 50 registros sintéticos y no el padrón real del RNPDNO?</summary>
               <div class="faq-answer">
-                Porque los propios Lineamientos PUI (DOF 27/11/2025) y la LFPDPPP prohíben a cualquier empresa o hotel
-                descargar o almacenar el padrón real de personas desaparecidas. En producción, Gobernación consulta
-                únicamente reportes activos bajo cifrado; en este simulador usamos 50 registros sintéticos con CURPs
-                matemáticamente válidas ante RENAPO para demostrar el motor real sin vulnerar la privacidad de nadie.
+                Los Lineamientos PUI (DOF 27/11/2025) y la LFPDPPP prohíben a cualquier empresa descargar el padrón real
+                de víctimas. En producción SEGOB empuja reportes cifrados activos; aquí usamos 50 registros sintéticos con
+                CURPs matemáticamente válidas ante RENAPO para demostrar el motor real respetando la ley.
               </div>
             </details>
-
             <details>
-              <summary>¿Qué ve el recepcionista si llega una persona con reporte activo?</summary>
+              <summary>¿Pueden conectarse hoteles con más de 100 años y sistemas antiguos sin API?</summary>
               <div class="faq-answer">
-                Nunca ve una alerta roja de SEGOB. Su terminal confirma el check-in normal mientras la plataforma envía
-                en silencio el aviso oficial (Fase 3) a Gobernación, protegiendo la seguridad del personal. Si el huésped
-                es menor de 18 años, sí solicita acreditar parentesco o tutela conforme al Art. 58 de la Ley General de Turismo.
+                Sí. Nuestro conector de 5 niveles soporta archivos heredados (punto y coma, pipe, codificación Latin-1
+                con Ñ), captura de impresión a archivo (.txt/.prn) para software antiguo sin exportación, y Terminal Web
+                en 15 minutos con cero equipo de TI.
               </div>
             </details>
-
-            <details>
-              <summary>¿Hay que cambiar Oracle OPERA, Cloudbeds o Zeus?</summary>
-              <div class="faq-answer">
-                No. Hospitality PUI ID se conecta vía API (OPERA Cloud, Cloudbeds), mediante instalador automático en 1
-                clic para carpetas XML/CSV (OPERA 5 y Zeus sin tocar la base de datos del PMS) o desde navegador web.
-              </div>
-            </details>
-
             <details>
               <summary>¿Cómo arranca una Asociación con $0 de su tesorería?</summary>
               <div class="faq-answer">
-                Alineado al plan oficial de la ATDT (iniciar con las 10 instituciones más representativas de cada cámara),
-                10 Hoteles Fundadores aportan $35,000 MXN + IVA una sola vez (exentos de cuota por 3 años), la Asociación
-                pone $0 de caja y el piloto arranca en 4 a 6 semanas.
+                Alineado al plan oficial ATDT (iniciar con las 10 instituciones más representativas), 10 Hoteles
+                Fundadores aportan $35,000 MXN + IVA una sola vez (exentos de cuota por 3 años), la Asociación desembolsa
+                $0 de caja y el piloto arranca en 4 a 6 semanas.
               </div>
             </details>
           </div>
@@ -1911,19 +1834,19 @@
       </section>
 
       <!-- CIERRE -->
-      <section class="section section-alt" aria-labelledby="closing-heading">
+      <section class="section" aria-labelledby="closing-heading">
         <div class="container">
           <div class="closing-band">
             <div>
-              <h2 id="closing-heading">Arquitectura lista hoy para piloto técnico en 4 a 6 semanas</h2>
+              <h2 id="closing-heading">Infraestructura lista hoy para despliegue en 4 a 6 semanas</h2>
               <p class="section-lead" style="margin-block-end: 0;">
-                Abre la plataforma completa para probar RBAC multi-hotel por RFC, instaladores 1-clic de OPERA 5,
-                benchmark criptográfico de 1,000 hoteles y generación de Constancia Oficial PDF.
+                Abre la consola completa para probar RBAC multi-hotel por RFC, instaladores 1-clic de OPERA 5, benchmark
+                criptográfico de 1,000 hoteles y emisión de Constancia Oficial PDF.
               </p>
             </div>
             <div class="closing-actions">
-              <a class="btn-primary" href="./index.html" style="text-decoration: none;">Abrir Plataforma Completa</a>
-              <button type="button" class="btn-secondary" id="btn-print-closing">Guardar en PDF</button>
+              <a class="btn-primary" href="./index.html">Abrir Consola Completa</a>
+              <button type="button" class="btn-secondary" id="btn-print-closing">Exportar PDF</button>
             </div>
           </div>
         </div>
@@ -1932,11 +1855,8 @@
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <span>
-          <strong>© 2026 Hospitality PUI ID</strong> · Software, arquitectura, contenido y proyecto propiedad exclusiva de
-          Hospitality PUI ID.
-        </span>
-        <span>Todos los derechos reservados · Monterrey, Nuevo León, México</span>
+        <span>© 2026 HOSPITALITY PUI ID · SOFTWARE, ARQUITECTURA Y PROYECTO PROPIEDAD EXCLUSIVA DE HOSPITALITY PUI ID</span>
+        <span>MONTERREY, N.L., MÉXICO</span>
       </div>
     </footer>
 

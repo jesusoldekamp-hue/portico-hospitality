@@ -3,26 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hospitality PUI ID — Ficha Técnica Completa (One-Pager)</title>
-    <link rel="icon" type="image/svg+xml" href="../public/assets/favicon.svg" />
+    <title>Hospitality PUI ID — Ficha Técnica Completa (1 Hoja)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --navy: #0c1828;
-        --navy-2: #162842;
-        --ink: #111c2b;
-        --soft: #3a4a5d;
-        --muted: #5a6b7d;
-        --line: #d9e0e8;
-        --canvas: #f6f7f5;
-        --white: #ffffff;
-        --emerald: #0d6b59;
-        --emerald-soft: #eaf5f2;
-        --emerald-line: #b4d8cc;
-        --gold: #c8a45d;
-        --gold-ink: #7a5519;
-        --gold-soft: #fcf6e9;
-        --crimson: #9f2017;
-        --crimson-soft: #fdf2f1;
+        --bg: #ffffff;
+        --panel: #f7f7f8;
+        --black: #0a0a0b;
+        --ink: #111113;
+        --soft: #4a4a50;
+        --muted: #71717a;
+        --line: #e4e4e7;
+        --signal: #0f766e;
+        --danger: #b91c1c;
+        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -38,9 +38,9 @@
       body {
         margin: 0;
         padding: 0;
-        background: #dde3ea;
+        background: #d4d4d8;
         color: var(--ink);
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -50,575 +50,493 @@
         width: 8.5in;
         height: 11in;
         margin: 0 auto;
-        background: var(--white);
+        background: var(--bg);
+        padding: 0.48in 0.58in 0.4in;
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
 
-      /* HEADER */
-      .top-band {
+      .topbar {
         flex: none;
-        background: var(--navy);
-        color: #ffffff;
-        padding: 15px 30px 14px;
-        border-bottom: 3px solid var(--gold);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 14px;
+        padding-bottom: 11px;
+        border-bottom: 1.5px solid var(--black);
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 11px;
+        gap: 10px;
       }
 
       .brand img {
-        width: 38px;
-        height: 38px;
-        border-radius: 9px;
+        width: 24px;
+        height: 24px;
       }
 
       .brand-name {
-        font-size: 17px;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        line-height: 1.1;
-      }
-
-      .brand-sub {
-        font-size: 9.2px;
-        color: #b7c8dc;
-        letter-spacing: 0.04em;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        margin-top: 2px;
+        color: var(--black);
       }
 
-      .header-badges {
-        text-align: right;
-      }
-
-      .status-pill {
-        display: inline-block;
-        background: #0d6b59;
-        color: #ffffff;
-        font-size: 8.5px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
+      .doc-meta {
+        font-family: var(--font-mono);
+        font-size: 7.5px;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 4px 10px;
-        border-radius: 999px;
+        color: var(--muted);
       }
 
-      .header-meta {
-        margin-top: 4px;
-        font-size: 8.6px;
-        color: #cdd9e7;
+      .doc-meta strong {
+        color: var(--black);
       }
 
-      /* MAIN CONTENT */
-      .content {
+      .body {
         flex: 1;
-        padding: 14px 30px 12px;
         display: flex;
         flex-direction: column;
-        gap: 11px;
+        gap: 14px;
+        padding-top: 15px;
       }
 
-      .hero-row {
+      .hero-grid {
         display: grid;
         grid-template-columns: 1.55fr 1fr;
-        gap: 14px;
-        align-items: center;
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--line);
+        gap: 20px;
+        align-items: end;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--black);
       }
 
-      .hero-row h1 {
-        margin: 0 0 5px;
-        font-family: Georgia, 'Times New Roman', serif;
-        font-size: 19.5px;
-        line-height: 1.16;
-        letter-spacing: -0.015em;
-        color: var(--navy);
+      h1 {
+        margin: 0 0 6px;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.09;
+        letter-spacing: -0.035em;
+        color: var(--black);
       }
 
-      .hero-row p {
+      h1 strong {
+        font-weight: 600;
+      }
+
+      .lead {
         margin: 0;
-        font-size: 9.5px;
-        line-height: 1.44;
+        font-size: 8.9px;
+        line-height: 1.48;
         color: var(--soft);
       }
 
-      .kpi-stack {
+      .kpi-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 7px;
-      }
-
-      .kpi {
-        background: var(--canvas);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 7px 9px;
-      }
-
-      .kpi.is-emerald {
-        background: var(--emerald-soft);
-        border-color: var(--emerald-line);
-      }
-
-      .kpi.is-crimson {
-        background: var(--crimson-soft);
-        border-color: #f0c4c0;
+        gap: 10px 14px;
+        border-left: 1px solid var(--line);
+        padding-left: 16px;
       }
 
       .kpi strong {
         display: block;
-        font-size: 12.5px;
-        font-weight: 800;
-        color: var(--navy);
-        line-height: 1.15;
-      }
-
-      .kpi.is-emerald strong {
-        color: var(--emerald);
-      }
-
-      .kpi.is-crimson strong {
-        color: var(--crimson);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--black);
+        font-variant-numeric: tabular-nums;
       }
 
       .kpi span {
         display: block;
-        font-size: 7.9px;
+        font-size: 7.5px;
         line-height: 1.3;
         color: var(--muted);
         margin-top: 2px;
       }
 
-      /* SECTION TITLE */
-      .sec-title {
-        margin: 0 0 6px;
-        font-size: 9px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--emerald);
+      .sec-rule {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-bottom: 5px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid var(--line);
       }
 
-      .sec-title::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--line);
+      .sec-rule h2 {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 7.6px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--black);
       }
 
-      /* 4-STEP ARCHITECTURE FLOW */
-      .flow-grid {
+      .sec-rule span {
+        font-family: var(--font-mono);
+        font-size: 7.1px;
+        color: var(--muted);
+      }
+
+      .flow-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
+        gap: 14px;
       }
 
       .flow-step {
-        background: var(--canvas);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 8px 9px;
+        border-top: 1.5px solid var(--black);
+        padding-top: 6px;
       }
 
-      .flow-num {
-        display: inline-block;
-        font-size: 8px;
-        font-weight: 800;
-        color: var(--gold-ink);
-        background: var(--gold-soft);
-        border: 1px solid #e7d1a4;
-        border-radius: 4px;
-        padding: 1px 6px;
-        margin-bottom: 4px;
+      .flow-step span {
+        font-family: var(--font-mono);
+        font-size: 7.1px;
+        letter-spacing: 0.08em;
+        color: var(--muted);
       }
 
       .flow-step h3 {
-        margin: 0 0 3px;
-        font-size: 9.6px;
-        font-weight: 700;
-        color: var(--navy);
+        margin: 2px 0 3px;
+        font-size: 9.4px;
+        font-weight: 600;
+        color: var(--black);
       }
 
       .flow-step p {
         margin: 0;
-        font-size: 8.2px;
-        line-height: 1.36;
+        font-size: 7.9px;
+        line-height: 1.4;
         color: var(--soft);
       }
 
-      /* 6 MODULES GRID */
-      .modules-grid {
+      .mods-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        gap: 10px 18px;
       }
 
-      .mod-card {
-        background: var(--white);
-        border: 1px solid var(--line);
-        border-top: 2.5px solid var(--navy);
-        border-radius: 8px;
-        padding: 8px 10px;
-      }
-
-      .mod-card.is-accent {
-        border-top-color: var(--emerald);
-      }
-
-      .mod-card h3 {
-        margin: 0 0 4px;
-        font-size: 9.6px;
-        font-weight: 800;
-        color: var(--navy);
-        line-height: 1.22;
-      }
-
-      .mod-card p {
-        margin: 0;
-        font-size: 8.25px;
-        line-height: 1.38;
-        color: var(--soft);
-      }
-
-      .mod-card code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 7.7px;
-        background: #eef2f6;
-        color: var(--navy);
-        padding: 0 3px;
-        border-radius: 3px;
-      }
-
-      /* BENCHMARK & SPECS ROW */
-      .bottom-grid {
-        display: grid;
-        grid-template-columns: 1.38fr 1fr;
-        gap: 12px;
-        align-items: stretch;
-      }
-
-      .comp-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 8.2px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .comp-table th {
-        background: var(--canvas);
-        color: var(--navy);
-        text-align: left;
-        padding: 5.5px 7px;
-        font-size: 7.5px;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+      .mod {
+        padding-bottom: 8px;
         border-bottom: 1px solid var(--line);
       }
 
-      .comp-table td {
-        padding: 5.5px 7px;
-        border-bottom: 1px solid #e7ecf1;
+      .mod h3 {
+        margin: 0 0 3px;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--black);
+      }
+
+      .mod p {
+        margin: 0;
+        font-size: 7.9px;
+        line-height: 1.4;
+        color: var(--soft);
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 7.2px;
+        background: #f1f1f3;
+        color: var(--black);
+        padding: 0 3px;
+      }
+
+      .bottom-split {
+        display: grid;
+        grid-template-columns: 1.38fr 1fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8px;
+      }
+
+      .spec-table th {
+        text-align: left;
+        padding: 0 6px 5px 0;
+        font-family: var(--font-mono);
+        font-size: 7px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1.5px solid var(--black);
+      }
+
+      .spec-table td {
+        padding: 6px 8px 6px 0;
+        border-bottom: 1px solid var(--line);
         color: var(--soft);
         vertical-align: top;
       }
 
-      .comp-table tr:last-child td {
+      .spec-table tr.winner td {
+        background: var(--black);
+        color: #ffffff;
+        font-weight: 600;
+        padding-left: 6px;
         border-bottom: 0;
       }
 
-      .comp-table tr.winner td {
-        background: var(--emerald-soft);
-        color: #083b31;
+      .num-danger {
+        color: var(--danger);
+        font-family: var(--font-mono);
         font-weight: 600;
-        border-top: 1.5px solid var(--emerald);
-      }
-
-      .num-red {
-        color: var(--crimson);
-        font-weight: 700;
         white-space: nowrap;
       }
 
-      .num-green {
-        color: var(--emerald);
-        font-weight: 800;
+      .num-win {
+        color: #ffffff;
+        font-family: var(--font-mono);
+        font-weight: 600;
         white-space: nowrap;
       }
 
-      .specs-box {
-        background: var(--navy);
-        color: #e6eff8;
-        border-radius: 9px;
-        padding: 10px 12px;
+      .monolith-side {
+        background: var(--black);
+        color: #ffffff;
+        padding: 13px 16px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
       }
 
-      .specs-box h3 {
-        margin: 0 0 6px;
-        font-size: 9.8px;
-        font-weight: 800;
+      .monolith-side h3 {
+        margin: 0 0 7px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #27272a;
+        font-family: var(--font-mono);
+        font-size: 7.8px;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
         color: #ffffff;
-        letter-spacing: 0.02em;
       }
 
-      .specs-list {
+      .monolith-side ul {
         margin: 0;
         padding-left: 14px;
         display: grid;
         gap: 4px;
-        font-size: 8.2px;
-        line-height: 1.35;
-        color: #cddae8;
+        font-size: 7.9px;
+        line-height: 1.4;
+        color: #a1a1aa;
       }
 
-      .specs-list strong {
+      .monolith-side strong {
         color: #ffffff;
       }
 
-      .specs-cta {
-        margin-top: 8px;
-        padding-top: 7px;
-        border-top: 1px solid rgb(255 255 255 / 0.16);
-        font-size: 8.1px;
-        color: #e5c683;
-        line-height: 1.35;
+      .monolith-side code {
+        background: #1c1c20;
+        color: #e4e4e7;
       }
 
-      /* FOOTER */
+      .monolith-foot {
+        margin-top: 8px;
+        padding-top: 7px;
+        border-top: 1px solid #27272a;
+        font-family: var(--font-mono);
+        font-size: 7.2px;
+        color: #d4d4d8;
+      }
+
       .footer {
         flex: none;
-        background: var(--canvas);
+        margin-top: auto;
+        padding-top: 8px;
         border-top: 1px solid var(--line);
-        padding: 8px 30px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        font-size: 7.8px;
+        font-family: var(--font-mono);
+        font-size: 7.1px;
+        letter-spacing: 0.04em;
         color: var(--muted);
       }
 
       .footer a {
-        color: var(--emerald);
-        text-decoration: none;
-        font-weight: 700;
+        color: var(--black);
+        text-decoration: underline;
+        font-weight: 600;
       }
     </style>
   </head>
   <body>
     <div class="page">
-      <header class="top-band">
+      <header class="topbar">
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Hospitality PUI ID" />
-          <div>
-            <div class="brand-name">Hospitality PUI ID</div>
-            <div class="brand-sub">Hospitality Trust &amp; Compliance · Plataforma Integral PUI &amp; Menores</div>
-          </div>
+          <span class="brand-name">Hospitality PUI ID</span>
         </div>
-        <div class="header-badges">
-          <span class="status-pill">Conectada a PUI SEGOB · Anexo 2 DOF</span>
-          <div class="header-meta">Manual Técnico DOF 23/01/2026 · Ley General de Turismo Art. 58</div>
-        </div>
+        <div class="doc-meta"><strong>SPEC // PUI-ANEXO-2</strong> &nbsp;|&nbsp; DOF 23/01/2026 &amp; ART. 58 LGT</div>
       </header>
 
-      <main class="content">
-        <!-- HERO + KPIS -->
-        <section class="hero-row">
+      <main class="body">
+        <section class="hero-grid">
           <div>
-            <h1>Cumplimiento total con la PUI de SEGOB y protección de menores — en operación continua y sin cambiar tu PMS</h1>
-            <p>
-              <strong>Hospitality PUI ID</strong> es la plataforma llave en mano diseñada específicamente para hoteles,
-              cadenas y asociaciones en México. Interconecta cada propiedad de forma cifrada con la
-              <strong>Plataforma Única de Identidad (PUI)</strong> de la Secretaría de Gobernación y ejecuta el protocolo
-              obligatorio de menores (Art. 58 LGT) sin fricción en mostrador y sin rentas mensuales perpetuas.
+            <h1>Cumplimiento integral con la <strong>PUI de SEGOB</strong> — sin cambiar su PMS ni rentas perpetuas.</h1>
+            <p class="lead">
+              <strong>Hospitality PUI ID</strong> interconecta de forma cifrada a cada propiedad con la Plataforma Única
+              de Identidad (PUI) de la Secretaría de Gobernación y ejecuta la verificación obligatoria de menores (Art. 58
+              LGT) con arquitectura aislada por RFC.
             </p>
           </div>
-          <div class="kpi-stack">
-            <div class="kpi is-emerald">
-              <strong>4 / 4 Endpoints DOF</strong>
-              <span>Anexo 2 y Sec. 8 · Fases 1, 2 y 3</span>
-            </div>
-            <div class="kpi is-crimson">
-              <strong>$1.17M – $2.34M</strong>
-              <span>Multa Art. 43 Bis evitada por hotel</span>
+          <div class="kpi-grid">
+            <div class="kpi">
+              <strong>4 / 4 APIs</strong>
+              <span>Anexo 2 DOF · Fases 1–3</span>
             </div>
             <div class="kpi">
-              <strong>12 años histórico</strong>
-              <span>Búsqueda retrospectiva + tiempo real</span>
+              <strong>$1.17M–$2.34M</strong>
+              <span>Multa Art. 43 Bis evitada</span>
             </div>
             <div class="kpi">
-              <strong>10 a 1,000+ hoteles</strong>
-              <span>Bóveda PostgreSQL RLS por RFC</span>
+              <strong>12 Años</strong>
+              <span>Histórico + tiempo real</span>
+            </div>
+            <div class="kpi">
+              <strong>10 – 1,000+</strong>
+              <span>Hoteles aislados (RLS)</span>
             </div>
           </div>
         </section>
 
-        <!-- FLUJO OPERATIVO -->
         <section>
-          <h2 class="sec-title">Cómo opera en vivo cada check-in conectado a la PUI de SEGOB</h2>
-          <div class="flow-grid">
-            <article class="flow-step">
-              <span class="flow-num">PASO 1 · RECEPCIÓN</span>
-              <h3>Validación instantánea</h3>
-              <p>Al registrar un huésped en OPERA, Cloudbeds, Zeus o portal web, valida su CURP RENAPO o pasaporte MRZ ($0) en milisegundos.</p>
-            </article>
-            <article class="flow-step">
-              <span class="flow-num">PASO 2 · SIGILO &amp; LGT</span>
-              <h3>Protección al personal</h3>
-              <p>Si existe alerta PUI, el mostrador <strong>jamás</strong> ve alarmas rojas. Si el huésped es menor (&lt;18), exige acreditar parentesco (Art. 58 LGT).</p>
-            </article>
-            <article class="flow-step">
-              <span class="flow-num">PASO 3 · PUI SEGOB</span>
-              <h3>Envío cifrado Fases 1–3</h3>
-              <p>Responde en automático búsqueda básica, histórica (hasta 12 años) y monitoreo continuo vía Bearer/JWT + AES-256-GCM con folio FUB + UUID4.</p>
-            </article>
-            <article class="flow-step">
-              <span class="flow-num">PASO 4 · INSPECCIÓN</span>
-              <h3>Constancia PDF sellada</h3>
-              <p>Cada hotel descarga en 1 clic su Constancia Oficial y bitácora encadenada SHA-256 lista para cualquier verificación de SEGOB o Turismo.</p>
-            </article>
+          <div class="sec-rule">
+            <h2>01 // Flujo operativo en vivo</h2>
+            <span>CHECK-IN → SEGOB</span>
+          </div>
+          <div class="flow-row">
+            <div class="flow-step">
+              <span>STEP 01</span>
+              <h3>Validación en vivo</h3>
+              <p>Valida CURP RENAPO o pasaporte MRZ ($0) en milisegundos desde OPERA, Zeus, sistema heredado o web.</p>
+            </div>
+            <div class="flow-step">
+              <span>STEP 02</span>
+              <h3>Sigilo y Menores</h3>
+              <p>Oculta 100% alertas de SEGOB en recepción. Si detecta menor (&lt;18), activa protocolo Art. 58 LGT.</p>
+            </div>
+            <div class="flow-step">
+              <span>STEP 03</span>
+              <h3>Envío Fases 1–3</h3>
+              <p>Responde búsqueda básica, histórica (12 años) y tiempo real vía Bearer/JWT + AES-256-GCM + FUB.</p>
+            </div>
+            <div class="flow-step">
+              <span>STEP 04</span>
+              <h3>Evidencia SHA-256</h3>
+              <p>Emite Constancia Oficial PDF y bitácora criptográfica inmutable lista para inspección de SEGOB.</p>
+            </div>
           </div>
         </section>
 
-        <!-- 6 MÓDULOS COMPLETOS -->
         <section>
-          <h2 class="sec-title">Capacidades completas incluidas en Hospitality PUI ID</h2>
-          <div class="modules-grid">
-            <article class="mod-card is-accent">
-              <h3>1. Interconexión Oficial PUI (Anexo 2)</h3>
-              <p>
-                Opera los 4 servicios exigidos por el Manual Técnico DOF 23/01/2026: <code>/login</code>,
-                <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code> y <code>/desactivar-reporte</code>,
-                con cola Outbox de reintentos y prueba oficial de webhook ATDT.
-              </p>
-            </article>
-
-            <article class="mod-card is-accent">
-              <h3>2. Sigilo RBAC y Menores (Art. 58 LGT)</h3>
-              <p>
-                Separa permisos por rol (Recepción, TI Hotel y Consejo). El recepcionista opera seguro sin ver alertas
-                SEGOB, mientras el sistema aplica el bloqueo obligatorio a menores sin tutela acreditada (DOF 13/11/2026).
-              </p>
-            </article>
-
-            <article class="mod-card is-accent">
-              <h3>3. Conector PMS sin cambiar sistemas</h3>
-              <p>
-                Compatible con Oracle OPERA Cloud (OHIP), Cloudbeds, Zeus y archivos Excel/CSV. Incluye
-                <strong>instalador automático en 1 clic</strong> (Windows <code>.ps1</code> / Linux <code>.sh</code>)
-                para sincronizar OPERA 5 sin tocar la base de datos del hotel.
-              </p>
-            </article>
-
-            <article class="mod-card">
-              <h3>4. Extranjeros MRZ ICAO 9303 a $0</h3>
-              <p>
-                Decodificación óptica local de pasaportes internacionales sin costo por escaneo ni cobros por consulta a
-                terceros, detectando automáticamente nacionalidad y minoría de edad en viajeros extranjeros.
-              </p>
-            </article>
-
-            <article class="mod-card">
-              <h3>5. Bóveda aislada por RFC y Cifrado</h3>
-              <p>
-                Cada hotel opera en su propio compartimento aislado con <strong>PostgreSQL RLS</strong>, transporte
-                <strong>TLS 1.2+</strong>, cifrado <strong>AES-256-GCM</strong>, purga automática LFPDPPP y diseño listo
-                para reportes <strong>SAST, DAST y SCA</strong>.
-              </p>
-            </article>
-
-            <article class="mod-card">
-              <h3>6. Auditoría SHA-256 y Escala Gremial</h3>
-              <p>
-                Bitácora criptográfica inmutable exportable a CSV con sello SHA-256, Constancia Oficial PDF por
-                propiedad y capacidad probada de <strong>&gt;12,000 check-ins/seg</strong> para escalar a 1,000+ hoteles.
-              </p>
-            </article>
+          <div class="sec-rule">
+            <h2>02 // Capacidades técnicas incluidas</h2>
+            <span>6 MÓDULOS CORE</span>
+          </div>
+          <div class="mods-grid">
+            <div class="mod">
+              <h3>01 · Interconexión Anexo 2 DOF</h3>
+              <p>Endpoints <code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code> y <code>/desactivar-reporte</code> + Outbox de reintentos.</p>
+            </div>
+            <div class="mod">
+              <h3>02 · Sigilo RBAC y Menores LGT</h3>
+              <p>Roles aislados (Recepción, TI Hotel, Consejo). Bloqueo obligatorio de menores sin parentesco acreditado (DOF 13/11/2026).</p>
+            </div>
+            <div class="mod">
+              <h3>03 · 5 Niveles de Enlace PMS</h3>
+              <p>API Cloud, instalador 1-clic OPERA 5/Zeus, parser heredado (<code>;</code>, <code>|</code>, Latin-1), captura impresión <code>.txt</code>/<code>.prn</code> y Web.</p>
+            </div>
+            <div class="mod">
+              <h3>04 · Pasaportes MRZ ICAO a $0</h3>
+              <p>Lectura óptica local de pasaportes internacionales sin costo por escaneo, detectando nacionalidad y minoría de edad.</p>
+            </div>
+            <div class="mod">
+              <h3>05 · Bóveda por RFC y Cifrado</h3>
+              <p>PostgreSQL Row-Level Security (RLS), TLS 1.2+, AES-256-GCM, purga automática LFPDPPP y diseño listo para SAST/DAST/SCA.</p>
+            </div>
+            <div class="mod">
+              <h3>06 · Escala Nacional Probada</h3>
+              <p>Bitácora encadenada SHA-256 exportable en CSV, Constancia PDF por hotel y capacidad &gt;12,000 check-ins/seg.</p>
+            </div>
           </div>
         </section>
 
-        <!-- COMPARATIVA + ACTIVACIÓN -->
-        <section class="bottom-grid">
+        <section class="bottom-split">
           <div>
-            <h2 class="sec-title">Ventaja financiera comprobada (136 hoteles · 3 años)</h2>
-            <table class="comp-table">
+            <div class="sec-rule">
+              <h2>03 // Comparativa 3 años (136 hoteles)</h2>
+              <span>MXN ANTES DE IVA</span>
+            </div>
+            <table class="spec-table">
               <thead>
                 <tr>
-                  <th>Proveedor</th>
-                  <th>Esquema</th>
-                  <th>Gasto 3 años</th>
-                  <th>Diferencia clave</th>
+                  <th>Alternativa</th>
+                  <th>Modelo</th>
+                  <th>Total 3 años</th>
+                  <th>Diferencia</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>PUIhoteles</strong></td>
+                  <td>PUIhoteles</td>
                   <td>$930/mes + entrada</td>
-                  <td class="num-red">$5,144,880</td>
-                  <td>Sin menores LGT · $0 a la Asociación</td>
+                  <td class="num-danger">$5,144,880</td>
+                  <td>Sin LGT · $0 gremial</td>
                 </tr>
                 <tr>
-                  <td><strong>PUI México</strong></td>
+                  <td>PUI México</td>
                   <td>$800/mes o $8,500/año</td>
-                  <td class="num-red">$3,468,000</td>
-                  <td>Alertas visibles · Sin menores LGT</td>
+                  <td class="num-danger">$3,468,000</td>
+                  <td>Alertas visibles · Sin LGT</td>
                 </tr>
                 <tr>
-                  <td><strong>KYC PUI / Otros SaaS</strong></td>
-                  <td>Renta perpetua (-50% grupal)</td>
+                  <td>KYC PUI / Otros (-50%)</td>
+                  <td>Renta perpetua</td>
                   <td><strong>$2,203,200+</strong></td>
-                  <td>Nube ajena · Sin OPERA 5 1-clic ni LGT</td>
+                  <td>Nube ajena · Sin OPERA 5</td>
                 </tr>
                 <tr class="winner">
-                  <td><strong>Hospitality PUI ID</strong></td>
-                  <td>$350k pago único + AWS ($44/hotel)</td>
-                  <td class="num-green">$566,000 MXN</td>
-                  <td><strong>2.2× a 9× más barato</strong> · +$336k/año a Asociación</td>
+                  <td>Hospitality PUI ID</td>
+                  <td>$350k único + AWS</td>
+                  <td class="num-win">$566,000 MXN</td>
+                  <td>2.2×–9× menos · +$336k/año</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <aside class="specs-box">
+          <aside class="monolith-side">
             <div>
-              <h3>Activación oficial en 2 etapas (DOF 23/01/2026)</h3>
-              <ul class="specs-list">
-                <li><strong>Etapa 1 · Llave MX:</strong> El representante legal da de alta la Persona Moral con su e.firma vigente (<code>.cer</code>/<code>.key</code>) en <code>plataformadebusqueda.gob.mx/inscripcion</code>.</li>
-                <li><strong>Etapa 2 · Enlace Técnico:</strong> Conectamos el PMS (1 clic o API), ejecutamos la prueba oficial de webhook ATDT y liberamos la operación continua.</li>
-                <li><strong>Arranque sin golpe a tesorería:</strong> Esquema de 10 Hoteles Fundadores ($35k pago único c/u) = <strong>$0 de caja</strong> para la Asociación.</li>
+              <h3>Habilitación oficial // 2 etapas</h3>
+              <ul>
+                <li><strong>Etapa 01 · Llave MX:</strong> Alta de Persona Moral con e.firma vigente en <code>plataformadebusqueda.gob.mx/inscripcion</code>.</li>
+                <li><strong>Etapa 02 · Enlace Técnico:</strong> Conexión PMS (Niveles 1–5), prueba oficial webhook ATDT y liberación en 4–6 semanas.</li>
+                <li><strong>Arranque sin caja:</strong> 10 Hoteles Fundadores ($35k pago único c/u) = <strong>$0 de tesorería</strong> para la Asociación.</li>
               </ul>
             </div>
-            <div class="specs-cta">
-              <strong>Demo en vivo disponible hoy:</strong> prueba en pantalla partida con 50 folios sintéticos RENAPO,
-              cálculo SHA-256 real y constancia oficial PDF.
+            <div class="monolith-foot">
+              SANDBOX EN VIVO: 50 FOLIOS RENAPO + SHA-256 REAL
             </div>
           </aside>
         </section>
       </main>
 
       <footer class="footer">
-        <span>
-          <strong>© 2026 Hospitality PUI ID</strong> · Software, arquitectura y proyecto propiedad exclusiva de Hospitality PUI ID · Todos los derechos reservados.
-        </span>
-        <span>
-          Sustento oficial: <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">Manual Técnico DOF (SG_230126_VES_02.pdf) ↗</a>
-        </span>
+        <span>© 2026 HOSPITALITY PUI ID · PROPIEDAD EXCLUSIVA DE HOSPITALITY PUI ID</span>
+        <span>DOF: <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">SG_230126_VES_02.pdf ↗</a></span>
       </footer>
     </div>
   </body>
