@@ -197,8 +197,11 @@
         inline-size: 100%;
         padding: 0.55rem 0.75rem;
         color: var(--text-soft);
-        font-size: 0.84rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
         font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         text-decoration: none;
       }
 
@@ -206,23 +209,35 @@
         color: #ffffff;
       }
 
+      .site-menu .nav-idx {
+        margin-inline-start: 0.25rem;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        vertical-align: super;
+        line-height: 0;
+      }
+
       .site-menu a[aria-current='page'] {
         color: #ffffff;
         text-decoration: underline;
-        text-underline-offset: 0.4em;
+        text-underline-offset: 0.45em;
         text-decoration-thickness: 1.5px;
+        text-decoration-color: var(--blue-accent);
       }
 
       .site-menu .nav-cta {
-        background: #ffffff;
-        color: #0a0a0b;
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid #525a66;
         font-weight: 600;
         border-radius: 2px;
         text-align: center;
+        transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
       }
 
       .site-menu .nav-cta:hover {
-        background: #e4e4e7;
+        background: #ffffff;
+        border-color: #ffffff;
         color: #0a0a0b;
         text-decoration: none;
       }
@@ -235,7 +250,7 @@
         position: static;
         display: flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.45rem;
         inline-size: auto;
         max-inline-size: none;
         block-size: auto;
@@ -253,12 +268,12 @@
 
       .site-header.is-wide .site-menu a {
         inline-size: auto;
-        padding: 0.42rem 0.75rem;
+        padding: 0.42rem 0.7rem;
       }
 
       .site-header.is-wide .site-menu .nav-cta {
-        margin-inline-start: 0.5rem;
-        padding: 0.46rem 0.95rem;
+        margin-inline-start: 0.6rem;
+        padding: 0.46rem 1rem;
       }
 
       /* ===== LAYOUT ===== */
@@ -291,12 +306,12 @@
         }
       }
 
-      /* ===== HERO STAGE (MONOCHROME + SWISS COBALT STEEL) ===== */
+      /* ===== HERO STAGE (ARCHITECTURAL CAD TELEMETRY + PRUSSIAN COBALT) ===== */
       .hero-stage {
-        padding: 3.2rem 1.75rem 3.8rem;
+        padding: 2rem 1.75rem 3.8rem;
         border-block-end: 1px solid var(--line);
         background:
-          radial-gradient(ellipse 60% 42% at 50% -14%, rgb(42 91 143 / 0.2), transparent 72%),
+          radial-gradient(ellipse 56% 38% at 72% 8%, rgb(42 91 143 / 0.16), transparent 70%),
           #0a0a0b;
       }
 
@@ -306,7 +321,58 @@
 
       @media (max-width: 640px) {
         .hero-stage {
-          padding: 2.2rem 1rem 2.8rem;
+          padding: 1.5rem 1rem 2.8rem;
+        }
+      }
+
+      .hero-hud {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding-block-end: 1.25rem;
+        margin-block-end: 2rem;
+        border-block-end: 1px solid var(--line);
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .hero-hud-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.22rem;
+      }
+
+      .hero-hud-col.is-right {
+        text-align: end;
+      }
+
+      @media (max-width: 640px) {
+        .hero-hud-col.is-right {
+          text-align: start;
+        }
+      }
+
+      .hero-hud strong {
+        color: #d4d8e0;
+        font-weight: 500;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+        align-items: center;
+        gap: 2.5rem;
+      }
+
+      @media (max-width: 920px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
         }
       }
 
@@ -323,27 +389,29 @@
       h1 {
         margin: 0;
         font-family: var(--font-display);
-        font-size: 2.7rem;
-        font-weight: 500;
-        line-height: 1.07;
-        letter-spacing: -0.028em;
+        font-size: 2.9rem;
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.032em;
         color: #ffffff;
-        max-inline-size: 22ch;
+        max-inline-size: 18ch;
       }
 
-      h1 strong {
-        font-weight: 700;
+      h1 .h1-muted {
+        display: block;
+        font-weight: 400;
+        color: #9098a6;
       }
 
       @media (max-width: 640px) {
         h1 {
-          font-size: 1.95rem;
+          font-size: 2rem;
         }
       }
 
       .hero-sub {
-        margin: 1rem 0 0;
-        max-inline-size: 62ch;
+        margin: 1.15rem 0 0;
+        max-inline-size: 56ch;
         font-size: 1.02rem;
         color: var(--text-soft);
       }
@@ -351,6 +419,23 @@
       .hero-sub strong {
         color: #ffffff;
         font-weight: 500;
+      }
+
+      .hero-visual {
+        position: relative;
+        min-inline-size: 0;
+      }
+
+      .hero-schematic {
+        display: block;
+        inline-size: 100%;
+        block-size: auto;
+      }
+
+      @media (max-width: 920px) {
+        .hero-visual {
+          max-inline-size: 30rem;
+        }
       }
 
       /* ARCHITECTURAL TELEMETRY STRIP (NO FLOATING BOXES) */
@@ -1368,28 +1453,121 @@
           </button>
 
           <ul id="site-menu" class="site-menu" popover="auto">
-            <li><a href="#inicio" aria-current="page">Probador</a></li>
-            <li><a href="#padron-sandbox">Padrón (50)</a></li>
-            <li><a href="#marco-legal">Leyes DOF</a></li>
-            <li><a href="#compatibilidad-pms">PMS (5 Niveles)</a></li>
-            <li><a href="#comparativa">Comparativa</a></li>
-            <li><a class="nav-cta" href="./index.html">Abrir Consola</a></li>
+            <li><a href="#inicio" aria-current="page">Probador<span class="nav-idx">01</span></a></li>
+            <li><a href="#padron-sandbox">Padrón<span class="nav-idx">02</span></a></li>
+            <li><a href="#marco-legal">Leyes DOF<span class="nav-idx">03</span></a></li>
+            <li><a href="#compatibilidad-pms">PMS<span class="nav-idx">04</span></a></li>
+            <li><a href="#comparativa">Costos<span class="nav-idx">05</span></a></li>
+            <li><a class="nav-cta" href="./index.html">Consola</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
     <main id="inicio">
-      <!-- HERO INTERACTIVO PALANTIR -->
+      <!-- HERO ARQUITECTÓNICO DE TELEMETRÍA -->
       <section class="hero-stage">
         <div class="container">
-          <p class="hero-kicker">CERTEZA ID // PUI CONNECTION ENGINE · ANEXO 2 DOF · RENAPO · SHA-256</p>
-          <h1>Inteligencia operativa PUI para <strong>hoteles en México</strong>.</h1>
-          <p class="hero-sub">
-            Ejecuta un check-in real contra <strong>50 folios sintéticos RENAPO</strong> o cualquier CURP de 18
-            caracteres y verifica en milisegundos el <strong>sigilo en mostrador</strong>, el bloqueo de
-            <strong>menores Art. 58 LGT</strong> y el envío cifrado a SEGOB.
-          </p>
+          <div class="hero-hud" aria-hidden="true">
+            <div class="hero-hud-col">
+              <span><strong>FIG. 01 / CERTEZA-ID / PUI CONNECTION ENGINE</strong></span>
+              <span>ANEXO 2 DOF · RLS POR RFC · SHA-256 VERIFICADO</span>
+            </div>
+            <div class="hero-hud-col is-right">
+              <span><strong>ENLACE // 5 NIVELES PMS</strong></span>
+              <span>FASES 1–3 · HISTÓRICO 12 AÑOS · SIGILO 100%</span>
+            </div>
+          </div>
+
+          <div class="hero-grid">
+            <div>
+              <p class="hero-kicker">(01) MOTOR DE ENLACE PUI // SEGOB · RENAPO</p>
+              <h1>
+                Certeza operativa PUI
+                <span class="h1-muted">para cada hotel en México.</span>
+              </h1>
+              <p class="hero-sub">
+                Ejecuta un check-in real contra <strong>50 folios sintéticos RENAPO</strong> o cualquier CURP de 18
+                caracteres y verifica en milisegundos el <strong>sigilo en mostrador</strong>, el bloqueo de
+                <strong>menores Art. 58 LGT</strong> y el envío cifrado a SEGOB.
+              </p>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+              <svg class="hero-schematic" viewBox="0 0 460 248" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Architectural projection axes -->
+                <line x1="18" y1="182" x2="442" y2="182" stroke="#222730" stroke-width="1" stroke-dasharray="2 4" />
+                <line x1="230" y1="16" x2="230" y2="234" stroke="#222730" stroke-width="1" stroke-dasharray="2 4" />
+                <line x1="56" y1="224" x2="404" y2="46" stroke="#222730" stroke-width="1" stroke-dasharray="2 5" />
+                <line x1="56" y1="54" x2="404" y2="220" stroke="#222730" stroke-width="1" stroke-dasharray="2 5" />
+
+                <!-- Left scale ticks -->
+                <line x1="8" y1="58" x2="18" y2="58" stroke="#364050" stroke-width="1" />
+                <line x1="8" y1="120" x2="14" y2="120" stroke="#364050" stroke-width="1" />
+                <line x1="8" y1="182" x2="18" y2="182" stroke="#364050" stroke-width="1" />
+                <text x="22" y="61" fill="#6b7485" font-family="Source Code Pro, monospace" font-size="9">01 // PMS</text>
+                <text x="22" y="185" fill="#6b7485" font-family="Source Code Pro, monospace" font-size="9">02 // RFC</text>
+
+                <!-- Isometric hotel architectural wireframe (back volume) -->
+                <polygon points="230,36 332,84 230,132 128,84" stroke="#2c4460" stroke-width="1" fill="none" />
+                <polygon points="230,72 332,120 230,168 128,120" stroke="#3d72a8" stroke-width="1.15" fill="rgb(42 91 143 / 0.06)" />
+                <polygon points="230,108 332,156 230,204 128,156" stroke="#3d72a8" stroke-width="1.25" fill="rgb(42 91 143 / 0.1)" />
+
+                <!-- Vertical structural pillars -->
+                <line x1="230" y1="36" x2="230" y2="204" stroke="#3d72a8" stroke-width="1" stroke-opacity="0.7" />
+                <line x1="128" y1="84" x2="128" y2="156" stroke="#5c93cb" stroke-width="1.2" />
+                <line x1="332" y1="84" x2="332" y2="156" stroke="#5c93cb" stroke-width="1.2" />
+                <line x1="179" y1="60" x2="179" y2="180" stroke="#2c4460" stroke-width="0.9" stroke-dasharray="2 3" />
+                <line x1="281" y1="60" x2="281" y2="180" stroke="#2c4460" stroke-width="0.9" stroke-dasharray="2 3" />
+
+                <!-- Inner vault core cube (Bóveda RFC) -->
+                <polygon points="230,86 274,107 230,128 186,107" stroke="#7fb2e5" stroke-width="1.3" fill="rgb(127 178 229 / 0.12)" />
+                <polygon points="230,116 274,137 230,158 186,137" stroke="#7fb2e5" stroke-width="1.1" fill="none" />
+                <line x1="186" y1="107" x2="186" y2="137" stroke="#7fb2e5" stroke-width="1.1" />
+                <line x1="274" y1="107" x2="274" y2="137" stroke="#7fb2e5" stroke-width="1.1" />
+                <line x1="230" y1="128" x2="230" y2="158" stroke="#ffffff" stroke-width="1.2" />
+
+                <!-- Point-cloud LiDAR lattice dots -->
+                <g fill="#7fb2e5" fill-opacity="0.78">
+                  <circle cx="230" cy="36" r="2.2" />
+                  <circle cx="128" cy="84" r="2.2" />
+                  <circle cx="332" cy="84" r="2.2" />
+                  <circle cx="128" cy="156" r="2.2" />
+                  <circle cx="332" cy="156" r="2.2" />
+                  <circle cx="230" cy="204" r="2.4" fill="#ffffff" />
+                  <circle cx="230" cy="107" r="2.8" fill="#ffffff" />
+                  <circle cx="154" cy="96" r="1.2" />
+                  <circle cx="179" cy="108" r="1.2" />
+                  <circle cx="204" cy="120" r="1.2" />
+                  <circle cx="256" cy="120" r="1.2" />
+                  <circle cx="281" cy="108" r="1.2" />
+                  <circle cx="306" cy="96" r="1.2" />
+                  <circle cx="154" cy="132" r="1.2" />
+                  <circle cx="179" cy="144" r="1.2" />
+                  <circle cx="204" cy="156" r="1.2" />
+                  <circle cx="256" cy="156" r="1.2" />
+                  <circle cx="281" cy="144" r="1.2" />
+                  <circle cx="306" cy="132" r="1.2" />
+                  <circle cx="204" cy="60" r="1.1" />
+                  <circle cx="256" cy="60" r="1.1" />
+                  <circle cx="179" cy="72" r="1.1" />
+                  <circle cx="281" cy="72" r="1.1" />
+                  <circle cx="204" cy="180" r="1.1" />
+                  <circle cx="256" cy="180" r="1.1" />
+                </g>
+
+                <!-- Encrypted relay vectors to SEGOB node -->
+                <line x1="332" y1="84" x2="394" y2="56" stroke="#7fb2e5" stroke-width="1.1" stroke-dasharray="3 3" />
+                <rect x="394" y="47" width="14" height="14" stroke="#7fb2e5" stroke-width="1.2" fill="#0a0a0b" />
+                <rect x="399" y="52" width="4" height="4" fill="#ffffff" />
+
+                <!-- Right CAD telemetry annotations -->
+                <text x="342" y="34" fill="#9fb2c8" font-family="Source Code Pro, monospace" font-size="9">SEGOB // PUI F3</text>
+                <text x="344" y="218" fill="#6b7485" font-family="Source Code Pro, monospace" font-size="9">AES-256-GCM · RLS</text>
+                <text x="200" y="232" fill="#7fb2e5" font-family="Source Code Pro, monospace" font-size="9">BÓVEDA AISLADA</text>
+              </svg>
+            </div>
+          </div>
 
           <div class="hero-metrics" aria-label="Telemetría del entorno">
             <div class="metric-box">
