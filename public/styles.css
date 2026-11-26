@@ -328,19 +328,15 @@ textarea {
 .status-pill {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  gap: 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
   font-weight: 500;
-  color: #e4e4e7;
+  color: #cbd5e1;
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 0;
-  background: #34d399;
-  flex: none;
+  display: none;
 }
 
 .sidebar-note {

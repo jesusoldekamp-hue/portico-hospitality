@@ -1,13 +1,11 @@
-// Certeza ID — Motor Interactivo en Vivo + Navegación Adaptable + Acordeón FAQ
-// Cumple CSP estricta (script-src 'self'), modern-web-guidance (navbar, accordion, responsive-table)
+// Certeza ID — Probador Interactivo en Vivo + Navegación Adaptable + Preguntas Frecuentes
 
 (() => {
-  // 1. Popover polyfill condicional (modern-web-guidance: navbar)
   if (!Object.hasOwn(HTMLElement.prototype, 'popover')) {
-    import('https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js').catch(() => {});
+    import('https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover-polyfill.min.js').catch(() => {});
   }
 
-  // 2. Navegación adaptable medida por contenido real
+  // Navegación adaptable
   const header = document.getElementById('site-header');
   const inner = document.getElementById('header-inner');
   const menu = document.getElementById('site-menu');
@@ -62,7 +60,7 @@
     });
   }
 
-  // 3. Acordeón FAQ (modern-web-guidance: accordion)
+  // Acordeón de preguntas frecuentes
   function toggleAllDetails(button, container) {
     const expand = button.getAttribute('aria-expanded') !== 'true';
     for (const d of container.querySelectorAll('details')) {
@@ -102,7 +100,7 @@
     { capture: true }
   );
 
-  // 4. Impresión / PDF
+  // Impresión / Guardar PDF
   const previousOpenState = new WeakMap();
   function expandAllForPrint() {
     for (const d of document.querySelectorAll('.accordion details')) {
@@ -128,7 +126,7 @@
     window.print();
   });
 
-  // 5. MOTOR INTERACTIVO EN VIVO CONTRA PADRÓN SANDBOX (50 REGISTROS)
+  // Probador interactivo contra 50 casos de prueba
   const reg = window.HOSPITALITY_SANDBOX_REGISTRY;
   if (!reg) return;
 
@@ -143,6 +141,7 @@
   const deskMinor = document.getElementById('desk-minor');
   const deskRoom = document.getElementById('desk-room');
   const segobPill = document.getElementById('segob-status-pill');
+  const segobSummary = document.getElementById('segob-summary-banner');
   const segobJson = document.getElementById('segob-json-output');
   const segobSha = document.getElementById('segob-sha-preview');
   const metricLatency = document.getElementById('metric-latency');
@@ -192,7 +191,7 @@
     let curpInfo = null;
     let isValidDoc = false;
     let docLabel = '';
-    let guestName = 'HUÉSPED EXTERNO (PRUEBA LIBRE)';
+    let guestName = 'Huésped de prueba libre';
     let esMenor = false;
     let edadLabel = '—';
     let needsLgtBlock = false;
@@ -204,32 +203,37 @@
       needsLgtBlock = esMenor && match.parentesco === 'NO_ACREDITO';
       isValidDoc = true;
       if (match.documento === 'PASAPORTE') {
-        docLabel = `Pasaporte MRZ ICAO (${match.nacionalidad}) · Válido ($0)`;
-        edadLabel = `${match.edad} años · ${esMenor ? (needsLgtBlock ? 'MENOR — BLOQUEO ART. 58 LGT' : 'Menor con tutela acreditada ✓') : 'Adulto'}`;
+        docLabel = `Pasaporte válido (${match.nacionalidad})`;
+        edadLabel = `${match.edad} años, ${esMenor ? (needsLgtBlock ? 'menor sin documento de tutela' : 'menor con tutela verificada') : 'adulto'}`;
       } else {
         curpInfo = reg.validarCurpRenapo(match.curp);
-        docLabel = `CURP RENAPO Válida ✓ · ${match.estado}`;
-        edadLabel = `${match.edad} años · ${esMenor ? (needsLgtBlock ? 'MENOR — BLOQUEO ART. 58 LGT' : 'Menor con tutela acreditada ✓') : 'Adulto'}`;
+        docLabel = `CURP válida (${match.estado})`;
+        edadLabel = `${match.edad} años, ${esMenor ? (needsLgtBlock ? 'menor sin documento de tutela' : 'menor con tutela verificada') : 'adulto'}`;
       }
     } else if (/^[A-Z0-9]{18}$/.test(query)) {
       setQuickChipActive('');
       curpInfo = reg.validarCurpRenapo(query);
       if (!curpInfo.valida) {
-        const dt = Math.max(0.2, performance.now() - t0).toFixed(2);
-        metricLatency.textContent = `${dt} ms`;
+        const dt = Math.max(0.2, performance.now() - t0).toFixed(1);
+        if (metricLatency) metricLatency.textContent = `${dt} ms`;
         deskPill.className = 'status-pill status-alert';
-        deskPill.textContent = 'CURP INVÁLIDA';
+        deskPill.textContent = 'CURP incorrecta';
         deskBanner.className = 'desk-banner is-error';
-        deskBanner.innerHTML = `<strong>Error de dígito verificador RENAPO</strong>${curpInfo.error}`;
-        deskName.textContent = 'Registro detenido en mostrador';
+        deskBanner.innerHTML = `<strong>CURP no válida</strong>${curpInfo.error}`;
+        deskName.textContent = 'Registro detenido en recepción';
         deskId.textContent = query;
-        deskValidation.textContent = 'Rechazada por validador oficial';
+        deskValidation.textContent = 'No pasó la validación oficial';
         deskMinor.textContent = '—';
-        deskRoom.textContent = 'Habitación asignada: Ninguna';
+        deskRoom.textContent = 'Habitación: Ninguna';
         segobPill.className = 'status-pill status-warn';
-        segobPill.textContent = 'SIN ENVÍO';
+        segobPill.textContent = 'Sin envío';
+        if (segobSummary) {
+          segobSummary.className = 'desk-banner is-lgt';
+          segobSummary.innerHTML =
+            '<strong>No se envió ningún reporte</strong>La CURP tiene un error de captura, por lo que el sistema pide corregirla antes de registrar.';
+        }
         const errPayload = {
-          resultado: 'VALIDACION_LOCAL_RECHAZADA',
+          resultado: 'CURP_INVALIDA',
           motivo: curpInfo.error,
           curp_recibida: query,
           envio_segob: false,
@@ -237,22 +241,22 @@
         };
         lastPayloadText = JSON.stringify(errPayload, null, 2);
         segobJson.textContent = lastPayloadText;
-        segobSha.textContent = 'SHA-256: no generado (entrada inválida)';
+        segobSha.textContent = 'Sin sello generado';
         return;
       }
       isValidDoc = true;
       esMenor = curpInfo.esMenor;
       needsLgtBlock = esMenor;
-      docLabel = `CURP RENAPO Válida ✓ · ${curpInfo.entidad}`;
-      edadLabel = `${curpInfo.edad} años · ${esMenor ? 'MENOR — VERIFICAR ART. 58 LGT' : 'Adulto'}`;
+      docLabel = `CURP válida (${curpInfo.entidad})`;
+      edadLabel = `${curpInfo.edad} años, ${esMenor ? 'menor de edad (verificar parentesco)' : 'adulto'}`;
     } else {
       setQuickChipActive('');
       isValidDoc = query.length >= 6;
-      docLabel = isValidDoc ? 'Documento / Pasaporte verificado localmente' : 'Formato demasiado corto';
+      docLabel = isValidDoc ? 'Documento verificado' : 'Faltan caracteres';
       edadLabel = 'No especificada';
     }
 
-    // 1) Actualizar Monitor Izquierdo (Recepción del Hotel — Sigilo RBAC)
+    // Monitor izquierdo: Recepción
     deskName.textContent = guestName;
     deskId.textContent = match ? match.identificador : query;
     deskValidation.textContent = docLabel;
@@ -260,28 +264,28 @@
 
     if (needsLgtBlock) {
       deskPill.className = 'status-pill status-warn';
-      deskPill.textContent = 'PROTOCOLO MENORES LGT';
+      deskPill.textContent = 'Verificar menor';
       deskBanner.className = 'desk-banner is-lgt';
       deskBanner.innerHTML =
-        '<strong>Verificación obligatoria de parentesco (Art. 58 Ley General de Turismo)</strong>' +
-        'Menor de 18 años sin documento oficial de tutela. Negar hospedaje conforme a la LGT y avisar a la autoridad competente. <em>(Ninguna alerta PUI de SEGOB se muestra al recepcionista).</em>';
-      deskRoom.textContent = 'Habitación asignada: Retenida (Art. 58 LGT)';
+        '<strong>Pedir documento de parentesco (Ley de Turismo)</strong>' +
+        'El huésped es menor de edad y no acredita vínculo con el adulto acompañante. El hotel debe negar el hospedaje y avisar a la autoridad.';
+      deskRoom.textContent = 'Habitación retenida';
     } else {
       deskPill.className = 'status-pill status-ok';
-      deskPill.textContent = 'CHECK-IN NORMAL';
+      deskPill.textContent = 'Registro normal';
       deskBanner.className = 'desk-banner is-ok';
       deskBanner.innerHTML =
-        '<strong>Check-in registrado correctamente — Operación en sigilo</strong>' +
-        'El mostrador completa el registro sin fricción y sin mostrar ninguna alarma de riesgo al personal de recepción.';
-      deskRoom.textContent = `Habitación asignada: #${roomNum}`;
+        '<strong>Registro completado sin alarmas en pantalla</strong>' +
+        'El recepcionista atiende con total normalidad y sin ponerse en riesgo.';
+      deskRoom.textContent = `Habitación asignada: ${roomNum}`;
     }
 
-    // 2) Actualizar Monitor Derecho (Canal Silencioso SEGOB / PUI)
+    // Monitor derecho: Aviso silencioso a SEGOB
     const isHit = Boolean(match && match.tieneAlertaPui);
     const payloadObj = isHit
       ? {
           protocolo: 'PUI-DOF-FASE-3-TIEMPO-REAL',
-          modo: 'SANDBOX_SINTETICO',
+          modo: 'PRUEBA_SINTETICA',
           coincidencia: true,
           folio_fub: match.fub,
           uuid_evento: eventUuid,
@@ -289,26 +293,26 @@
           tipo_documento: match.documento,
           tipo_alerta: match.tipo,
           alerta_visible_en_recepcion: false,
-          protocolo_menores_lgt_activado: needsLgtBlock,
-          estatus_entrega_segob: '200 OK · ACUSE SELLADO',
+          protocolo_menores_activado: needsLgtBlock,
+          estatus_entrega_segob: 'Recibido por SEGOB',
           timestamp_utc: nowIso
         }
       : {
-          protocolo: 'PUI-DOF-CONTROL-LOCAL',
-          modo: 'SANDBOX_SINTETICO',
+          protocolo: 'PUI-CONTROL-LOCAL',
+          modo: 'PRUEBA_SINTETICA',
           coincidencia: false,
           uuid_evento: eventUuid,
           identificador_validado: match ? match.identificador : query,
           datos_enviados_a_segob: 0,
-          privacidad_lfpdppp: 'Registro conservado exclusivamente en bóveda aislada del hotel',
-          protocolo_menores_lgt_activado: needsLgtBlock,
+          privacidad: 'Guardado exclusivamente dentro de la bóveda privada del hotel',
+          protocolo_menores_activado: needsLgtBlock,
           timestamp_utc: nowIso
         };
 
     const rawJson = JSON.stringify(payloadObj, null, 2);
     const digest = await sha256Hex(rawJson);
-    const dt = Math.max(0.3, performance.now() - t0).toFixed(2);
-    metricLatency.textContent = `${dt} ms`;
+    const dt = Math.max(0.3, performance.now() - t0).toFixed(1);
+    if (metricLatency) metricLatency.textContent = `${dt} ms`;
 
     const sealedPayload = {
       ...payloadObj,
@@ -317,30 +321,41 @@
     };
     lastPayloadText = JSON.stringify(sealedPayload, null, 2);
     segobJson.textContent = lastPayloadText;
-    segobSha.textContent = `SHA-256: ${digest.slice(0, 24)}…`;
+    segobSha.textContent = `Folio de respaldo guardado (${dt} ms)`;
 
     if (isHit) {
       segobPill.className = 'status-pill status-alert';
-      segobPill.textContent = 'COINCIDENCIA · ENVÍO SILENCIOSO';
+      segobPill.textContent = 'Aviso enviado en silencio';
+      if (segobSummary) {
+        segobSummary.className = 'desk-banner is-error';
+        segobSummary.innerHTML =
+          `<strong>Coincidencia detectada (${match.fub})</strong>` +
+          `Se envió el aviso cifrado directamente a Gobernación (${match.tipo}) sin mostrar absolutamente nada en la pantalla de recepción.`;
+      }
     } else {
       segobPill.className = 'status-pill status-ok';
-      segobPill.textContent = 'SIN COINCIDENCIA · 0 ENVÍOS';
+      segobPill.textContent = 'Sin coincidencias';
+      if (segobSummary) {
+        segobSummary.className = 'desk-banner is-ok';
+        segobSummary.innerHTML =
+          '<strong>Cero datos enviados a terceros</strong>' +
+          'El huésped no tiene reporte activo. Su registro permanece cifrado únicamente dentro de la bóveda privada de tu hotel.';
+      }
     }
 
-    // 3) Actualizar cinta de ejecución en vivo (4 nodos)
+    // Cinta de estado simple
     const setPipe = (stepId, labelId, cls, txt) => {
       const el = document.getElementById(stepId);
       const lb = document.getElementById(labelId);
       if (el) el.className = `pipe-step ${cls}`;
       if (lb) lb.textContent = txt;
     };
-    setPipe('pipe-step-1', 'pipe-s1', 'is-ok', 'OK ✓');
-    setPipe('pipe-step-2', 'pipe-s2', 'is-ok', 'RLS OK');
-    setPipe('pipe-step-3', 'pipe-s3', needsLgtBlock ? 'is-warn' : 'is-ok', needsLgtBlock ? 'BLOQUEO LGT' : 'SIGILO OK');
-    setPipe('pipe-step-4', 'pipe-s4', isHit ? 'is-alert' : 'is-ok', isHit ? 'FASE 3 · 200' : '0 ENVÍOS');
+    setPipe('pipe-step-1', 'pipe-s1', 'is-ok', 'Verificada');
+    setPipe('pipe-step-2', 'pipe-s2', 'is-ok', 'Aislada por RFC');
+    setPipe('pipe-step-3', 'pipe-s3', needsLgtBlock ? 'is-warn' : 'is-ok', needsLgtBlock ? 'Pedir parentesco' : 'Sin alarmas');
+    setPipe('pipe-step-4', 'pipe-s4', isHit ? 'is-alert' : 'is-ok', isHit ? 'Enviado en silencio' : 'No requerido');
   }
 
-  // Eventos del probador
   simForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     runLiveCheckin(simInput.value);
@@ -366,14 +381,14 @@
     try {
       await navigator.clipboard.writeText(lastPayloadText);
       const prev = btnCopyJson.textContent;
-      btnCopyJson.textContent = 'Copiado ✓';
+      btnCopyJson.textContent = 'Comprobante copiado';
       setTimeout(() => {
         btnCopyJson.textContent = prev;
       }, 1800);
     } catch {}
   });
 
-  // 6. EXPLORADOR DE LOS 50 REGISTROS SANDBOX
+  // Explorador de 50 casos
   function getFilteredRecords() {
     const q = String(searchInput?.value || '').trim().toLowerCase();
     return reg.records.filter((r) => {
@@ -395,31 +410,31 @@
   function renderSandboxTable() {
     if (!tbody) return;
     const filtered = getFilteredRecords();
-    const limit = showAllRows ? filtered.length : Math.min(12, filtered.length);
+    const limit = showAllRows ? filtered.length : Math.min(10, filtered.length);
     const slice = filtered.slice(0, limit);
 
     tbody.innerHTML = '';
     for (const r of slice) {
       const tr = document.createElement('tr');
       const badgeClass = r.tieneAlertaPui ? (r.esMenor ? 'status-warn' : 'status-alert') : 'status-ok';
-      const badgeText = r.fub ? r.fub : 'Sin reporte PUI';
+      const badgeText = r.tieneAlertaPui ? (r.esMenor ? 'Aviso + menores' : 'Aviso silencioso') : 'Sin alerta';
 
       tr.innerHTML = `
-        <th scope="row">${r.nombre}<span class="cell-note">${r.edad} años · ${r.documento}</span></th>
-        <td class="mono-cell">${r.identificador}</td>
+        <th scope="row">${r.nombre}<span class="cell-note">${r.edad} años (${r.documento === 'PASAPORTE' ? 'Pasaporte' : 'CURP'})</span></th>
+        <td class="code-cell">${r.identificador}</td>
         <td>${r.estado}<span class="cell-note">${r.tipo}</span></td>
         <td><span class="status-pill ${badgeClass}">${badgeText}</span></td>
-        <td><button type="button" class="row-test-btn" data-run-id="${r.identificador}">Probar en vivo &#8593;</button></td>
+        <td><button type="button" class="row-test-btn" data-run-id="${r.identificador}">Probar</button></td>
       `;
       tbody.appendChild(tr);
     }
 
     if (countLabel) {
-      countLabel.textContent = `Mostrando ${slice.length} de ${filtered.length} registros sintéticos (total cargados: ${reg.total})`;
+      countLabel.textContent = `Mostrando ${slice.length} de ${filtered.length} casos de prueba`;
     }
     if (btnToggleRows) {
-      btnToggleRows.hidden = filtered.length <= 12;
-      btnToggleRows.textContent = showAllRows ? 'Mostrar vista compacta (12)' : `Ver los ${filtered.length} registros completos`;
+      btnToggleRows.hidden = filtered.length <= 10;
+      btnToggleRows.textContent = showAllRows ? 'Ver menos' : `Ver los ${filtered.length} casos`;
     }
   }
 
@@ -449,7 +464,6 @@
     document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
   });
 
-  // Inicializar tabla y correr automáticamente el caso estrella SBX-001 al abrir
   renderSandboxTable();
   const initialCase = reg.buscarPorIdentificador('SBX-001');
   if (initialCase && simInput) {

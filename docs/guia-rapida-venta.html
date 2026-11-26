@@ -7,25 +7,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         --bg: #ffffff;
         --panel: #f6f8fa;
-        --black: #0a0a0b;
-        --ink: #111113;
-        --soft: #434750;
-        --muted: #666c77;
+        --black: #0b0d11;
+        --ink: #12151c;
+        --soft: #434a57;
+        --muted: #687080;
         --line: #e2e6ec;
         --blue-ink: #173f6b;
         --blue-rule: #2a5b8f;
-        --blue-ice: #b9d3ee;
-        --signal: #0f766e;
+        --blue-ice: #c6dcf3;
+        --ok: #15803d;
         --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -54,7 +53,7 @@
         height: 11in;
         margin: 0 auto;
         background: var(--bg);
-        padding: 0.5in 0.58in 0.42in;
+        padding: 0.48in 0.58in 0.4in;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -65,7 +64,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 11px;
+        padding-bottom: 10px;
         border-bottom: 1.5px solid var(--black);
         box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--blue-rule);
       }
@@ -73,44 +72,26 @@
       .brand {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 9px;
       }
 
       .brand img {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
       }
 
       .brand-name {
         font-family: var(--font-display);
         font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        letter-spacing: -0.01em;
         color: var(--black);
-      }
-
-      .brand-sub {
-        font-family: var(--font-mono);
-        font-size: 7.4px;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--blue-ink);
-        padding-left: 10px;
-        border-left: 1px solid var(--line);
       }
 
       .doc-meta {
-        font-family: var(--font-mono);
-        font-size: 7.7px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 8.5px;
+        font-weight: 600;
         color: var(--muted);
-      }
-
-      .doc-meta strong {
-        color: var(--black);
       }
 
       .body {
@@ -125,23 +106,22 @@
         margin: 0 0 8px;
         font-family: var(--font-display);
         font-size: 22px;
-        font-weight: 500;
-        line-height: 1.1;
-        letter-spacing: -0.028em;
+        font-weight: 600;
+        line-height: 1.12;
+        letter-spacing: -0.025em;
         color: var(--black);
       }
 
       h1 strong {
-        font-weight: 700;
         color: var(--blue-ink);
       }
 
       .opening {
         margin: 0;
-        padding: 10px 13px;
+        padding: 10px 14px;
         background: var(--panel);
-        border-left: 2.5px solid var(--blue-rule);
-        font-size: 9px;
+        border-left: 3px solid var(--blue-rule);
+        font-size: 9.2px;
         line-height: 1.48;
         color: var(--soft);
       }
@@ -150,45 +130,27 @@
         color: var(--black);
       }
 
-      .sec-rule {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
+      .sec-title {
+        margin: 0 0 8px;
         padding-bottom: 5px;
-        margin-bottom: 8px;
         border-bottom: 1px solid var(--line);
-      }
-
-      .sec-rule h2 {
-        margin: 0;
-        font-family: var(--font-mono);
-        font-size: 7.8px;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-family: var(--font-display);
+        font-size: 10.5px;
+        font-weight: 700;
         color: var(--black);
-      }
-
-      .sec-rule span {
-        font-family: var(--font-mono);
-        font-size: 7.2px;
-        color: var(--muted);
       }
 
       .check-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 8.4px;
+        font-size: 8.5px;
       }
 
       .check-table thead th {
         text-align: left;
         padding: 0 8px 6px 0;
-        font-family: var(--font-mono);
-        font-size: 7.1px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 7.7px;
+        font-weight: 700;
         color: var(--muted);
         border-bottom: 1.5px solid var(--black);
       }
@@ -198,7 +160,7 @@
         border-bottom: 1px solid var(--line);
         vertical-align: top;
         color: var(--soft);
-        line-height: 1.38;
+        line-height: 1.4;
       }
 
       .check-table td:first-child {
@@ -208,27 +170,12 @@
       }
 
       .check-table td:last-child {
-        width: 15%;
+        width: 13%;
         text-align: right;
         padding-right: 0;
-      }
-
-      .ready-dot {
-        font-family: var(--font-mono);
-        font-size: 7.3px;
-        font-weight: 600;
-        color: var(--black);
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
+        font-weight: 700;
+        color: var(--ok);
         white-space: nowrap;
-      }
-
-      .ready-dot::before {
-        content: '';
-        width: 5px;
-        height: 5px;
-        background: var(--signal);
       }
 
       .adv-grid {
@@ -247,13 +194,12 @@
         font-family: var(--font-display);
         font-size: 9.6px;
         font-weight: 600;
-        letter-spacing: -0.01em;
         color: var(--black);
       }
 
       .adv p {
         margin: 0;
-        font-size: 8.3px;
+        font-size: 8.4px;
         line-height: 1.42;
         color: var(--soft);
       }
@@ -271,13 +217,11 @@
 
       .qa-monolith h2 {
         margin: 0 0 9px;
-        padding-bottom: 7px;
-        border-bottom: 1px solid #27272a;
-        font-family: var(--font-mono);
-        font-size: 7.8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #252b38;
+        font-family: var(--font-display);
+        font-size: 10px;
         font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
         color: var(--blue-ice);
       }
 
@@ -289,7 +233,7 @@
 
       .qa-q {
         display: block;
-        font-size: 8.8px;
+        font-size: 8.9px;
         font-weight: 600;
         color: #ffffff;
         margin-bottom: 2px;
@@ -297,9 +241,9 @@
 
       .qa-item p {
         margin: 0;
-        font-size: 8px;
+        font-size: 8.2px;
         line-height: 1.42;
-        color: #a1a1aa;
+        color: #b7bfce;
       }
 
       .qa-item p strong {
@@ -309,13 +253,11 @@
       .footer {
         flex: none;
         margin-top: auto;
-        padding-top: 9px;
+        padding-top: 8px;
         border-top: 1px solid var(--line);
         display: flex;
         justify-content: space-between;
-        font-family: var(--font-mono);
-        font-size: 7.1px;
-        letter-spacing: 0.05em;
+        font-size: 7.7px;
         color: var(--muted);
       }
     </style>
@@ -326,127 +268,119 @@
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Certeza ID" />
           <span class="brand-name">Certeza ID</span>
-          <span class="brand-sub">Motor de Enlace PUI</span>
         </div>
-        <div class="doc-meta"><strong>BRIEF // GUÍA DE VENTA</strong> &nbsp;|&nbsp; RESUMEN EJECUTIVO DE 1 HOJA</div>
+        <div class="doc-meta">Guía rápida de venta (Resumen de 1 hoja)</div>
       </header>
 
       <main class="body">
         <section>
           <h1>Qué exige la ley, <strong>qué ya tenemos resuelto</strong> y por qué superamos al mercado.</h1>
           <p class="opening">
-            <strong>Mensaje central para abrir la junta:</strong> “El Gobierno cobra <strong>$0 pesos</strong> por
-            conectarse a la PUI, pero multa con <strong>$1.17M a $2.34M por hotel</strong> si no cumplen. Otros
-            proveedores cobran renta eterna cada mes; nosotros ya construimos la plataforma completa para cumplir con
-            <strong>PUI + Ley de Menores</strong>, conectando incluso a hoteles centenarios sin cambiar su PMS y
-            ahorrando hasta 9 veces.”
+            <strong>Idea clave para abrir la junta:</strong> “El Gobierno cobra <strong>$0 pesos</strong> por conectarse
+            a la PUI, pero multa con <strong>$1.17M a $2.34M por hotel</strong> si no cumplen. Otros proveedores cobran
+            renta eterna cada mes; nosotros ya construimos la plataforma completa para cumplir con <strong>PUI y Ley de
+            Menores</strong>, conectando incluso a hoteles centenarios sin cambiar su sistema y ahorrando hasta 9 veces.”
           </p>
         </section>
 
         <section>
-          <div class="sec-rule">
-            <h2>01 // Exigencias legales (DOF 2025–2026) vs. capacidades ya resueltas hoy</h2>
-            <span>STATUS: OPERATIONAL</span>
-          </div>
+          <h2 class="sec-title">Qué exige el Gobierno vs. lo que ya hace Certeza ID hoy</h2>
           <table class="check-table">
             <thead>
               <tr>
-                <th>Lo que exige el Gobierno</th>
+                <th>Lo que exige la ley</th>
                 <th>Lo que ya hace Certeza ID hoy</th>
                 <th style="text-align: right; padding-right: 0;">Estado</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Conexión oficial PUI SEGOB (Manual Técnico 23/01/2026)</td>
-                <td>4 servicios oficiales listos (acceso, alertas reales, pruebas y baja), búsqueda histórica hasta 12 años y monitoreo continuo.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Conexión oficial PUI con SEGOB (Manual 23 ene 2026)</td>
+                <td>Cuatro servicios oficiales listos (acceso, alertas reales, pruebas y baja), histórico de 12 años y monitoreo continuo.</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
                 <td>Validar CURP y pasaportes extranjeros en recepción</td>
-                <td>Validación oficial RENAPO en milisegundos y lectura automática de pasaportes MRZ sin cobrar por escaneo ($0).</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Validación oficial RENAPO en segundos y lectura de pasaportes extranjeros sin cobrar por escaneo ($0).</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
                 <td>Proteger al personal de recepción (sigilo total)</td>
-                <td>En mostrador jamás salen alarmas rojas; el aviso viaja en silencio a SEGOB para no exponer al personal ni huéspedes.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>En mostrador jamás salen alarmas rojas; el aviso viaja en silencio a SEGOB para no poner en riesgo a tu equipo.</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
-                <td>Verificar parentesco de menores (Ley de Turismo Art. 58)</td>
-                <td>Si el huésped es menor de 18 años (nacional o extranjero), exige acreditar parentesco/tutela y bloquea si no lo acredita.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Comprobar parentesco de menores (Ley de Turismo Art. 58)</td>
+                <td>Si el huésped es menor de 18 años (nacional o extranjero), pide acreditar parentesco o tutela y bloquea si no cumple.</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
                 <td>Privacidad por hotel (LFPDPPP)</td>
-                <td>Bóveda cifrada e independiente por RFC (ningún hotel ve datos de otro), AES-256-GCM y purga automática legal.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Bóveda cifrada e independiente por RFC (ningún hotel ve datos de otro) con purga automática legal.</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
-                <td>Evidencia inmediata ante inspección de SEGOB o Turismo</td>
-                <td>Descarga en un clic de Constancia Oficial PDF y bitácora criptográfica sellada con SHA-256 por cada propiedad.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Evidencia inmediata ante inspección</td>
+                <td>Descarga en un clic de Constancia Oficial PDF y bitácora sellada con respaldo criptográfico por hotel.</td>
+                <td>Resuelto</td>
               </tr>
               <tr>
-                <td>Conectar 100% de los hoteles sin cambiar su PMS</td>
-                <td>5 niveles de enlace: API Cloud, instalador 1-clic OPERA 5/Zeus, parser heredado (Latin-1/;/|), captura impresión (.txt/.prn) y web.</td>
-                <td><span class="ready-dot">RESUELTO</span></td>
+                <td>Conectar 100% de los hoteles sin cambiar su sistema</td>
+                <td>Cinco niveles de conexión: nube, instalador de un clic, archivos antiguos, captura de impresión y portal web.</td>
+                <td>Resuelto</td>
               </tr>
             </tbody>
           </table>
         </section>
 
         <section>
-          <div class="sec-rule">
-            <h2>02 // Por qué ganamos frente a toda la competencia</h2>
-            <span>BENCHMARK 136 HOTELES · 3 AÑOS</span>
-          </div>
+          <h2 class="sec-title">Por qué ganamos frente a toda la competencia (136 hoteles en 3 años)</h2>
           <div class="adv-grid">
             <div class="adv">
-              <h3>01 · De 2.2× a 9× más económico</h3>
-              <p>PUIhoteles ($5.14M) y PUI México ($3.47M) cobran renta perpetua por hotel. Nosotros: <strong>$350k pago único</strong> + servidor ($44/hotel) = <strong>$566k en 3 años</strong>.</p>
+              <h3>1. De 2.2 a 9 veces más económico</h3>
+              <p>PUIhoteles ($5.14M) y PUI México ($3.47M) cobran renta perpetua por hotel. Nosotros: <strong>$350k pago único</strong> más nube ($44/hotel) = <strong>$566k en 3 años</strong>.</p>
             </div>
             <div class="adv">
-              <h3>02 · Dos leyes en una sola pantalla</h3>
-              <p>KYC PUI (pui.com.mx), PUI México y PUIhoteles solo cubren PUI básica. Nosotros cubrimos <strong>PUI + Menores (Art. 58 LGT) + Pasaportes MRZ a $0</strong>.</p>
+              <h3>2. Dos leyes resueltas en una sola pantalla</h3>
+              <p>La competencia solo cubre PUI básica. Nosotros cubrimos <strong>PUI, Ley de Menores y pasaportes extranjeros a $0</strong> en el mismo flujo.</p>
             </div>
             <div class="adv">
-              <h3>03 · Sigilo real y hoteles centenarios</h3>
-              <p>Cero alertas visibles en mostrador, bóveda aislada por RFC en la nube de la Asociación y <strong>captura de impresión</strong> para sistemas antiguos sin API.</p>
+              <h3>3. Sigilo real y cobertura para hoteles centenarios</h3>
+              <p>Cero alertas visibles en mostrador, bóveda aislada por RFC en la nube de la Asociación y <strong>captura de impresión</strong> para sistemas antiguos.</p>
             </div>
             <div class="adv">
-              <h3>04 · Deja utilidad neta a la Asociación</h3>
+              <h3>4. Genera utilidad neta a la Asociación</h3>
               <p>Los socios bajan su gasto de $1,000 a $250/mes (-75%) y la Asociación retiene <strong>+$336,000 MXN netos al año</strong> en lugar de fugar capital.</p>
             </div>
           </div>
         </section>
 
         <section class="qa-monolith">
-          <h2>03 // Respuestas directas para las 4 preguntas típicas en junta</h2>
+          <h2>Respuestas directas para las 4 preguntas típicas en junta</h2>
           <div class="qa-grid">
             <div class="qa-item">
               <span class="qa-q">“¿Y si la Asociación no tiene $350,000 en caja?”</span>
-              <p>Arrancamos con <strong>10 Hoteles Fundadores</strong> ($35,000 pago único c/u, exentos 3 años) = <strong>$0 de caja</strong>, alineado al plan oficial ATDT.</p>
+              <p>Arrancamos con <strong>10 Hoteles Fundadores</strong> ($35,000 pago único c/u, exentos 3 años) = <strong>$0 de caja</strong>, alineado al plan oficial de la autoridad.</p>
             </div>
             <div class="qa-item">
               <span class="qa-q">“¿Y si un competidor ofrece 50% de descuento?”</span>
-              <p>Aun al -50% ($450/mes por hotel) pagan <strong>$2.20 millones en 3 años</strong>, sigue siendo renta eterna que sube al año 2 y deja $0 a la Asociación.</p>
+              <p>Aun al -50% ($450/mes por hotel) pagan <strong>$2.20 millones en 3 años</strong>, sigue siendo renta eterna que sube al renovar y deja $0 a la Asociación.</p>
             </div>
             <div class="qa-item">
               <span class="qa-q">“¿Y los hoteles centenarios con sistemas muy viejos?”</span>
-              <p>Capturamos su <strong>impresión de llegadas en archivo de texto (.txt/.prn)</strong> o activan nuestra Terminal Web en 15 min sin tocar su sistema viejo.</p>
+              <p>Capturamos la <strong>hoja de llegadas que ya imprimen todos los días</strong> o activan el acceso web en 15 minutos sin tocar su sistema viejo.</p>
             </div>
             <div class="qa-item">
               <span class="qa-q">“¿Qué necesitan para arrancar ya?”</span>
-              <p>1) Alta del hotel piloto en <strong>Llave MX</strong> con e.firma vigente, y 2) sesión de <strong>20 minutos con TI</strong> para enlazar y certificar en 4–6 semanas.</p>
+              <p>1) Alta del hotel piloto con <strong>Llave MX y e.firma vigente</strong>, y 2) sesión de <strong>20 minutos</strong> para conectar y certificar en 4 a 6 semanas.</p>
             </div>
           </div>
         </section>
       </main>
 
       <footer class="footer">
-        <span>© 2026 CERTEZA ID SYSTEMS · PROPIEDAD EXCLUSIVA DE CERTEZA ID SYSTEMS</span>
-        <span>MONTERREY, NUEVO LEÓN, MÉXICO · TODOS LOS DERECHOS RESERVADOS</span>
+        <span>© 2026 Certeza ID Systems · Propiedad exclusiva de Certeza ID Systems</span>
+        <span>Monterrey, Nuevo León, México</span>
       </footer>
     </div>
   </body>

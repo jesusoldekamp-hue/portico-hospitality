@@ -7,26 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         --bg: #ffffff;
         --panel: #f6f8fa;
-        --black: #0a0a0b;
-        --ink: #111113;
-        --soft: #434750;
-        --muted: #666c77;
+        --black: #0b0d11;
+        --ink: #12151c;
+        --soft: #434a57;
+        --muted: #687080;
         --line: #e2e6ec;
         --blue-ink: #173f6b;
         --blue-rule: #2a5b8f;
-        --blue-ice: #b9d3ee;
+        --blue-ice: #c6dcf3;
         --danger: #991b1b;
         --danger-light: #fca5a5;
         --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -55,7 +54,7 @@
         height: 11in;
         margin: 0 auto;
         background: var(--bg);
-        padding: 0.46in 0.56in 0.38in;
+        padding: 0.48in 0.58in 0.4in;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -84,77 +83,47 @@
 
       .brand-name {
         font-family: var(--font-display);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        letter-spacing: -0.01em;
         color: var(--black);
-      }
-
-      .brand-sub {
-        font-family: var(--font-mono);
-        font-size: 7.2px;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--blue-ink);
-        padding-left: 9px;
-        border-left: 1px solid var(--line);
       }
 
       .doc-meta {
-        font-family: var(--font-mono);
-        font-size: 7.4px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 8.5px;
+        font-weight: 600;
         color: var(--muted);
-      }
-
-      .doc-meta strong {
-        color: var(--black);
       }
 
       .body {
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 13px;
-        padding-top: 15px;
-      }
-
-      .mono-tag {
-        margin: 0 0 5px;
-        font-family: var(--font-mono);
-        font-size: 7.4px;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--blue-ink);
+        gap: 15px;
+        padding-top: 18px;
       }
 
       h1 {
-        margin: 0 0 6px;
+        margin: 0 0 7px;
         font-family: var(--font-display);
         font-size: 21.5px;
-        font-weight: 500;
-        line-height: 1.1;
-        letter-spacing: -0.026em;
+        font-weight: 600;
+        line-height: 1.12;
+        letter-spacing: -0.024em;
         color: var(--black);
       }
 
       h1 strong {
-        font-weight: 700;
         color: var(--blue-ink);
       }
 
       .lead {
         margin: 0;
-        font-size: 8.8px;
-        line-height: 1.46;
+        font-size: 9.2px;
+        line-height: 1.48;
         color: var(--soft);
       }
 
-      /* KPI STRIP */
       .kpi-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -163,7 +132,7 @@
       }
 
       .kpi {
-        padding: 9px 10px;
+        padding: 10px 10px;
         border-right: 1px solid var(--line);
       }
 
@@ -179,7 +148,7 @@
       .kpi-val {
         display: block;
         font-family: var(--font-display);
-        font-size: 16.5px;
+        font-size: 16px;
         font-weight: 700;
         letter-spacing: -0.02em;
         color: var(--black);
@@ -193,62 +162,42 @@
       .kpi-lbl {
         display: block;
         margin-top: 2px;
-        font-size: 7.4px;
+        font-size: 7.9px;
         line-height: 1.32;
         color: var(--muted);
       }
 
-      /* SECTION RULE */
-      .sec-rule {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        padding-bottom: 4px;
-        margin-bottom: 7px;
+      .sec-title {
+        margin: 0 0 8px;
+        padding-bottom: 5px;
         border-bottom: 1px solid var(--line);
-      }
-
-      .sec-rule h2 {
-        margin: 0;
-        font-family: var(--font-mono);
-        font-size: 7.6px;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-family: var(--font-display);
+        font-size: 10.5px;
+        font-weight: 700;
         color: var(--black);
       }
 
-      .sec-rule span {
-        font-family: var(--font-mono);
-        font-size: 7px;
-        color: var(--muted);
-      }
-
-      /* LAW TABLE */
       .law-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 8.1px;
+        font-size: 8.4px;
       }
 
       .law-table thead th {
         text-align: left;
-        padding: 0 8px 5px 0;
-        font-family: var(--font-mono);
-        font-size: 6.9px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        padding: 0 8px 6px 0;
+        font-size: 7.7px;
+        font-weight: 700;
         color: var(--muted);
         border-bottom: 1.5px solid var(--black);
       }
 
       .law-table tbody td {
-        padding: 6px 8px 6px 0;
+        padding: 6.5px 8px 6.5px 0;
         border-bottom: 1px solid var(--line);
         vertical-align: top;
         color: var(--soft);
-        line-height: 1.38;
+        line-height: 1.4;
       }
 
       .law-table td:first-child {
@@ -259,8 +208,7 @@
 
       .law-table td:nth-child(2) {
         width: 12%;
-        font-family: var(--font-mono);
-        font-size: 7.3px;
+        font-weight: 600;
         color: var(--blue-ink);
         white-space: nowrap;
       }
@@ -269,17 +217,14 @@
         width: 15%;
         text-align: right;
         padding-right: 0;
-        font-family: var(--font-mono);
-        font-size: 7.1px;
         white-space: nowrap;
       }
 
       .law-sub {
         display: block;
         margin-top: 1px;
-        font-family: var(--font-mono);
-        font-size: 6.9px;
-        font-weight: 500;
+        font-size: 7.5px;
+        font-weight: 400;
         color: var(--muted);
       }
 
@@ -289,19 +234,10 @@
         font-weight: 600;
       }
 
-      code {
-        font-family: var(--font-mono);
-        font-size: 7.1px;
-        background: #eef2f6;
-        color: var(--black);
-        padding: 0 3px;
-      }
-
-      /* 2x2 OBLIGATIONS GRID */
       .obl-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 9px 22px;
+        gap: 10px 22px;
       }
 
       .obl {
@@ -312,15 +248,15 @@
       .obl h3 {
         margin: 0 0 2px;
         font-family: var(--font-display);
-        font-size: 9.2px;
+        font-size: 9.4px;
         font-weight: 600;
         color: var(--black);
       }
 
       .obl p {
         margin: 0;
-        font-size: 8px;
-        line-height: 1.4;
+        font-size: 8.3px;
+        line-height: 1.42;
         color: var(--soft);
       }
 
@@ -328,44 +264,26 @@
         color: var(--black);
       }
 
-      /* SANCTIONS BLACK MONOLITH */
       .sanctions-box {
         background: var(--black);
         color: #ffffff;
-        padding: 13px 17px;
+        padding: 14px 18px;
         border-top: 2px solid var(--blue-rule);
       }
 
-      .sanctions-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
+      .sanctions-box h2 {
+        margin: 0 0 9px;
         padding-bottom: 6px;
-        margin-bottom: 9px;
-        border-bottom: 1px solid #27272a;
-      }
-
-      .sanctions-head h2 {
-        margin: 0;
-        font-family: var(--font-mono);
-        font-size: 7.7px;
+        border-bottom: 1px solid #252b38;
+        font-family: var(--font-display);
+        font-size: 10px;
         font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
         color: var(--blue-ice);
-      }
-
-      .sanctions-head span {
-        font-family: var(--font-mono);
-        font-size: 7.2px;
-        font-weight: 600;
-        color: var(--danger-light);
-        letter-spacing: 0.06em;
       }
 
       .sanctions-grid {
         display: grid;
-        grid-template-columns: 1.25fr 1fr;
+        grid-template-columns: 1.2fr 1fr;
         gap: 18px;
       }
 
@@ -373,9 +291,9 @@
         margin: 0;
         padding-left: 10px;
         border-left: 2px solid var(--danger-light);
-        font-size: 8px;
-        line-height: 1.44;
-        color: #e4e4e7;
+        font-size: 8.3px;
+        line-height: 1.45;
+        color: #e4e7ee;
       }
 
       .quote strong {
@@ -384,12 +302,12 @@
 
       .sanc-list {
         margin: 0;
-        padding-left: 13px;
+        padding-left: 14px;
         display: grid;
         gap: 5px;
-        font-size: 7.9px;
-        line-height: 1.4;
-        color: #b4b8c2;
+        font-size: 8.2px;
+        line-height: 1.42;
+        color: #b7bfce;
       }
 
       .sanc-list strong {
@@ -398,20 +316,17 @@
 
       .sanc-amount {
         color: var(--danger-light);
-        font-family: var(--font-mono);
-        font-weight: 600;
+        font-weight: 700;
       }
 
       .footer {
         flex: none;
         margin-top: auto;
-        padding-top: 7px;
+        padding-top: 8px;
         border-top: 1px solid var(--line);
         display: flex;
         justify-content: space-between;
-        font-family: var(--font-mono);
-        font-size: 6.9px;
-        letter-spacing: 0.04em;
+        font-size: 7.7px;
         color: var(--muted);
       }
     </style>
@@ -422,50 +337,45 @@
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Certeza ID" />
           <span class="brand-name">Certeza ID</span>
-          <span class="brand-sub">Motor de Enlace PUI</span>
         </div>
-        <div class="doc-meta"><strong>MEMO LEGAL // DOF 2025–2026</strong> &nbsp;|&nbsp; OBLIGACIONES Y MULTAS · RAMO HOTELERO</div>
+        <div class="doc-meta">Marco legal y sanciones para el sector hotelero (DOF 2025–2026)</div>
       </header>
 
       <main class="body">
         <section>
-          <p class="mono-tag">SUSTENTO NORMATIVO FEDERAL · HOTELES, MOTELES Y ESTABLECIMIENTOS DE HOSPEDAJE EN MÉXICO</p>
           <h1>A qué obliga la ley al <strong>sector hotelero</strong>, su sustento en el DOF y las multas por incumplimiento.</h1>
           <p class="lead">
-            Síntesis estrictamente jurídica de las disposiciones federales vigentes publicadas en el Diario Oficial de la
-            Federación (DOF) que obligan a todo establecimiento de hospedaje que recabe registros o identidad de huéspedes
-            a interconectarse con la Plataforma Única de Identidad (PUI) de SEGOB y acreditar parentesco de menores.
+            Resumen jurídico de las leyes federales vigentes en el Diario Oficial de la Federación (DOF) que obligan a
+            todos los hoteles, moteles y establecimientos de hospedaje a conectarse con la Plataforma Única de Identidad
+            (PUI) de SEGOB y a verificar el parentesco de menores.
           </p>
         </section>
 
         <section class="kpi-grid">
           <div class="kpi">
-            <span class="kpi-val is-danger">10,000 – 20,000</span>
-            <span class="kpi-lbl">UMAs de multa federal por hotel incumplido (Art. 43 Bis)</span>
+            <span class="kpi-val is-danger">10,000 a 20,000</span>
+            <span class="kpi-lbl">UMAs de multa federal por hotel (Art. 43 Bis)</span>
           </div>
           <div class="kpi">
-            <span class="kpi-val is-danger">$1.17M – $2.34M</span>
-            <span class="kpi-lbl">MXN por hotel (UMA 2026: $117.31) · Sanciona SEGOB</span>
+            <span class="kpi-val is-danger">$1.17M a $2.34M</span>
+            <span class="kpi-lbl">Pesos por hotel (UMA 2026: $117.31), sanciona SEGOB</span>
           </div>
           <div class="kpi">
-            <span class="kpi-val">12 Años</span>
-            <span class="kpi-lbl">Histórico mínimo de búsqueda exigido (Anexo 2 DOF)</span>
+            <span class="kpi-val">12 años</span>
+            <span class="kpi-lbl">Búsqueda histórica mínima exigida por el Manual</span>
           </div>
           <div class="kpi">
-            <span class="kpi-val">31 Mar. 2026</span>
-            <span class="kpi-lbl">Fecha límite oficial de enlace técnico (ATDT / SEGOB)</span>
+            <span class="kpi-val">31 mar 2026</span>
+            <span class="kpi-lbl">Plazo técnico federal de enlace vencido</span>
           </div>
         </section>
 
         <section>
-          <div class="sec-rule">
-            <h2>01 // Sustento legal oficial aplicable expresamente al ramo hotelero</h2>
-            <span>DIARIO OFICIAL DE LA FEDERACIÓN (DOF)</span>
-          </div>
+          <h2 class="sec-title">Sustento legal oficial aplicable al ramo hotelero</h2>
           <table class="law-table">
             <thead>
               <tr>
-                <th>Ordenamiento</th>
+                <th>Ley o norma</th>
                 <th>Publicación</th>
                 <th>Por qué obliga al hotel y qué exige</th>
                 <th style="text-align: right; padding-right: 0;">Fuente oficial</th>
@@ -475,55 +385,51 @@
               <tr>
                 <td>
                   Reforma LGMDFP y LGP
-                  <span class="law-sub">Arts. 12 Bis y 43 Bis</span>
+                  <span class="law-sub">Artículos 12 Bis y 43 Bis</span>
                 </td>
-                <td>16 jul. 2025</td>
+                <td>16 jul 2025</td>
                 <td>
-                  Crea la <strong>PUI</strong> (SEGOB/RENAPO) y obliga a particulares que administren registros o bases de
-                  datos de personas —el catálogo oficial de la ATDT clasifica expresamente <strong>Hospedaje: hoteles y
-                  moteles</strong>— a permitir búsqueda continua y emitir alertas en tiempo real.
+                  Crea la PUI (SEGOB y RENAPO) y obliga a particulares con registros de personas —el catálogo oficial
+                  incluye expresamente <strong>Hospedaje: hoteles y moteles</strong>— a permitir búsquedas continuas y
+                  alertas en tiempo real.
                 </td>
-                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5763157&amp;fecha=16/07/2025">DOF 5763157 ↗</a></td>
+                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5763157&amp;fecha=16/07/2025">Ver DOF 5763157</a></td>
               </tr>
               <tr>
                 <td>
                   Lineamientos de Operación PUI
-                  <span class="law-sub">SEGOB / RENAPO</span>
+                  <span class="law-sub">SEGOB y RENAPO</span>
                 </td>
-                <td>27 nov. 2025</td>
+                <td>27 nov 2025</td>
                 <td>
-                  Regulan el monitoreo continuo del uso de la CURP, la notificación inmediata y confidencial a autoridades
-                  de búsqueda, cifrado obligatorio, control de accesos y bitácoras auditables. Prohíben a privados descargar
-                  el padrón real del RNPDNO.
+                  Exigen revisión continua de CURP, envío silencioso y confidencial de avisos a autoridades de búsqueda,
+                  cifrado de datos y bitácoras auditables. Prohíben descargar el padrón real del RNPDNO.
                 </td>
-                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025">DOF 5774120 ↗</a></td>
+                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025">Ver DOF 5774120</a></td>
               </tr>
               <tr>
                 <td>
                   Manual Técnico Instituciones Diversas
                   <span class="law-sub">Anexo 2 y Sección 8</span>
                 </td>
-                <td>23 ene. 2026</td>
+                <td>23 ene 2026</td>
                 <td>
-                  Exige registro con Llave MX + e.firma Persona Moral en <code>plataformadebusqueda.gob.mx/inscripcion</code>,
-                  4 servicios (<code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code>,
-                  <code>/desactivar-reporte</code>), histórico hasta <strong>12 años</strong>, TLS 1.2+, JWT, AES-256-GCM y
-                  pruebas SAST/DAST/SCA.
+                  Exige registro con Llave MX y e.firma de Persona Moral en <strong>plataformadebusqueda.gob.mx/inscripcion</strong>,
+                  conexión cifrada para reportes, búsqueda histórica de hasta 12 años y controles de seguridad.
                 </td>
-                <td><a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">PDF Oficial ↗</a></td>
+                <td><a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">Ver manual PDF</a></td>
               </tr>
               <tr>
                 <td>
                   Ley General de Turismo
-                  <span class="law-sub">Art. 58 X Bis y X Ter</span>
+                  <span class="law-sub">Art. 58 fracc. X Bis y X Ter</span>
                 </td>
-                <td>13 nov. 2026</td>
+                <td>13 nov 2026</td>
                 <td>
-                  Obliga a hoteles y prestadores de hospedaje a exigir a todo adulto acompañado de menores de 18 años que
-                  acredite <strong>parentesco, patria potestad, tutela o guarda y custodia</strong>. Sin acreditación,
-                  debe <strong>negar el hospedaje y avisar a la autoridad</strong>.
+                  Obliga a hoteles a exigir a cualquier adulto acompañado de menores de 18 años documentos que acrediten
+                  <strong>parentesco, patria potestad o tutela</strong>. Si no lo acredita, debe negar el hospedaje y avisar.
                 </td>
-                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5803838&amp;fecha=13/11/2026">DOF 5803838 ↗</a></td>
+                <td><a href="https://dof.gob.mx/nota_detalle.php?codigo=5803838&amp;fecha=13/11/2026">Ver DOF 5803838</a></td>
               </tr>
               <tr>
                 <td>
@@ -532,58 +438,51 @@
                 </td>
                 <td>Vigente</td>
                 <td>
-                  Obliga a resguardar con cifrado y confidencialidad el registro de huéspedes por razón social (RFC). Cada
-                  hotel conserva control de su base y solo remite a SEGOB coincidencias exactas con reportes oficiales.
+                  Obliga a resguardar de forma cifrada e independiente la base de huéspedes por razón social (RFC). Solo
+                  se envían a SEGOB coincidencias exactas con reportes oficiales activos.
                 </td>
-                <td><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPDPPP.pdf">Ley Federal ↗</a></td>
+                <td><a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPDPPP.pdf">Ver ley federal</a></td>
               </tr>
             </tbody>
           </table>
         </section>
 
         <section>
-          <div class="sec-rule">
-            <h2>02 // En concreto: las 4 obligaciones operativas del establecimiento</h2>
-            <span>CUMPLIMIENTO VERIFICABLE</span>
-          </div>
+          <h2 class="sec-title">En concreto: las 4 obligaciones de cada establecimiento</h2>
           <div class="obl-grid">
             <div class="obl">
-              <h3>01 · Inscripción institucional y enlace PUI (costo gubernamental $0)</h3>
+              <h3>1. Registro ante gobierno y conexión PUI (trámite $0)</h3>
               <p>
-                Dar de alta la Persona Moral del hotel con <strong>Llave MX y e.firma vigente</strong> en el portal oficial
-                ATDT y habilitar la interconexión técnica de sus registros de huéspedes (Fases 1, 2 histórica de hasta 12
-                años y 3 en tiempo real).
+                Dar de alta la razón social del hotel con <strong>Llave MX y e.firma vigente</strong> ante la ATDT y
+                enlazar el registro de huéspedes para consultas históricas (hasta 12 años) y en tiempo real.
               </p>
             </div>
             <div class="obl">
-              <h3>02 · Validación de identidad y monitoreo continuo</h3>
+              <h3>2. Validación de identidad en el check-in</h3>
               <p>
-                Recabar y validar la <strong>CURP</strong> (huéspedes nacionales) o documento oficial de identidad
-                (extranjeros) durante el registro, ejecutando cruces automáticos contra reportes activos emitidos por SEGOB.
+                Recabar y verificar la <strong>CURP</strong> (huéspedes nacionales) o documento oficial (extranjeros) al
+                registrar la estancia para cruzarlo automáticamente contra reportes activos de SEGOB.
               </p>
             </div>
             <div class="obl">
-              <h3>03 · Protocolo obligatorio de menores (Art. 58 LGT)</h3>
+              <h3>3. Control obligatorio de menores de edad</h3>
               <p>
-                Verificar acta de nacimiento, identificación coincidente o autorización notariada que acredite el vínculo
-                legal del adulto acompañante de un menor; en caso negativo, <strong>negar el alojamiento y notificar</strong>.
+                Comprobar acta de nacimiento, identificación coincidente o carta notariada que acredite el vínculo del
+                adulto con el menor; de lo contrario, <strong>negar el alojamiento y notificar a la autoridad</strong>.
               </p>
             </div>
             <div class="obl">
-              <h3>04 · Sigilo, seguridad informática y evidencia auditable</h3>
+              <h3>4. Reserva, protección de datos y bitácora auditable</h3>
               <p>
-                Mantener reserva absoluta de los reportes PUI (sin exhibir alertas en mostrador), proteger datos personales
-                por RFC bajo estándares criptográficos y conservar <strong>bitácora auditable</strong> ante inspecciones.
+                Mantener sigilo absoluto (sin mostrar alertas al personal de mostrador), proteger los datos por RFC y
+                conservar <strong>comprobantes auditables</strong> ante inspecciones de SEGOB o Turismo.
               </p>
             </div>
           </div>
         </section>
 
         <section class="sanctions-box">
-          <div class="sanctions-head">
-            <h2>03 // Multas y sanciones legales por incumplimiento</h2>
-            <span>VERIFICACIÓN FEDERAL: SEGOB · TURISMO · PROTECCIÓN DE DATOS</span>
-          </div>
+          <h2>Multas y sanciones legales por incumplimiento</h2>
           <div class="sanctions-grid">
             <div>
               <p class="quote">
@@ -598,16 +497,16 @@
               <li>
                 <strong>Incumplimiento PUI (SEGOB):</strong> Multa de
                 <span class="sanc-amount">$1,173,100 a $2,346,200 MXN</span> por establecimiento (10,000 a 20,000 UMAs
-                2026) por no enlazarse, impedir acceso o no actualizar información.
+                2026) por no enlazarse o no entregar información.
               </li>
               <li>
-                <strong>Omisión en menores (Art. 58 LGT):</strong> Sanciones administrativas de la autoridad turística
-                (multas, <strong>suspensión o clausura</strong> del establecimiento) más posible responsabilidad penal en
-                caso de delitos contra menores.
+                <strong>Omisión en menores (Ley General de Turismo):</strong> Multas administrativas,
+                <strong>suspensión o clausura</strong> del hotel y posible responsabilidad penal en caso de delitos
+                contra menores.
               </li>
               <li>
                 <strong>Vulneración de privacidad (LFPDPPP):</strong> Multas de <strong>100 a 320,000 UMAs</strong> por
-                transferencia indebida o falta de resguardo de datos personales de huéspedes (duplicables en reincidencia).
+                manejo o entrega indebida de datos personales de huéspedes (duplicables en reincidencia).
               </li>
             </ul>
           </div>
@@ -615,8 +514,8 @@
       </main>
 
       <footer class="footer">
-        <span>NOTA INFORMATIVA DE REFERENCIA NORMATIVA · CERTEZA ID SYSTEMS · MARCO FEDERAL VIGENTE 2025–2026</span>
-        <span>FUENTES VERIFICABLES EN DOF.GOB.MX Y DIPUTADOS.GOB.MX</span>
+        <span>Nota informativa de referencia normativa · Certeza ID Systems</span>
+        <span>Fuentes oficiales verificables en dof.gob.mx y diputados.gob.mx</span>
       </footer>
     </div>
   </body>

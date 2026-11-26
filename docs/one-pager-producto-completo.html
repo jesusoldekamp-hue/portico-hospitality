@@ -86,27 +86,27 @@
         font-family: var(--font-display);
         font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        
         color: var(--black);
       }
 
       .brand-sub {
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.4px;
         font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        letter-spacing: 0;
+        
         color: var(--blue-ink);
         padding-left: 10px;
         border-left: 1px solid var(--line);
       }
 
       .doc-meta {
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.5px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        letter-spacing: 0;
+        
         color: var(--muted);
       }
 
@@ -190,16 +190,16 @@
 
       .sec-rule h2 {
         margin: 0;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.6px;
         font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        letter-spacing: 0;
+        
         color: var(--black);
       }
 
       .sec-rule span {
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.1px;
         color: var(--muted);
       }
@@ -216,10 +216,10 @@
       }
 
       .flow-step span {
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.1px;
         font-weight: 600;
-        letter-spacing: 0.08em;
+        letter-spacing: 0;
         color: var(--blue-ink);
       }
 
@@ -265,7 +265,7 @@
       }
 
       code {
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.2px;
         background: #f1f1f3;
         color: var(--black);
@@ -288,11 +288,11 @@
       .spec-table th {
         text-align: left;
         padding: 0 6px 5px 0;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7px;
         font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        letter-spacing: 0;
+        
         color: var(--muted);
         border-bottom: 1.5px solid var(--black);
       }
@@ -314,14 +314,14 @@
 
       .num-danger {
         color: var(--danger);
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-weight: 600;
         white-space: nowrap;
       }
 
       .num-win {
         color: #ffffff;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-weight: 600;
         white-space: nowrap;
       }
@@ -340,11 +340,11 @@
         margin: 0 0 7px;
         padding-bottom: 6px;
         border-bottom: 1px solid #27272a;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.8px;
         font-weight: 600;
         letter-spacing: 0.09em;
-        text-transform: uppercase;
+        
         color: var(--blue-ice);
       }
 
@@ -371,7 +371,7 @@
         margin-top: 8px;
         padding-top: 7px;
         border-top: 1px solid #27272a;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.2px;
         color: #d4d4d8;
       }
@@ -383,7 +383,7 @@
         border-top: 1px solid var(--line);
         display: flex;
         justify-content: space-between;
-        font-family: var(--font-mono);
+        font-family: var(--font-sans);
         font-size: 7.1px;
         letter-spacing: 0.04em;
         color: var(--muted);
@@ -402,7 +402,7 @@
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Certeza ID" />
           <span class="brand-name">Certeza ID</span>
-          <span class="brand-sub">Motor de Enlace PUI</span>
+          
         </div>
         <div class="doc-meta"><strong>SPEC // PUI-ANEXO-2</strong> &nbsp;|&nbsp; DOF 23/01/2026 &amp; ART. 58 LGT</div>
       </header>
@@ -439,27 +439,27 @@
 
         <section>
           <div class="sec-rule">
-            <h2>01 // Flujo operativo en vivo</h2>
-            <span>CHECK-IN → SEGOB</span>
+            <h2>1. Cómo funciona en operación diaria</h2>
+            
           </div>
           <div class="flow-row">
             <div class="flow-step">
-              <span>STEP 01</span>
+              <span>Paso 1</span>
               <h3>Validación en vivo</h3>
               <p>Valida CURP RENAPO o pasaporte MRZ ($0) en milisegundos desde OPERA, Zeus, sistema heredado o web.</p>
             </div>
             <div class="flow-step">
-              <span>STEP 02</span>
+              <span>Paso 2</span>
               <h3>Sigilo y Menores</h3>
               <p>Oculta 100% alertas de SEGOB en recepción. Si detecta menor (&lt;18), activa protocolo Art. 58 LGT.</p>
             </div>
             <div class="flow-step">
-              <span>STEP 03</span>
+              <span>Paso 3</span>
               <h3>Envío Fases 1–3</h3>
               <p>Responde búsqueda básica, histórica (12 años) y tiempo real vía Bearer/JWT + AES-256-GCM + FUB.</p>
             </div>
             <div class="flow-step">
-              <span>STEP 04</span>
+              <span>Paso 4</span>
               <h3>Evidencia SHA-256</h3>
               <p>Emite Constancia Oficial PDF y bitácora criptográfica inmutable lista para inspección de SEGOB.</p>
             </div>
@@ -468,8 +468,8 @@
 
         <section>
           <div class="sec-rule">
-            <h2>02 // Capacidades técnicas incluidas</h2>
-            <span>6 MÓDULOS CORE</span>
+            <h2>2. Qué incluye la plataforma</h2>
+            
           </div>
           <div class="mods-grid">
             <div class="mod">
@@ -502,8 +502,8 @@
         <section class="bottom-split">
           <div>
             <div class="sec-rule">
-              <h2>03 // Comparativa 3 años (136 hoteles)</h2>
-              <span>MXN ANTES DE IVA</span>
+              <h2>3. Comparativa a 3 años (136 hoteles)</h2>
+              
             </div>
             <table class="spec-table">
               <thead>
@@ -545,7 +545,7 @@
 
           <aside class="monolith-side">
             <div>
-              <h3>Habilitación oficial // 2 etapas</h3>
+              <h3>Activación en 2 pasos</h3>
               <ul>
                 <li><strong>Etapa 01 · Llave MX:</strong> Alta de Persona Moral con e.firma vigente en <code>plataformadebusqueda.gob.mx/inscripcion</code>.</li>
                 <li><strong>Etapa 02 · Enlace Técnico:</strong> Conexión PMS (Niveles 1–5), prueba oficial webhook ATDT y liberación en 4–6 semanas.</li>
@@ -553,7 +553,7 @@
               </ul>
             </div>
             <div class="monolith-foot">
-              SANDBOX EN VIVO: 50 FOLIOS RENAPO + SHA-256 REAL
+              Probador en vivo: certeza-id.vercel.app/guia-hospedaje
             </div>
           </aside>
         </section>
