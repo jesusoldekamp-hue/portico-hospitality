@@ -7,25 +7,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         --bg: #ffffff;
-        --panel: #f7f7f8;
+        --panel: #f6f8fa;
         --black: #0a0a0b;
         --ink: #111113;
-        --soft: #4a4a50;
-        --muted: #71717a;
-        --line: #e4e4e7;
+        --soft: #434750;
+        --muted: #666c77;
+        --line: #e2e6ec;
         --line-strong: #18181b;
-        --gold: #96773a;
-        --gold-bright: #c6a769;
-        --gold-champagne: #e6d1a3;
+        --blue-ink: #173f6b;
+        --blue-rule: #2a5b8f;
+        --blue-ice: #b9d3ee;
         --signal: #0f766e;
-        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -73,7 +74,7 @@
         align-items: center;
         padding-bottom: 12px;
         border-bottom: 1.5px solid var(--black);
-        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--gold-bright);
+        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--blue-rule);
       }
 
       .brand {
@@ -88,8 +89,9 @@
       }
 
       .brand-name {
+        font-family: var(--font-display);
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--black);
@@ -124,21 +126,23 @@
         font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--blue-ink);
       }
 
       h1 {
         margin: 0 0 9px;
-        font-size: 25px;
-        font-weight: 400;
+        font-family: var(--font-display);
+        font-size: 24.5px;
+        font-weight: 500;
         line-height: 1.09;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.028em;
         color: var(--black);
         max-width: 96%;
       }
 
       h1 strong {
-        font-weight: 600;
+        font-weight: 700;
+        color: var(--blue-ink);
       }
 
       .lead {
@@ -174,9 +178,10 @@
 
       .kpi-val {
         display: block;
+        font-family: var(--font-display);
         font-size: 20px;
-        font-weight: 500;
-        letter-spacing: -0.03em;
+        font-weight: 600;
+        letter-spacing: -0.025em;
         color: var(--black);
         font-variant-numeric: tabular-nums;
       }
@@ -236,6 +241,7 @@
 
       .p-head h3 {
         margin: 0;
+        font-family: var(--font-display);
         font-size: 11px;
         font-weight: 600;
         letter-spacing: -0.015em;
@@ -246,7 +252,7 @@
         font-family: var(--font-mono);
         font-size: 8px;
         font-weight: 600;
-        color: var(--gold);
+        color: var(--blue-ink);
       }
 
       .p-stack {
@@ -284,7 +290,7 @@
         background: var(--black);
         color: #ffffff;
         padding: 16px 20px;
-        border-top: 2px solid var(--gold-bright);
+        border-top: 2px solid var(--blue-rule);
       }
 
       .monolith-head {
@@ -298,17 +304,18 @@
 
       .monolith-head h3 {
         margin: 0;
+        font-family: var(--font-display);
         font-size: 11px;
-        font-weight: 500;
+        font-weight: 600;
         letter-spacing: -0.01em;
-        color: var(--gold-champagne);
+        color: var(--blue-ice);
       }
 
       .monolith-head span {
         font-family: var(--font-mono);
         font-size: 7.4px;
         letter-spacing: 0.08em;
-        color: var(--gold-bright);
+        color: #7fb2e5;
         text-transform: uppercase;
       }
 
@@ -406,7 +413,7 @@
       }
 
       .wave {
-        border-top: 2px solid var(--gold-bright);
+        border-top: 2px solid var(--blue-rule);
         padding-top: 8px;
       }
 
@@ -416,11 +423,12 @@
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--blue-ink);
       }
 
       .wave h3 {
         margin: 4px 0 5px;
+        font-family: var(--font-display);
         font-size: 11px;
         font-weight: 600;
         letter-spacing: -0.015em;
@@ -436,7 +444,7 @@
 
       .summary-bar {
         background: var(--panel);
-        border-left: 3px solid var(--gold-bright);
+        border-left: 3px solid var(--blue-rule);
         padding: 11px 14px;
         font-size: 8.6px;
         line-height: 1.48;

@@ -11,10 +11,10 @@
   --ink-secondary: #52525b;
   --border: #e4e4e7;
   --border-strong: #d4d4d8;
-  --accent: #0a0a0b;
-  --accent-hover: #27272a;
-  --accent-soft: #f4f4f5;
-  --gold: #c6a769;
+  --accent: #173f6b;
+  --accent-hover: #102e50;
+  --accent-soft: #edf3f9;
+  --blue-rule: #3d72a8;
   --danger: #b91c1c;
   --danger-hover: #991b1b;
   --danger-soft: #fef2f2;
@@ -24,8 +24,9 @@
   --radius-md: 3px;
   --shadow-sm: none;
   --shadow-dialog: 0 24px 64px rgb(0 0 0 / 0.5);
-  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 *,
@@ -35,8 +36,8 @@
 }
 
 ::selection {
-  background: #ccebe4;
-  color: #0b3c33;
+  background: #d4e4f4;
+  color: #102a46;
 }
 
 html,
@@ -95,7 +96,7 @@ textarea {
   display: grid;
   place-items: center;
   padding: 2rem 1.25rem;
-  background: radial-gradient(ellipse 65% 45% at 50% 0%, rgb(198 167 105 / 0.14), transparent 70%), #0a0a0b;
+  background: radial-gradient(ellipse 65% 45% at 50% 0%, rgb(42 91 143 / 0.2), transparent 70%), #0a0a0b;
 }
 
 .auth-card {
@@ -103,7 +104,7 @@ textarea {
   max-inline-size: 620px;
   background: var(--surface);
   border: 1px solid #27272a;
-  border-top: 2px solid var(--gold);
+  border-top: 2px solid var(--blue-rule);
   border-radius: 2px;
   padding: 2.25rem 2.4rem;
   box-shadow: var(--shadow-dialog);
@@ -118,8 +119,9 @@ textarea {
 
 .auth-brand h1 {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 1.45rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -264,9 +266,10 @@ textarea {
 }
 
 .brand-title {
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 1.06rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 .brand-sub {
@@ -304,11 +307,11 @@ textarea {
 }
 
 .nav-btn[aria-current="page"] {
-  background: #18181b;
+  background: #14181f;
   color: #ffffff;
   font-weight: 600;
-  border-color: #2c2820;
-  box-shadow: inset 2px 0 0 var(--gold);
+  border-color: #213247;
+  box-shadow: inset 2px 0 0 var(--blue-rule);
 }
 
 .sidebar-footer {
@@ -384,6 +387,7 @@ textarea {
 
 .topbar h1 {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -506,6 +510,7 @@ button:disabled {
 }
 
 .kpi-value {
+  font-family: var(--font-display);
   font-size: 1.42rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -531,6 +536,7 @@ button:disabled {
 
 .panel h2 {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 1.08rem;
   font-weight: 700;
   letter-spacing: -0.015em;

@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -28,8 +28,8 @@
         --text: #ffffff;
         --text-soft: #a1a1aa;
         --text-muted: #8b8b94;
-        --gold: #d4b575;
-        --gold-rule: #c6a769;
+        --blue-accent: #7fb2e5;
+        --blue-rule: #3d72a8;
         --accent: #ffffff;
         --accent-ink: #0a0a0b;
         --ok: #34d399;
@@ -41,8 +41,9 @@
         --alert: #f87171;
         --alert-bg: #241112;
         --alert-line: #5e2226;
-        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       *,
@@ -131,8 +132,9 @@
       }
 
       .site-logo-text {
+        font-family: var(--font-display);
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
       }
@@ -289,12 +291,12 @@
         }
       }
 
-      /* ===== HERO STAGE (PURE PALANTIR MONOCHROME) ===== */
+      /* ===== HERO STAGE (MONOCHROME + SWISS COBALT STEEL) ===== */
       .hero-stage {
         padding: 3.2rem 1.75rem 3.8rem;
         border-block-end: 1px solid var(--line);
         background:
-          radial-gradient(ellipse 60% 42% at 50% -14%, rgb(198 167 105 / 0.14), transparent 72%),
+          radial-gradient(ellipse 60% 42% at 50% -14%, rgb(42 91 143 / 0.2), transparent 72%),
           #0a0a0b;
       }
 
@@ -315,22 +317,22 @@
         font-weight: 500;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--blue-accent);
       }
 
       h1 {
         margin: 0;
-        font-family: var(--font-sans);
-        font-size: 2.75rem;
-        font-weight: 300;
+        font-family: var(--font-display);
+        font-size: 2.7rem;
+        font-weight: 500;
         line-height: 1.07;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.028em;
         color: #ffffff;
         max-inline-size: 22ch;
       }
 
       h1 strong {
-        font-weight: 600;
+        font-weight: 700;
       }
 
       @media (max-width: 640px) {
@@ -409,7 +411,7 @@
       .sim-shell {
         background: var(--surface);
         border: 1px solid var(--line-strong);
-        border-block-start: 2px solid var(--gold-rule);
+        border-block-start: 2px solid var(--blue-rule);
         border-radius: 2px;
         padding: 1.5rem;
       }
@@ -802,11 +804,11 @@
       /* ===== HEADINGS & SECTIONS ===== */
       h2 {
         margin: 0 0 0.75rem;
-        font-family: var(--font-sans);
-        font-size: 1.95rem;
-        font-weight: 300;
+        font-family: var(--font-display);
+        font-size: 1.9rem;
+        font-weight: 500;
         line-height: 1.14;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.022em;
         color: #ffffff;
         scroll-margin-top: 5.2rem;
       }
@@ -987,7 +989,7 @@
       }
 
       .stage-card.is-tech {
-        border-block-start-color: var(--gold-rule);
+        border-block-start-color: var(--blue-rule);
       }
 
       .stage-tag {
@@ -997,11 +999,12 @@
         font-size: 0.72rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--gold);
+        color: var(--blue-accent);
       }
 
       .stage-card h3 {
         margin: 0 0 0.7rem;
+        font-family: var(--font-display);
         font-size: 1.08rem;
         font-weight: 600;
         color: #ffffff;
@@ -1150,7 +1153,7 @@
       }
 
       .bar-fill.is-best {
-        background: var(--gold-rule);
+        background: var(--blue-rule);
       }
 
       .num-red {
@@ -1264,7 +1267,7 @@
         padding: 2.25rem 2.5rem;
         background: var(--surface);
         border: 1px solid var(--line-strong);
-        border-block-start: 2px solid var(--gold-rule);
+        border-block-start: 2px solid var(--blue-rule);
         display: flex;
         justify-content: space-between;
         align-items: center;

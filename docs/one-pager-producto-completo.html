@@ -7,25 +7,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         --bg: #ffffff;
-        --panel: #f7f7f8;
+        --panel: #f6f8fa;
         --black: #0a0a0b;
         --ink: #111113;
-        --soft: #4a4a50;
-        --muted: #71717a;
-        --line: #e4e4e7;
-        --gold: #96773a;
-        --gold-bright: #c6a769;
-        --gold-champagne: #e6d1a3;
+        --soft: #434750;
+        --muted: #666c77;
+        --line: #e2e6ec;
+        --blue-ink: #173f6b;
+        --blue-rule: #2a5b8f;
+        --blue-ice: #b9d3ee;
         --signal: #0f766e;
         --danger: #b91c1c;
-        --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
       }
 
       * {
@@ -67,7 +68,7 @@
         align-items: center;
         padding-bottom: 11px;
         border-bottom: 1.5px solid var(--black);
-        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--gold-bright);
+        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--blue-rule);
       }
 
       .brand {
@@ -82,8 +83,9 @@
       }
 
       .brand-name {
+        font-family: var(--font-display);
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--black);
@@ -120,15 +122,17 @@
 
       h1 {
         margin: 0 0 6px;
-        font-size: 22px;
-        font-weight: 400;
+        font-family: var(--font-display);
+        font-size: 21.5px;
+        font-weight: 500;
         line-height: 1.09;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.028em;
         color: var(--black);
       }
 
       h1 strong {
-        font-weight: 600;
+        font-weight: 700;
+        color: var(--blue-ink);
       }
 
       .lead {
@@ -148,6 +152,7 @@
 
       .kpi strong {
         display: block;
+        font-family: var(--font-display);
         font-size: 15px;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -195,7 +200,7 @@
       }
 
       .flow-step {
-        border-top: 2px solid var(--gold-bright);
+        border-top: 2px solid var(--blue-rule);
         padding-top: 6px;
       }
 
@@ -204,11 +209,12 @@
         font-size: 7.1px;
         font-weight: 600;
         letter-spacing: 0.08em;
-        color: var(--gold);
+        color: var(--blue-ink);
       }
 
       .flow-step h3 {
         margin: 2px 0 3px;
+        font-family: var(--font-display);
         font-size: 9.4px;
         font-weight: 600;
         color: var(--black);
@@ -234,6 +240,7 @@
 
       .mod h3 {
         margin: 0 0 3px;
+        font-family: var(--font-display);
         font-size: 9px;
         font-weight: 600;
         color: var(--black);
@@ -312,7 +319,7 @@
         background: var(--black);
         color: #ffffff;
         padding: 13px 16px;
-        border-top: 2px solid var(--gold-bright);
+        border-top: 2px solid var(--blue-rule);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -327,7 +334,7 @@
         font-weight: 600;
         letter-spacing: 0.09em;
         text-transform: uppercase;
-        color: var(--gold-champagne);
+        color: var(--blue-ice);
       }
 
       .monolith-side ul {
