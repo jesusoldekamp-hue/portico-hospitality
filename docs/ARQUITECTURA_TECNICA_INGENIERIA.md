@@ -4,6 +4,18 @@ Documento de ingeniería en español basado exactamente en el código implementa
 
 ---
 
+## 0. Marco Legal y Especificación Oficial PUI (Fuentes Directas)
+
+| Instrumento oficial | Fecha | Qué exige al sistema | Enlace directo |
+| :--- | :--- | :--- | :--- |
+| **Manual Técnico PUI (Anexo 2 y Sec. 8)** | 23 ene 2026 | Define los 4 endpoints API (`/login`, `/activar-reporte`, `/activar-reporte-prueba`, `/desactivar-reporte`), histórico de 12 años, TLS 1.2+, JWT, AES-256-GCM y auditoría SAST/DAST/SCA. | [PDF Oficial DOF](https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf) · [Portal ATDT](https://www.plataformadebusqueda.gob.mx/inscripcion) |
+| **Reforma LGMDFP (Arts. 12 Bis y 43 Bis)** | 16 jul 2025 | Crea la PUI, obliga a hoteles y moteles y fija multas de 10,000 a 20,000 UMAs (\$1.17M a \$2.34M MXN por hotel). | [DOF 5763157](https://dof.gob.mx/nota_detalle.php?codigo=5763157&fecha=16/07/2025) · [Llave MX](https://www.llave.gob.mx/) |
+| **Lineamientos de Operación PUI** | 27 nov 2025 | Monitoreo continuo de CURP, envío silencioso, cifrado, bitácoras y prohibición de descargar el padrón real del RNPDNO. | [DOF 5774120](https://dof.gob.mx/nota_detalle.php?codigo=5774120&fecha=27/11/2025) |
+| **Ley General de Turismo (Art. 58 X Bis/Ter)** | 13 nov 2026 | Verificación obligatoria de parentesco/tutela para menores de 18 años en hoteles; negar hospedaje y avisar si no se acredita. | [DOF 5803838](https://dof.gob.mx/nota_detalle.php?codigo=5803838&fecha=13/11/2026) |
+| **LFPDPPP (Protección de Datos)** | Vigente | Bóveda cifrada e independiente por RFC y borrado automático de datos personales vencidos. | [Ley Federal](https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPDPPP.pdf) |
+
+---
+
 ## 1. Mapa de Arquitectura y Fronteras de Seguridad
 
 ```mermaid

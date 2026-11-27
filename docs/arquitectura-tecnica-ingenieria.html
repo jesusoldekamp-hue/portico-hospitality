@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Certeza ID — Arquitectura Técnica y Plan de Producción</title>
+    <title>Certeza ID — Guía Técnica, Marco Legal PUI y Plan de Producción</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,16 +13,22 @@
     <style>
       :root {
         --bg: #ffffff;
-        --panel: #f6f8fb;
-        --black: #0b0d11;
-        --ink: #12151c;
-        --soft: #434a57;
-        --muted: #687080;
-        --line: #e2e7ef;
-        --blue-ink: #173f6b;
-        --blue-rule: #2a5b8f;
-        --blue-soft: #eef4fa;
-        --blue-ice: #c6dcf3;
+        --canvas: #f7f9fc;
+        --black: #0b0e14;
+        --ink: #111827;
+        --soft: #475569;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --blue-dark: #13355c;
+        --blue: #1e4e82;
+        --blue-mid: #2f69a8;
+        --blue-soft: #eef5fc;
+        --blue-border: #c5dcf3;
+        --red: #991b1b;
+        --red-soft: #fef2f2;
+        --red-border: #fecaca;
+        --ok: #166534;
+        --ok-soft: #f0fdf4;
         --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         --font-mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -41,7 +47,7 @@
       body {
         margin: 0;
         padding: 0;
-        background: #d4d4d8;
+        background: #cbd5e1;
         color: var(--ink);
         font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
@@ -54,7 +60,7 @@
         height: 11in;
         margin: 0 auto;
         background: var(--bg);
-        padding: 0.46in 0.56in 0.38in;
+        padding: 0.48in 0.58in 0.4in;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -65,37 +71,38 @@
         page-break-after: auto;
       }
 
+      /* CABECERA LIMPIA */
       .topbar {
         flex: none;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 10px;
+        padding-bottom: 11px;
         border-bottom: 1.5px solid var(--black);
-        box-shadow: 0 3px 0 0 #ffffff, 0 4px 0 0 var(--blue-rule);
+        box-shadow: 0 3px 0 0 #ffffff, 0 4.5px 0 0 var(--blue-mid);
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 10px;
       }
 
       .brand img {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
       }
 
       .brand-name {
         font-family: var(--font-display);
-        font-size: 11.5px;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: -0.015em;
         color: var(--black);
       }
 
-      .doc-meta {
-        font-size: 8.4px;
+      .page-indicator {
+        font-size: 8.8px;
         font-weight: 600;
         color: var(--muted);
       }
@@ -104,213 +111,386 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 15px;
-        padding-top: 16px;
+        gap: 18px;
+        padding-top: 20px;
       }
 
-      h1 {
-        margin: 0 0 6px;
+      /* PORTADA / TÍTULO EDITORIAL */
+      .hero-head h1 {
+        margin: 0 0 8px;
         font-family: var(--font-display);
-        font-size: 21px;
+        font-size: 23px;
         font-weight: 600;
         line-height: 1.12;
-        letter-spacing: -0.026em;
+        letter-spacing: -0.028em;
         color: var(--black);
       }
 
-      h1 strong {
-        color: var(--blue-ink);
+      .hero-head h1 strong {
+        color: var(--blue);
       }
 
-      .lead {
+      .hero-head p {
         margin: 0;
-        font-size: 9px;
-        line-height: 1.48;
+        font-size: 9.8px;
+        line-height: 1.52;
         color: var(--soft);
+        max-width: 96%;
       }
 
       code {
         font-family: var(--font-mono);
-        font-size: 7.6px;
-        background: #eef2f7;
+        font-size: 8.2px;
+        background: #edf2f7;
         color: var(--black);
-        padding: 0 3px;
-        border-radius: 2px;
+        padding: 0.5px 4px;
+        border-radius: 3px;
       }
 
-      .sec-title {
-        margin: 0 0 8px;
+      a {
+        color: var(--blue);
+        text-decoration: underline;
+        font-weight: 600;
+      }
+
+      .sec-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 10px;
         padding-bottom: 5px;
         border-bottom: 1px solid var(--line);
+      }
+
+      .sec-head h2 {
+        margin: 0;
         font-family: var(--font-display);
-        font-size: 10.6px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--black);
+        letter-spacing: -0.01em;
+      }
+
+      .sec-head span {
+        font-size: 8.4px;
+        font-weight: 600;
+        color: var(--blue);
+      }
+
+      /* BLOQUE LEGAL + MANUAL PUI (4 TARJETAS LIMPIAS CON ENLACES DIRECTOS) */
+      .legal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 11px;
+      }
+
+      .legal-card {
+        background: var(--canvas);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--blue-mid);
+        border-radius: 6px;
+        padding: 10px 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .legal-card.is-primary {
+        background: var(--blue-soft);
+        border-color: var(--blue-border);
+        border-left-color: var(--blue-dark);
+      }
+
+      .legal-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .legal-top h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 9.6px;
         font-weight: 700;
         color: var(--black);
       }
 
-      .diagram-card {
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        background: var(--panel);
-        padding: 12px 14px;
+      .legal-date {
+        font-size: 7.8px;
+        font-weight: 600;
+        color: var(--blue);
+        white-space: nowrap;
       }
 
-      .diagram-card svg {
+      .legal-card p {
+        margin: 0;
+        font-size: 8.6px;
+        line-height: 1.44;
+        color: var(--soft);
+      }
+
+      .legal-links {
+        margin-top: 2px;
+        font-size: 8.2px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* DIAGRAMA ARQUITECTÓNICO ESPACIOSO */
+      .diagram-shell {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 14px 16px;
+      }
+
+      .diagram-shell svg {
         display: block;
         width: 100%;
         height: auto;
       }
 
-      .spec-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 8.3px;
+      /* TIMELINE STEPPERS (PÁGINA 2) */
+      .flows-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
       }
 
-      .spec-table thead th {
+      .stepper-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--canvas);
+        padding: 14px 16px;
+      }
+
+      .stepper-card h3 {
+        margin: 0 0 11px;
+        font-family: var(--font-display);
+        font-size: 10.6px;
+        font-weight: 700;
+        color: var(--blue-dark);
+      }
+
+      .stepper {
+        display: grid;
+        gap: 9px;
+      }
+
+      .step-row {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 9px;
+        align-items: start;
+      }
+
+      .step-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
+        background: var(--blue);
+        color: #ffffff;
+        font-family: var(--font-display);
+        font-size: 8.8px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+
+      .step-row.is-dark .step-num {
+        background: var(--black);
+      }
+
+      .step-body {
+        font-size: 8.7px;
+        line-height: 1.42;
+        color: var(--soft);
+      }
+
+      .step-body strong {
+        display: block;
+        color: var(--black);
+        font-size: 9px;
+        margin-bottom: 1px;
+      }
+
+      /* TABLA CRIPTOGRÁFICA LIMPIA */
+      .clean-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8.8px;
+      }
+
+      .clean-table thead th {
         text-align: left;
-        padding: 0 8px 6px 0;
-        font-size: 7.7px;
+        padding: 0 10px 7px 0;
+        font-size: 8.1px;
         font-weight: 700;
         color: var(--muted);
         border-bottom: 1.5px solid var(--black);
       }
 
-      .spec-table tbody td {
-        padding: 6.5px 10px 6.5px 0;
+      .clean-table tbody td {
+        padding: 8px 10px 8px 0;
         border-bottom: 1px solid var(--line);
         vertical-align: top;
         color: var(--soft);
-        line-height: 1.4;
+        line-height: 1.42;
       }
 
-      .spec-table td:first-child {
+      .clean-table td:first-child {
         color: var(--black);
         font-weight: 600;
+        width: 25%;
       }
 
-      .flows-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
+      .clean-table td:nth-child(2) {
+        width: 35%;
       }
 
-      .flow-card {
-        border: 1px solid var(--line);
-        border-top: 2.5px solid var(--blue-rule);
-        border-radius: 6px;
-        background: var(--panel);
-        padding: 12px 14px;
-      }
-
-      .flow-card h3 {
-        margin: 0 0 8px;
-        font-family: var(--font-display);
-        font-size: 9.8px;
-        font-weight: 700;
-        color: var(--blue-ink);
-      }
-
-      .step-list {
-        margin: 0;
-        padding-left: 15px;
-        display: grid;
-        gap: 5.5px;
-        font-size: 8.2px;
-        line-height: 1.42;
-        color: var(--soft);
-      }
-
-      .step-list strong {
-        color: var(--black);
-      }
-
-      .backlog-panel {
-        background: var(--black);
-        color: #ffffff;
-        border-radius: 6px;
-        padding: 15px 18px;
-        border-top: 2.5px solid var(--blue-rule);
-      }
-
-      .backlog-panel h2 {
-        margin: 0 0 10px;
-        padding-bottom: 7px;
-        border-bottom: 1px solid #242b38;
-        font-family: var(--font-display);
-        font-size: 10.4px;
-        font-weight: 600;
-        color: var(--blue-ice);
-      }
-
-      .backlog-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 11px 20px;
-      }
-
-      .task-card {
-        font-size: 8.1px;
-        line-height: 1.42;
-        color: #c4ccd9;
-      }
-
-      .task-head {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 3px;
-        color: #ffffff;
-        font-family: var(--font-display);
-        font-size: 8.6px;
-        font-weight: 600;
-      }
-
-      .pill-crit {
+      .crypto-tag {
         display: inline-block;
-        padding: 1px 5px;
-        border-radius: 3px;
-        background: #7f1d1d;
-        color: #fecaca;
-        font-family: var(--font-sans);
-        font-size: 7px;
-        font-weight: 700;
-        flex: none;
-      }
-
-      .task-card strong {
-        color: #ffffff;
-        font-weight: 600;
-      }
-
-      .task-card code {
-        background: #1a2130;
-        color: #e2e8f0;
-        font-size: 7.3px;
-      }
-
-      .next-strip {
+        padding: 1px 6px;
+        border-radius: 4px;
         background: var(--blue-soft);
-        border-left: 3px solid var(--blue-rule);
-        border-radius: 0 6px 6px 0;
-        padding: 10px 14px;
+        color: var(--blue-dark);
+        font-family: var(--font-mono);
+        font-size: 7.7px;
+        font-weight: 600;
+        margin-right: 4px;
+      }
+
+      /* PÁGINA 3: TARJETAS DE PENDIENTES CLARAS (HOY VS ACCIÓN) */
+      .status-banner {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: var(--black);
+        color: #ffffff;
       }
 
-      .next-item {
-        font-size: 8px;
+      .sb-item strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      .sb-item span {
+        display: block;
+        margin-top: 2px;
+        font-size: 8.2px;
+        color: #b8c4d6;
+      }
+
+      .p1-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .eng-card {
+        border: 1px solid var(--line);
+        border-top: 2.5px solid var(--red);
+        border-radius: 7px;
+        background: #ffffff;
+        padding: 11px 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .eng-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .eng-head h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 9.6px;
+        font-weight: 700;
+        color: var(--black);
+      }
+
+      .eng-badge {
+        padding: 1.5px 6px;
+        border-radius: 4px;
+        background: var(--red-soft);
+        border: 1px solid var(--red-border);
+        color: var(--red);
+        font-size: 7.4px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .eng-now {
+        margin: 0;
+        font-size: 8.4px;
         line-height: 1.4;
+        color: var(--muted);
+      }
+
+      .eng-fix {
+        margin: 0;
+        font-size: 8.6px;
+        line-height: 1.42;
+        color: var(--ink);
+      }
+
+      .eng-fix strong {
+        color: var(--blue-dark);
+      }
+
+      .p2-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 11px;
+      }
+
+      .p2-card {
+        background: var(--blue-soft);
+        border: 1px solid var(--blue-border);
+        border-radius: 7px;
+        padding: 10px 12px;
+      }
+
+      .p2-card h3 {
+        margin: 0 0 4px;
+        font-family: var(--font-display);
+        font-size: 9.2px;
+        font-weight: 700;
+        color: var(--blue-dark);
+      }
+
+      .p2-card p {
+        margin: 0;
+        font-size: 8.4px;
+        line-height: 1.42;
         color: var(--soft);
       }
 
-      .next-item strong {
-        display: block;
-        color: var(--blue-ink);
-        font-family: var(--font-display);
-        font-size: 8.4px;
-        margin-bottom: 2px;
+      .quickstart {
+        background: var(--canvas);
+        border: 1px solid var(--line);
+        border-left: 3.5px solid var(--blue);
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 8.6px;
+        line-height: 1.48;
+        color: var(--soft);
+      }
+
+      .quickstart strong {
+        color: var(--black);
       }
 
       .footer {
@@ -320,181 +500,379 @@
         border-top: 1px solid var(--line);
         display: flex;
         justify-content: space-between;
-        font-size: 7.7px;
+        font-size: 7.9px;
         color: var(--muted);
       }
     </style>
   </head>
   <body>
-    <!-- PÁGINA 1: ARQUITECTURA GENERAL + MODELO CRIPTOGRÁFICO -->
+    <!-- ================= PÁGINA 1: MARCO LEGAL + MANUAL PUI + ARQUITECTURA ================= -->
     <div class="page">
       <header class="topbar">
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Certeza ID" />
           <span class="brand-name">Certeza ID</span>
         </div>
-        <div class="doc-meta">Arquitectura técnica y plan de salida a producción (Página 1 de 2)</div>
+        <div class="page-indicator">Guía técnica y marco normativo oficial (Página 1 de 3)</div>
       </header>
 
       <main class="body">
-        <section>
-          <h1>Arquitectura de <strong>Certeza ID</strong>, seguridad criptográfica y aislamiento por hotel.</h1>
-          <p class="lead">
-            Guía técnica fiel al código ya construido en <code>src/</code>, <code>agent/</code> y <code>sql/</code>
-            (Node.js &ge;20 nativo, <strong>cero librerías npm de terceros</strong> y 9/9 pruebas automatizadas pasando
-            en <code>test/pui.test.js</code>). Cubre el Manual Técnico PUI (DOF 23/01/2026) y la Ley General de Turismo
-            (Art. 58) garantizando que recepción nunca vea alertas de SEGOB.
+        <section class="hero-head">
+          <h1>Arquitectura de <strong>Certeza ID</strong>, sustento oficial PUI y plan de salida a producción.</h1>
+          <p>
+            Documentación técnica y regulatoria en español sobre el código ya implementado en <code>src/</code>,
+            <code>agent/</code> y <code>sql/</code> (Node.js &ge;20 nativo, <strong>cero librerías npm externas</strong>
+            y 9/9 pruebas en verde). Incluye enlaces directos al <strong>Manual Técnico PUI</strong>, leyes federales
+            aplicables, arquitectura en 4 capas y lista exacta de endurecimiento para AWS.
           </p>
         </section>
 
-        <!-- DIAGRAMA DE ARQUITECTURA EN 4 CAPAS (100% ESPAÑOL, LECTURA CÓMODA) -->
+        <!-- 1. MARCO LEGAL Y MANUAL TÉCNICO OFICIAL -->
         <section>
-          <h2 class="sec-title">1. Mapa de arquitectura y fronteras de seguridad</h2>
-          <div class="diagram-card">
-            <svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, sans-serif">
+          <div class="sec-head">
+            <h2>1. Marco legal y especificación oficial que rige el software</h2>
+            <span>Documentos oficiales clicables (DOF)</span>
+          </div>
+
+          <div class="legal-grid">
+            <article class="legal-card is-primary">
+              <div class="legal-top">
+                <h3>Manual Técnico PUI (Anexo 2 y Sección 8)</h3>
+                <span class="legal-date">DOF · 23 ene 2026</span>
+              </div>
+              <p>
+                Es la especificación técnica obligatoria de SEGOB/ATDT: define los <strong>4 endpoints API</strong>
+                (<code>/login</code>, <code>/activar-reporte</code>, <code>/activar-reporte-prueba</code>,
+                <code>/desactivar-reporte</code>), histórico de <strong>12 años</strong>, TLS 1.2+, JWT, AES-256-GCM y
+                reporte de pruebas SAST/DAST/SCA.
+              </p>
+              <div class="legal-links">
+                <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">Abrir Manual Técnico PDF</a>
+                <a href="https://www.plataformadebusqueda.gob.mx/inscripcion">Portal de inscripción ATDT</a>
+              </div>
+            </article>
+
+            <article class="legal-card">
+              <div class="legal-top">
+                <h3>Reforma LGMDFP (Arts. 12 Bis y 43 Bis)</h3>
+                <span class="legal-date">DOF · 16 jul 2025</span>
+              </div>
+              <p>
+                Crea la Plataforma Única de Identidad y obliga expresamente a establecimientos de
+                <strong>hospedaje (hoteles y moteles)</strong> a enlazarse. Fija multas de <strong>10,000 a 20,000 UMAs</strong>
+                ($1.17M a $2.34M MXN por hotel incumplido), verificadas por SEGOB.
+              </p>
+              <div class="legal-links">
+                <a href="https://dof.gob.mx/nota_detalle.php?codigo=5763157&amp;fecha=16/07/2025">Abrir decreto DOF 5763157</a>
+                <a href="https://www.llave.gob.mx/">Acceso Llave MX (e.firma)</a>
+              </div>
+            </article>
+
+            <article class="legal-card">
+              <div class="legal-top">
+                <h3>Lineamientos de Operación PUI</h3>
+                <span class="legal-date">DOF · 27 nov 2025</span>
+              </div>
+              <p>
+                Regulan el monitoreo continuo de CURP, envío silencioso de alertas, bitácoras auditables y control de
+                accesos. <strong>Prohíben a particulares descargar o almacenar el padrón real del RNPDNO</strong>
+                (SEGOB empuja reportes activos uno a uno).
+              </p>
+              <div class="legal-links">
+                <a href="https://dof.gob.mx/nota_detalle.php?codigo=5774120&amp;fecha=27/11/2025">Abrir Lineamientos DOF 5774120</a>
+              </div>
+            </article>
+
+            <article class="legal-card">
+              <div class="legal-top">
+                <h3>Menores (Art. 58 LGT) y Privacidad (LFPDPPP)</h3>
+                <span class="legal-date">DOF · 13 nov 2026</span>
+              </div>
+              <p>
+                Exige comprobar parentesco o tutela de menores de 18 años en hoteles (negar hospedaje y avisar si falta).
+                LFPDPPP exige bóveda cifrada e independiente por RFC y borrado automático de datos vencidos.
+              </p>
+              <div class="legal-links">
+                <a href="https://dof.gob.mx/nota_detalle.php?codigo=5803838&amp;fecha=13/11/2026">Abrir reforma Turismo 5803838</a>
+                <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPDPPP.pdf">Abrir LFPDPPP</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- 2. MAPA VISUAL DE ARQUITECTURA -->
+        <section>
+          <div class="sec-head">
+            <h2>2. Mapa general de arquitectura y fronteras de seguridad</h2>
+            <span>4 capas separadas</span>
+          </div>
+
+          <div class="diagram-shell">
+            <svg viewBox="0 0 700 318" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3, sans-serif">
               <defs>
                 <marker id="arrB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#2a5b8f" />
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#2f69a8" />
                 </marker>
                 <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                   <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
                 </marker>
               </defs>
 
-              <!-- CAPA 1: HOTELES -->
-              <rect x="6" y="4" width="688" height="68" rx="6" fill="#ffffff" stroke="#cbd5e1" />
-              <text x="16" y="19" fill="#173f6b" font-family="Archivo, sans-serif" font-size="9" font-weight="700">Capa 1. Entrada desde hoteles (cualquier sistema, sin tocar su base de datos)</text>
+              <!-- CAPA 1 -->
+              <rect x="4" y="4" width="692" height="66" rx="7" fill="#ffffff" stroke="#cbd5e1" />
+              <text x="16" y="19" fill="#13355c" font-family="Archivo, sans-serif" font-size="9.2" font-weight="700">Capa 1. Entrada desde hoteles (sin intervenir la base de datos del PMS)</text>
 
-              <rect x="16" y="27" width="156" height="36" rx="4" fill="#f8fafc" stroke="#d5dde8" />
-              <text x="24" y="42" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">PMS en la nube</text>
-              <text x="24" y="55" fill="#64748b" font-size="7.8">Webhook HTTPS / API REST</text>
+              <rect x="16" y="27" width="156" height="34" rx="5" fill="#f8fafc" stroke="#d7e0eb" />
+              <text x="25" y="41" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">PMS en la nube</text>
+              <text x="25" y="53" fill="#64748b" font-size="7.9">Webhook HTTPS / API REST</text>
 
-              <rect x="184" y="27" width="194" height="36" rx="4" fill="#f8fafc" stroke="#d5dde8" />
-              <text x="192" y="42" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">PMS local o arcaico + agente</text>
-              <text x="192" y="55" fill="#64748b" font-size="7.8">XML, CSV, barras o impresión (.prn)</text>
+              <rect x="184" y="27" width="194" height="34" rx="5" fill="#f8fafc" stroke="#d7e0eb" />
+              <text x="193" y="41" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">PMS local o arcaico + agente</text>
+              <text x="193" y="53" fill="#64748b" font-size="7.9">XML, CSV, barras o impresión (.prn)</text>
 
-              <rect x="390" y="27" width="144" height="36" rx="4" fill="#f8fafc" stroke="#d5dde8" />
-              <text x="398" y="42" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Terminal de recepción</text>
-              <text x="398" y="55" fill="#64748b" font-size="7.8">Rol sigiloso (0% alertas PUI)</text>
+              <rect x="390" y="27" width="144" height="34" rx="5" fill="#f8fafc" stroke="#d7e0eb" />
+              <text x="399" y="41" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Terminal de recepción</text>
+              <text x="399" y="53" fill="#64748b" font-size="7.9">Sigilo total (0% alertas PUI)</text>
 
-              <rect x="546" y="27" width="138" height="36" rx="4" fill="#f8fafc" stroke="#d5dde8" />
-              <text x="554" y="42" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Consola Admin / TI</text>
-              <text x="554" y="55" fill="#64748b" font-size="7.8">Acceso aislado por RFC</text>
+              <rect x="546" y="27" width="138" height="34" rx="5" fill="#f8fafc" stroke="#d7e0eb" />
+              <text x="555" y="41" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Consola Admin / TI</text>
+              <text x="555" y="53" fill="#64748b" font-size="7.9">Acceso aislado por RFC</text>
 
-              <!-- Flechas hacia el núcleo -->
-              <line x1="94" y1="72" x2="94" y2="88" stroke="#2a5b8f" stroke-width="1.3" marker-end="url(#arrB)" />
-              <line x1="281" y1="72" x2="281" y2="88" stroke="#2a5b8f" stroke-width="1.3" marker-end="url(#arrB)" />
-              <line x1="462" y1="72" x2="462" y2="88" stroke="#475569" stroke-width="1.3" marker-end="url(#arrG)" />
-              <line x1="615" y1="72" x2="615" y2="88" stroke="#475569" stroke-width="1.3" marker-end="url(#arrG)" />
+              <line x1="94" y1="70" x2="94" y2="85" stroke="#2f69a8" stroke-width="1.3" marker-end="url(#arrB)" />
+              <line x1="281" y1="70" x2="281" y2="85" stroke="#2f69a8" stroke-width="1.3" marker-end="url(#arrB)" />
+              <line x1="462" y1="70" x2="462" y2="85" stroke="#475569" stroke-width="1.3" marker-end="url(#arrG)" />
+              <line x1="615" y1="70" x2="615" y2="85" stroke="#475569" stroke-width="1.3" marker-end="url(#arrG)" />
 
-              <!-- CAPA 2: NÚCLEO CERTEZA ID -->
-              <rect x="6" y="90" width="688" height="118" rx="6" fill="#0b0d11" stroke="#2a5b8f" stroke-width="1.5" />
-              <text x="18" y="106" fill="#c6dcf3" font-family="Archivo, sans-serif" font-size="9.2" font-weight="700">Capa 2. Servidor central Certeza ID (src/server.js — Node.js nativo sin dependencias externas)</text>
+              <!-- CAPA 2 -->
+              <rect x="4" y="88" width="692" height="114" rx="7" fill="#0b0e14" stroke="#2f69a8" stroke-width="1.4" />
+              <text x="16" y="104" fill="#c5dcf3" font-family="Archivo, sans-serif" font-size="9.4" font-weight="700">Capa 2. Servidor central Certeza ID (src/server.js — Node.js nativo sin paquetes externos)</text>
 
-              <rect x="18" y="114" width="664" height="22" rx="4" fill="#161d29" stroke="#2a5b8f" stroke-width="0.9" />
-              <text x="28" y="128" fill="#e2e8f0" font-size="8">Control de entrada: límite de peticiones, tope de 1 MB, cabeceras CSP/X-Frame, sesiones HttpOnly, llave PMS y JWT de SEGOB</text>
+              <rect x="16" y="112" width="668" height="21" rx="4" fill="#161f2e" stroke="#2f69a8" stroke-width="0.9" />
+              <text x="26" y="126" fill="#e2e8f0" font-size="8.1">Filtro de entrada: límite de peticiones, tope 1 MB, cabeceras CSP/X-Frame, sesiones HttpOnly, llave PMS y JWT de SEGOB</text>
 
-              <rect x="18" y="144" width="158" height="54" rx="4" fill="#161d29" stroke="#334155" />
-              <text x="27" y="159" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Lectura e identidad</text>
-              <text x="27" y="172" fill="#9fb0c6" font-size="7.7">csv.js (XML, CSV, .prn)</text>
-              <text x="27" y="184" fill="#9fb0c6" font-size="7.7">curp.js y mrz.js ($0)</text>
+              <rect x="16" y="141" width="159" height="51" rx="5" fill="#161f2e" stroke="#334155" />
+              <text x="25" y="156" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Lectura e identidad</text>
+              <text x="25" y="169" fill="#a8b8ce" font-size="7.8">csv.js (XML, CSV, .prn)</text>
+              <text x="25" y="181" fill="#a8b8ce" font-size="7.8">curp.js y mrz.js ($0)</text>
 
-              <rect x="186" y="144" width="158" height="54" rx="4" fill="#161d29" stroke="#334155" />
-              <text x="195" y="159" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Cifrado e integridad</text>
-              <text x="195" y="172" fill="#9fb0c6" font-size="7.7">Índice ciego HMAC-SHA256</text>
-              <text x="195" y="184" fill="#9fb0c6" font-size="7.7">AES-256-GCM y cadena SHA</text>
+              <rect x="185" y="141" width="159" height="51" rx="5" fill="#161f2e" stroke="#334155" />
+              <text x="194" y="156" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Cifrado e integridad</text>
+              <text x="194" y="169" fill="#a8b8ce" font-size="7.8">Índice ciego HMAC-SHA256</text>
+              <text x="194" y="181" fill="#a8b8ce" font-size="7.8">AES-256-GCM y SHA-256</text>
 
-              <rect x="354" y="144" width="158" height="54" rx="4" fill="#161d29" stroke="#334155" />
-              <text x="363" y="159" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Cruce PUI y menores</text>
-              <text x="363" y="172" fill="#9fb0c6" font-size="7.7">Fases 1 a 3 (hasta 12 años)</text>
-              <text x="363" y="184" fill="#9fb0c6" font-size="7.7">Filtro Art. 58 LGT y sigilo</text>
+              <rect x="354" y="141" width="159" height="51" rx="5" fill="#161f2e" stroke="#334155" />
+              <text x="363" y="156" fill="#ffffff" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Cruce PUI y menores</text>
+              <text x="363" y="169" fill="#a8b8ce" font-size="7.8">Fases 1 a 3 (hasta 12 años)</text>
+              <text x="363" y="181" fill="#a8b8ce" font-size="7.8">Bloqueo Art. 58 y sigilo</text>
 
-              <rect x="522" y="144" width="160" height="54" rx="4" fill="#161d29" stroke="#2a5b8f" />
-              <text x="531" y="159" fill="#c6dcf3" font-family="Archivo, sans-serif" font-size="8.6" font-weight="600">Cola y constancias</text>
-              <text x="531" y="172" fill="#9fb0c6" font-size="7.7">puiClient.js (reintentos 5 s)</text>
-              <text x="531" y="184" fill="#9fb0c6" font-size="7.7">constancia.js (PDF y CSV)</text>
+              <rect x="523" y="141" width="161" height="51" rx="5" fill="#161f2e" stroke="#2f69a8" />
+              <text x="532" y="156" fill="#c5dcf3" font-family="Archivo, sans-serif" font-size="8.7" font-weight="600">Cola y constancias</text>
+              <text x="532" y="169" fill="#a8b8ce" font-size="7.8">puiClient.js (reintentos 5 s)</text>
+              <text x="532" y="181" fill="#a8b8ce" font-size="7.8">constancia.js (PDF y CSV)</text>
 
-              <line x1="176" y1="171" x2="184" y2="171" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
-              <line x1="344" y1="171" x2="352" y2="171" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
-              <line x1="512" y1="171" x2="520" y2="171" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
+              <line x1="175" y1="166" x2="183" y2="166" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
+              <line x1="344" y1="166" x2="352" y2="166" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
+              <line x1="513" y1="166" x2="521" y2="166" stroke="#7fb2e5" stroke-width="1.2" marker-end="url(#arrB)" />
 
-              <!-- Flechas hacia datos y SEGOB -->
-              <line x1="196" y1="208" x2="196" y2="226" stroke="#2a5b8f" stroke-width="1.4" marker-end="url(#arrB)" />
-              <line x1="505" y1="226" x2="505" y2="210" stroke="#2a5b8f" stroke-width="1.4" marker-end="url(#arrB)" />
-              <line x1="590" y1="208" x2="590" y2="226" stroke="#2a5b8f" stroke-width="1.4" marker-end="url(#arrB)" />
+              <line x1="196" y1="202" x2="196" y2="219" stroke="#2f69a8" stroke-width="1.4" marker-end="url(#arrB)" />
+              <line x1="504" y1="219" x2="504" y2="204" stroke="#2f69a8" stroke-width="1.4" marker-end="url(#arrB)" />
+              <line x1="590" y1="202" x2="590" y2="219" stroke="#2f69a8" stroke-width="1.4" marker-end="url(#arrB)" />
 
-              <!-- CAPA 3: BASE DE DATOS -->
-              <rect x="6" y="228" width="376" height="96" rx="6" fill="#ffffff" stroke="#cbd5e1" />
-              <text x="16" y="244" fill="#173f6b" font-family="Archivo, sans-serif" font-size="9" font-weight="700">Capa 3. Base de datos aislada por hotel (db.js y schema.postgres.sql)</text>
+              <!-- CAPA 3 -->
+              <rect x="4" y="222" width="378" height="92" rx="7" fill="#ffffff" stroke="#cbd5e1" />
+              <text x="16" y="238" fill="#13355c" font-family="Archivo, sans-serif" font-size="9.2" font-weight="700">Capa 3. Base de datos aislada por hotel (db.js y schema.postgres.sql)</text>
 
-              <rect x="16" y="252" width="170" height="34" rx="4" fill="#f8fafc" stroke="#d5dde8" />
-              <text x="24" y="266" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8.3" font-weight="600">Piloto hoy: SQLite nativo</text>
-              <text x="24" y="279" fill="#64748b" font-size="7.6">Modo WAL, sin servidor extra</text>
+              <rect x="16" y="246" width="170" height="32" rx="4" fill="#f8fafc" stroke="#d7e0eb" />
+              <text x="24" y="260" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.4" font-weight="600">Piloto hoy: SQLite nativo</text>
+              <text x="24" y="272" fill="#64748b" font-size="7.6">Modo WAL, sin servidor extra</text>
 
-              <rect x="196" y="252" width="176" height="34" rx="4" fill="#eef4fa" stroke="#2a5b8f" />
-              <text x="204" y="266" fill="#173f6b" font-family="Archivo, sans-serif" font-size="8.3" font-weight="600">Producción: PostgreSQL 16</text>
-              <text x="204" y="279" fill="#434a57" font-size="7.6">Aislamiento RLS por RFC + partición</text>
+              <rect x="196" y="246" width="176" height="32" rx="4" fill="#eef5fc" stroke="#2f69a8" />
+              <text x="204" y="260" fill="#13355c" font-family="Archivo, sans-serif" font-size="8.4" font-weight="600">Producción: PostgreSQL 16</text>
+              <text x="204" y="272" fill="#475569" font-size="7.6">Aislamiento RLS por RFC + partición</text>
 
-              <text x="16" y="303" fill="#0b0d11" font-size="7.8" font-weight="600">8 tablas:</text>
-              <text x="58" y="303" fill="#475569" font-size="7.8">associations, hotels, users, sessions, pui_alerts, guests, segob_outbox, audit_log</text>
-              <text x="16" y="316" fill="#64748b" font-size="7.6">Incluye función de borrado automático legal de datos vencidos: purge_expired_guest_pii()</text>
+              <text x="16" y="294" fill="#0b0e14" font-size="7.9" font-weight="600">8 tablas:</text>
+              <text x="58" y="294" fill="#475569" font-size="7.9">associations, hotels, users, sessions, pui_alerts, guests, segob_outbox, audit_log</text>
+              <text x="16" y="306" fill="#64748b" font-size="7.6">Borrado legal automático de datos vencidos: purge_expired_guest_pii()</text>
 
-              <!-- CAPA 4: SEGOB -->
-              <rect x="396" y="228" width="298" height="96" rx="6" fill="#eef4fa" stroke="#2a5b8f" stroke-width="1.2" />
-              <text x="406" y="244" fill="#173f6b" font-family="Archivo, sans-serif" font-size="9" font-weight="700">Capa 4. Conexión oficial SEGOB / ATDT (Anexo 2)</text>
+              <!-- CAPA 4 -->
+              <rect x="396" y="222" width="300" height="92" rx="7" fill="#eef5fc" stroke="#2f69a8" stroke-width="1.2" />
+              <text x="408" y="238" fill="#13355c" font-family="Archivo, sans-serif" font-size="9.2" font-weight="700">Capa 4. Conexión oficial SEGOB / ATDT (Anexo 2)</text>
 
-              <rect x="406" y="252" width="278" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" />
-              <text x="414" y="264" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8" font-weight="600">Llamadas que recibe tu servidor (SEGOB &rarr; Hotel)</text>
-              <text x="414" y="276" fill="#475569" font-size="7.4">/login, /activar-reporte, /activar-reporte-prueba, /desactivar-reporte</text>
+              <rect x="408" y="246" width="276" height="29" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+              <text x="416" y="258" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.1" font-weight="600">Llamadas entrantes (SEGOB &rarr; Hotel)</text>
+              <text x="416" y="269" fill="#475569" font-size="7.4">/login, /activar-reporte, /activar-reporte-prueba, /desactivar-reporte</text>
 
-              <rect x="406" y="288" width="278" height="30" rx="4" fill="#ffffff" stroke="#cbd5e1" />
-              <text x="414" y="300" fill="#0b0d11" font-family="Archivo, sans-serif" font-size="8" font-weight="600">Avisos que envía tu servidor (Hotel &rarr; SEGOB)</text>
-              <text x="414" y="312" fill="#475569" font-size="7.4">POST /notificar-coincidencia con JWT y hasta 8 reintentos automáticos</text>
+              <rect x="408" y="280" width="276" height="29" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+              <text x="416" y="292" fill="#0b0e14" font-family="Archivo, sans-serif" font-size="8.1" font-weight="600">Avisos salientes (Hotel &rarr; SEGOB)</text>
+              <text x="416" y="303" fill="#475569" font-size="7.4">POST /notificar-coincidencia con JWT y hasta 8 reintentos automáticos</text>
             </svg>
           </div>
         </section>
+      </main>
 
-        <!-- TABLA CRIPTOGRÁFICA EN ESPAÑOL CLARO -->
+      <footer class="footer">
+        <span>Certeza ID Systems — Guía técnica y regulatoria oficial (DOF 2025–2026)</span>
+        <span>Página 1 de 3</span>
+      </footer>
+    </div>
+
+    <!-- ================= PÁGINA 2: FLUJOS PASO A PASO + SEGURIDAD CRIPTOGRÁFICA ================= -->
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <img src="../public/assets/favicon.svg" alt="Certeza ID" />
+          <span class="brand-name">Certeza ID</span>
+        </div>
+        <div class="page-indicator">Flujos de ejecución y modelo criptográfico (Página 2 de 3)</div>
+      </header>
+
+      <main class="body">
         <section>
-          <h2 class="sec-title">2. Cómo se protegen los datos personales hoy (src/security.js)</h2>
-          <table class="spec-table">
+          <div class="sec-head">
+            <h2>3. Flujos críticos de ejecución (Anexo 2 DOF y sigilo en recepción)</h2>
+            <span>Procesos separados en paralelo</span>
+          </div>
+
+          <div class="flows-two">
+            <article class="stepper-card">
+              <h3>Flujo A. Cuando SEGOB envía un reporte (Fases 1, 2 y 3)</h3>
+              <div class="stepper">
+                <div class="step-row">
+                  <span class="step-num">1</span>
+                  <div class="step-body">
+                    <strong>Autenticación máquina a máquina</strong>
+                    SEGOB llama a <code>POST /api/pui/:slug/login</code>; el servidor valida la clave con
+                    <code>scrypt</code> y entrega un token JWT (1 hora) válido únicamente para ese hotel y RFC.
+                  </div>
+                </div>
+                <div class="step-row">
+                  <span class="step-num">2</span>
+                  <div class="step-body">
+                    <strong>Validación estricta de RFC</strong>
+                    En <code>/activar-reporte</code> o <code>/activar-reporte-prueba</code> verifica que el JWT
+                    coincida exactamente con el hotel destino; cualquier cruce entre hoteles responde HTTP <code>401</code>.
+                  </div>
+                </div>
+                <div class="step-row">
+                  <span class="step-num">3</span>
+                  <div class="step-body">
+                    <strong>Cifrado y activación de vigilancia (Fase 3)</strong>
+                    Valida la CURP ante reglas RENAPO, calcula el índice ciego <code>HMAC-SHA256</code>, cifra la CURP
+                    en <code>AES-256-GCM</code> y guarda la alerta activa en <code>pui_alerts</code>.
+                  </div>
+                </div>
+                <div class="step-row">
+                  <span class="step-num">4</span>
+                  <div class="step-body">
+                    <strong>Barrido histórico hasta 12 años (Fases 1 y 2)</strong>
+                    Busca en <code>guests</code> de ese hotel usando el índice ciego (sin texto plano) y encola la
+                    respuesta positiva o cierre negativo dentro de <code>segob_outbox</code>.
+                  </div>
+                </div>
+                <div class="step-row">
+                  <span class="step-num">5</span>
+                  <div class="step-body">
+                    <strong>Entrega asíncrona garantizada (<code>puiClient.js</code>)</strong>
+                    Un proceso cada 5 segundos renueva el JWT si caduca y entrega a SEGOB con espera progresiva hasta 8
+                    reintentos sin perder eventos ante caídas de red.
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="stepper-card">
+              <h3>Flujo B. Cuando llega un huésped (Check-in, menores y sigilo)</h3>
+              <div class="stepper">
+                <div class="step-row is-dark">
+                  <span class="step-num">1</span>
+                  <div class="step-body">
+                    <strong>Ingesta desde cualquier hotel</strong>
+                    Entra por API en nube, por <code>agent/pms-sync-agent.js</code> (detecta UTF-8 o Latin-1 con
+                    acentos/Ñ en XML, CSV, barras y <code>.prn</code>) o por la Terminal Web.
+                  </div>
+                </div>
+                <div class="step-row is-dark">
+                  <span class="step-num">2</span>
+                  <div class="step-body">
+                    <strong>Validación de identidad y edad ($0)</strong>
+                    <code>curp.js</code> y <code>mrz.js</code> validan CURP o pasaporte internacional y calculan edad
+                    exacta. Si es menor de 18 años sin documento de parentesco, activa el bloqueo Art. 58 LGT.
+                  </div>
+                </div>
+                <div class="step-row is-dark">
+                  <span class="step-num">3</span>
+                  <div class="step-body">
+                    <strong>Resguardo privado por RFC</strong>
+                    Inserta al huésped en <code>guests</code> guardando solo índice ciego y documento cifrado en
+                    <code>AES-256-GCM</code>; la pantalla operativa muestra únicamente datos enmascarados.
+                  </div>
+                </div>
+                <div class="step-row is-dark">
+                  <span class="step-num">4</span>
+                  <div class="step-body">
+                    <strong>Frontera de sigilo total en mostrador</strong>
+                    <code>evaluarAlertasFase3()</code> busca coincidencias activas en segundo plano. El resultado
+                    <strong>nunca entra en la respuesta HTTP que recibe el rol <code>RECEPCION</code></strong>.
+                  </div>
+                </div>
+                <div class="step-row is-dark">
+                  <span class="step-num">5</span>
+                  <div class="step-body">
+                    <strong>Aviso silencioso y bitácora sellada</strong>
+                    Si existe coincidencia, encola aviso Fase 3 (prioridad crítica si es menor), dispara el envío a
+                    SEGOB y encadena el registro con <code>SHA-256</code> en <code>audit_log</code>.
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- 4. MODELO CRIPTOGRÁFICO -->
+        <section>
+          <div class="sec-head">
+            <h2>4. Cómo se protegen los datos hoy en el código (src/security.js)</h2>
+            <span>Primitivas nativas de node:crypto</span>
+          </div>
+
+          <table class="clean-table">
             <thead>
               <tr>
-                <th style="width: 26%;">Qué se protege</th>
-                <th style="width: 35%;">Cómo está implementado hoy</th>
-                <th style="width: 39%;">Qué garantiza ante una auditoría o fuga</th>
+                <th>Dato o componente</th>
+                <th>Mecanismo implementado</th>
+                <th>Propiedad de seguridad que garantiza</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Contraseñas y claves PUI</td>
-                <td><code>scrypt</code> (clave de 64 bytes + sal aleatoria) y comparación en tiempo constante</td>
-                <td>Impide descifrar contraseñas con fuerza bruta y evita ataques por diferencia de tiempo.</td>
+                <td><span class="crypto-tag">scrypt</span> 64 bytes + sal aleatoria 16 B + <code>timingSafeEqual</code></td>
+                <td>Resistencia contra fuerza bruta offline (GPU/ASIC) y ataques de tiempo.</td>
               </tr>
               <tr>
-                <td>Sesiones de usuarios web</td>
-                <td>Token aleatorio de 256 bits guardado solo como resumen <code>SHA-256</code></td>
-                <td>Aunque alguien copiara la tabla <code>sessions</code>, no puede secuestrar sesiones abiertas.</td>
+                <td>Sesiones web activas</td>
+                <td><span class="crypto-tag">SHA-256</span> sobre token aleatorio de 256 bits (cookie <code>HttpOnly</code>)</td>
+                <td>Un volcado de la tabla <code>sessions</code> no permite secuestrar sesiones abiertas.</td>
               </tr>
               <tr>
-                <td>Búsqueda de CURP sin texto plano</td>
-                <td>Índice ciego por hotel: <code>HMAC-SHA256(clave, "hotel::CURP")</code></td>
-                <td>Permite buscar coincidencias al instante sin guardar CURP legible y sin cruzar hoteles.</td>
+                <td>Índice de búsqueda de CURP</td>
+                <td><span class="crypto-tag">HMAC-SHA256</span> con llave y prefijo <code>"hotel::CURP"</code></td>
+                <td>Búsquedas instantáneas sin texto plano; impide cruzar identidades entre hoteles distintos.</td>
               </tr>
               <tr>
-                <td>CURP y claves de SEGOB en reposo</td>
-                <td>Cifrado autenticado <code>AES-256-GCM</code> (vector aleatorio de 12 bytes)</td>
-                <td>Garantiza confidencialidad e integridad de cada registro guardado en base de datos.</td>
+                <td>CURP y claves SEGOB en reposo</td>
+                <td><span class="crypto-tag">AES-256-GCM</span> con IV aleatorio de 12 B y etiqueta de integridad</td>
+                <td>Confidencialidad y detección automática de cualquier alteración en base de datos.</td>
               </tr>
               <tr>
-                <td>Bitácora de auditoría</td>
-                <td>Cadena encadenada <code>SHA-256</code> (cada evento firma al anterior)</td>
-                <td>Si alguien intenta borrar o alterar un registro pasado, <code>verifyFullAuditChain()</code> lo delata.</td>
+                <td>Bitácora de inspecciones</td>
+                <td><span class="crypto-tag">Cadena SHA-256</span> donde cada evento firma el hash anterior</td>
+                <td>Evidencia forense inmutable verificable con <code>verifyFullAuditChain()</code>.</td>
               </tr>
               <tr>
-                <td>Separación física entre hoteles</td>
-                <td>Políticas <strong>RLS</strong> en PostgreSQL 16 fijadas por transacción (<code>hotel_slug</code>)</td>
-                <td>Un hotel jamás puede consultar huéspedes, alertas ni bitácoras de otro RFC.</td>
+                <td>Aislamiento multi-hotel</td>
+                <td><span class="crypto-tag">PostgreSQL RLS</span> fijado por transacción con <code>hotel_slug</code></td>
+                <td>Separa físicamente por RFC las tablas <code>guests</code>, <code>pui_alerts</code>, <code>segob_outbox</code> y <code>audit_log</code>.</td>
               </tr>
             </tbody>
           </table>
@@ -502,108 +880,133 @@
       </main>
 
       <footer class="footer">
-        <span>Certeza ID Systems — Especificación técnica (código y diagramas Mermaid en docs/ARQUITECTURA_TECNICA_INGENIERIA.md)</span>
-        <span>Página 1 de 2</span>
+        <span>Certeza ID Systems — Flujos de ejecución y protección de datos personales (LFPDPPP)</span>
+        <span>Página 2 de 3</span>
       </footer>
     </div>
 
-    <!-- PÁGINA 2: FLUJOS DE EJECUCIÓN + PLAN DE ENDURECIMIENTO PARA PRODUCCIÓN -->
+    <!-- ================= PÁGINA 3: PLAN DE ENDURECIMIENTO Y ARRANQUE EN AWS ================= -->
     <div class="page">
       <header class="topbar">
         <div class="brand">
           <img src="../public/assets/favicon.svg" alt="Certeza ID" />
           <span class="brand-name">Certeza ID</span>
         </div>
-        <div class="doc-meta">Flujos de ejecución y tareas pendientes para producción (Página 2 de 2)</div>
+        <div class="page-indicator">Plan de endurecimiento y salida a producción (Página 3 de 3)</div>
       </header>
 
       <main class="body">
-        <section>
-          <h2 class="sec-title">3. Cómo corren los dos flujos principales del sistema</h2>
-          <div class="flows-grid">
-            <div class="flow-card">
-              <h3>Flujo A. Cuando SEGOB envía un reporte (Fases 1, 2 y 3)</h3>
-              <ol class="step-list">
-                <li><strong>Inicio de sesión máquina a máquina:</strong> SEGOB llama a <code>POST /api/pui/:slug/login</code>; el servidor valida la clave con <code>scrypt</code> y emite un token JWT válido por 1 hora, limitado únicamente a ese hotel y RFC.</li>
-                <li><strong>Validación de permisos:</strong> En <code>/activar-reporte</code> (o <code>/activar-reporte-prueba</code>) comprueba que el token pertenezca exactamente a ese hotel; cualquier cruce entre RFC se rechaza con HTTP <code>401</code>.</li>
-                <li><strong>Guardado cifrado (Fase 3):</strong> Valida la CURP, genera su índice ciego <code>HMAC-SHA256</code>, cifra la CURP en <code>AES-256-GCM</code> y deja encendida la vigilancia en tiempo real.</li>
-                <li><strong>Barrido histórico (Fases 1 y 2, hasta 12 años):</strong> Busca en la tabla <code>guests</code> de ese hotel usando el índice ciego y encola la respuesta (positiva o cierre negativo) en <code>segob_outbox</code>.</li>
-                <li><strong>Entrega con reintentos (<code>puiClient.js</code>):</strong> Un proceso en segundo plano revisa cada 5 segundos, renueva su JWT si caduca y envía a SEGOB con espera progresiva hasta 8 intentos.</li>
-              </ol>
-            </div>
-
-            <div class="flow-card">
-              <h3>Flujo B. Cuando llega un huésped (Check-in, menores y sigilo)</h3>
-              <ol class="step-list">
-                <li><strong>Recepción del registro:</strong> Entra por API en nube, por el agente local (<code>pms-sync-agent.js</code> que detecta UTF-8 o Latin-1 para acentos/Ñ en archivos viejos y <code>.prn</code>) o por la Terminal Web.</li>
-                <li><strong>Validación y edad:</strong> <code>curp.js</code> o <code>mrz.js</code> validan la identificación sin costo ($0) y calculan la edad exacta. Si es menor de 18 años sin documento de parentesco, activa el bloqueo del Art. 58 LGT.</li>
-                <li><strong>Resguardo privado:</strong> Guarda el registro en <code>guests</code> con índice ciego y CURP cifrada; en pantallas operativas solo muestra la versión enmascarada.</li>
-                <li><strong>Aislamiento total del mostrador:</strong> El motor busca coincidencias activas en <code>pui_alerts</code> por atrás. El resultado <strong>nunca se incluye en la respuesta HTTP que recibe recepción</strong>.</li>
-                <li><strong>Aviso silencioso y respaldo:</strong> Si hay coincidencia, encola el aviso Fase 3 (prioridad crítica si es menor), dispara el envío a SEGOB y sella el evento en la cadena <code>SHA-256</code> de <code>audit_log</code>.</li>
-              </ol>
-            </div>
+        <section class="status-banner">
+          <div class="sb-item">
+            <strong>9 / 9 pruebas en verde</strong>
+            <span>Suite automatizada actual (test/pui.test.js)</span>
+          </div>
+          <div class="sb-item">
+            <strong>6 tareas Prioridad 1</strong>
+            <span>Obligatorias antes de recibir huéspedes reales</span>
+          </div>
+          <div class="sb-item">
+            <strong>3 mejoras Prioridad 2</strong>
+            <span>Validación SAT, RENAPO Nivel 3 y certificación Sec. 8</span>
           </div>
         </section>
 
-        <!-- TAREAS OBLIGATORIAS PARA EL EQUIPO DE SOFTWARE -->
-        <section class="backlog-panel">
-          <h2>4. Lista exacta de endurecimiento obligatorio antes de operar con huéspedes reales</h2>
-          <div class="backlog-grid">
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Quitar llaves de prueba y usar AWS KMS</div>
-              En <code>src/security.js</code> (líneas 11–14) aún existen llaves de respaldo para desarrollo. En producción el servidor debe <strong>negarse a arrancar</strong> si faltan secretos, usar <strong>AWS KMS con una clave por hotel</strong> (más columna <code>key_version</code> para rotar sin romper búsquedas) y apagar el modo demo y rutas <code>/api/demo/*</code>.
-            </div>
+        <section>
+          <div class="sec-head">
+            <h2>5. Tareas obligatorias de endurecimiento antes de producción (Prioridad 1)</h2>
+            <span>Referencias exactas en código</span>
+          </div>
 
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Conectar PostgreSQL 16 real + RLS + Redis</div>
-              Hoy <code>src/db.js</code> corre sobre SQLite en un solo nodo. Hay que conectar los queries al driver real <code>pg</code> en AWS RDS con usuario <code>NOBYPASSRLS</code> + <code>FORCE ROW LEVEL SECURITY</code>, usar <code>FOR UPDATE SKIP LOCKED</code> en <code>segob_outbox</code> para escalar a varias réplicas y particionar <code>guests</code> por mes.
-            </div>
+          <div class="p1-grid">
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>1. Llaves maestras en AWS KMS y fail-fast</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> <code>src/security.js</code> (líneas 11–14) trae llaves de respaldo para desarrollo y una clave única compartida.</p>
+              <p class="eng-fix"><strong>Acción:</strong> hacer que el servidor falle al arrancar si faltan secretos en producción, usar <strong>AWS KMS con clave de datos por hotel</strong> (más <code>key_version</code> para rotar sin romper búsquedas) y desactivar modo demo y <code>/api/demo/*</code>.</p>
+            </article>
 
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Blindar la red exclusiva para SEGOB</div>
-              Habilitar HTTPS obligatorio (TLS 1.2+/1.3) con cabecera <code>Strict-Transport-Security</code>, proteger <code>/api/pui/*</code> con <strong>AWS WAF y lista blanca de IPs de SEGOB/ATDT</strong> (y certificado mutuo mTLS si la autoridad lo admite) separando las rutas administrativas.
-            </div>
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>2. Cablear PostgreSQL 16 + RLS + SKIP LOCKED</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> <code>src/db.js</code> corre sobre SQLite en un solo nodo; <code>sql/schema.postgres.sql</code> ya tiene el esquema listo.</p>
+              <p class="eng-fix"><strong>Acción:</strong> migrar consultas al driver <code>pg</code> en AWS RDS usando rol <code>NOBYPASSRLS</code> + <code>FORCE ROW LEVEL SECURITY</code>, aplicar <code>FOR UPDATE SKIP LOCKED</code> en <code>segob_outbox</code> para multi-réplica y particionar <code>guests</code> por mes.</p>
+            </article>
 
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Doble factor (2FA), CSRF y límite en Redis</div>
-              Mover <code>src/rateLimit.js</code> de memoria local a <strong>Redis</strong>. Exigir <strong>2FA (TOTP) y bloqueo por intentos fallidos</strong> en cuentas de administrador y TI, validar origen + token CSRF en peticiones con cookie y servir las fuentes localmente sin depender de CDNs externos.
-            </div>
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>3. Blindaje de red exclusivo para SEGOB</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> el servidor recibe HTTP detrás del balanceador sin restricción de IP de origen en <code>/api/pui/*</code>.</p>
+              <p class="eng-fix"><strong>Acción:</strong> exigir TLS 1.2+/1.3 con cabecera <code>Strict-Transport-Security</code>, poner <strong>AWS WAF y lista blanca de IPs de SEGOB/ATDT</strong> (y mTLS si la autoridad lo admite) separando los endpoints administrativos.</p>
+            </article>
 
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Endurecer el agente local en recepción</div>
-              En <code>agent/pms-sync-agent.js</code>, exigir <code>https://</code> con verificación estricta de certificado (quitar <code>http://</code> por defecto) y <strong>borrar de forma segura</strong> los archivos CSV/XML en cuanto el servidor confirme HTTP <code>200</code> para no dejar CURPs en texto plano en la PC del hotel.
-            </div>
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>4. Doble factor (2FA), CSRF y límite en Redis</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> <code>src/rateLimit.js</code> guarda contadores en memoria local y el acceso admin usa solo correo y contraseña.</p>
+              <p class="eng-fix"><strong>Acción:</strong> mover rate-limit a <strong>Redis</strong>, exigir <strong>2FA (TOTP) y bloqueo por intentos fallidos</strong> en cuentas de admin/TI, validar origen + token CSRF en mutaciones con cookie y alojar fuentes localmente.</p>
+            </article>
 
-            <div class="task-card">
-              <div class="task-head"><span class="pill-crit">Prioridad 1</span> Validar contrato oficial en Sandbox ATDT</div>
-              Cuando el hotel piloto complete su alta con Llave MX y e.firma, contrastar exactamente los nombres de campos, códigos HTTP, firma JWT (<code>HS256</code> vs <code>RS256</code>) y URLs de respuesta del Manual Técnico (<code>SG_230126_VES_02.pdf</code>) usando <code>/activar-reporte-prueba</code>.
-            </div>
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>5. Endurecer el agente local en recepción</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> <code>agent/pms-sync-agent.js</code> permite <code>http://</code> por defecto y conserva archivos CSV/XML en <code>processed/</code>.</p>
+              <p class="eng-fix"><strong>Acción:</strong> exigir <code>https://</code> con verificación estricta de certificado, <strong>borrar de forma segura</strong> los archivos procesados tras confirmar HTTP <code>200</code> (cero CURPs en disco del hotel) y rotar llaves PMS.</p>
+            </article>
+
+            <article class="eng-card">
+              <div class="eng-head">
+                <h3>6. Contrastar contrato real en Sandbox ATDT</h3>
+                <span class="eng-badge">Prioridad 1</span>
+              </div>
+              <p class="eng-now"><strong>Hoy:</strong> los 4 endpoints del Anexo 2 están validados contra servidor mock local en pruebas automatizadas.</p>
+              <p class="eng-fix"><strong>Acción:</strong> al completar el alta del primer hotel piloto con Llave MX y e.firma, verificar campos exactos, códigos HTTP, algoritmo JWT (<code>HS256</code> vs <code>RS256</code>) y callbacks reales con <code>/activar-reporte-prueba</code>.</p>
+            </article>
           </div>
         </section>
 
-        <!-- SIGUIENTES MEJORAS RECOMENDADAS -->
         <section>
-          <h2 class="sec-title">5. Siguientes pasos recomendados para certificación y operación comercial</h2>
-          <div class="next-strip">
-            <div class="next-item">
-              <strong>Validación real de RFC (SAT)</strong>
-              Verificar el certificado público <code>.cer</code> emitido por el SAT (o el QR de la Constancia de Situación Fiscal) al dar de alta cada hotel real.
-            </div>
-            <div class="next-item">
-              <strong>Consulta en vivo RENAPO / INE</strong>
-              Dejar listo un conector opcional para hoteles que quieran confirmar existencia y nombre oficial de la CURP en tiempo real (Nivel 3).
-            </div>
-            <div class="next-item">
-              <strong>Auditoría Sección 8 y LFPDPPP</strong>
-              Integrar escaneo automático SAST, DAST y SCA en despliegues (cero hallazgos críticos/altos) y firmar contrato de privacidad con cada hotel.
-            </div>
+          <div class="sec-head">
+            <h2>6. Certificación Sección 8 y validación comercial (Prioridad 2)</h2>
+            <span>Listo para escalar a 136+ hoteles</span>
           </div>
+
+          <div class="p2-grid">
+            <article class="p2-card">
+              <h3>Autenticidad de RFC ante el SAT</h3>
+              <p>Validar la cadena del certificado público <code>.cer</code> emitido por el SAT (o el código QR de la Constancia de Situación Fiscal) al registrar cada hotel real.</p>
+            </article>
+            <article class="p2-card">
+              <h3>Consulta en vivo RENAPO / INE</h3>
+              <p>Dejar preparado un adaptador opcional para hoteles que soliciten confirmar vigencia y nombre oficial de la CURP en tiempo real (Nivel 3).</p>
+            </article>
+            <article class="p2-card">
+              <h3>Escaneo SAST / DAST / SCA + LFPDPPP</h3>
+              <p>Integrar Semgrep/CodeQL, OWASP ZAP y Trivy en despliegues (cero hallazgos críticos/altos) y firmar contrato de Encargado de Tratamiento de Datos con cada hotel.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="quickstart">
+          <strong>Arranque rápido para el ingeniero:</strong> clonar el repositorio, ejecutar <code>npm test</code> (debe mostrar
+          <strong>9/9 en verde</strong>), revisar la guía de contenedores en <code>DEPLOY_AWS.md</code> y
+          <code>docker-compose.prod.yml</code>, y contrastar contratos contra el Manual Técnico oficial en
+          <a href="https://dof.gob.mx/2026/GOBERNACION/SG_230126_VES_02.pdf">SG_230126_VES_02.pdf</a>.
         </section>
       </main>
 
       <footer class="footer">
-        <span>© 2026 Certeza ID Systems — Documento técnico para equipo de ingeniería</span>
-        <span>Página 2 de 2</span>
+        <span>© 2026 Certeza ID Systems — Especificación confidencial para equipo de ingeniería</span>
+        <span>Página 3 de 3</span>
       </footer>
     </div>
   </body>
