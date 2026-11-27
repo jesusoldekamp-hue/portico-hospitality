@@ -311,11 +311,15 @@
         color: var(--soft);
       }
 
-      .step-body strong {
+      .step-body > strong:first-child {
         display: block;
         color: var(--black);
         font-size: 9px;
         margin-bottom: 1px;
+      }
+
+      .step-body strong {
+        color: var(--black);
       }
 
       /* TABLA CRIPTOGRÁFICA LIMPIA */
