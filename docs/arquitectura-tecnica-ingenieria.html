@@ -252,11 +252,17 @@
         color: #c1c9d6;
       }
 
-      .threat-item strong {
+      .threat-title {
         display: block;
         color: #ffffff;
         font-size: 8.3px;
-        margin-bottom: 1.5px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .threat-item strong {
+        color: #ffffff;
+        font-weight: 600;
       }
 
       .threat-item code {
@@ -426,8 +432,8 @@
               <text x="207" y="279" fill="#434a57" font-family="Source Code Pro, monospace" font-size="6.9">RLS (hotel_slug) + pg_partman</text>
 
               <rect x="16" y="295" width="364" height="31" rx="3" fill="#f8fafc" stroke="#e2e6ec" />
-              <text x="23" y="307" fill="#0b0d11" font-family="Source Code Pro, monospace" font-size="6.9">Tables: associations, hotels, users, sessions, pui_alerts, guests, segob_outbox, audit_log</text>
-              <text x="23" y="319" fill="#687080" font-family="Source Code Pro, monospace" font-size="6.9">Indexes: (hotel_slug, curp_hash) · (hotel_slug, activa, curp_hash) · purge_expired_guest_pii()</text>
+              <text x="23" y="307" fill="#0b0d11" font-family="Source Code Pro, monospace" font-size="6.5">Tables: associations, hotels, users, sessions, pui_alerts, guests, segob_outbox, audit_log</text>
+              <text x="23" y="319" fill="#687080" font-family="Source Code Pro, monospace" font-size="6.4">Indexes: (hotel_slug, curp_hash) · (hotel_slug, activa, curp_hash) · purge_expired_guest_pii()</text>
 
               <!-- BOUNDARY 4: SEGOB / ATDT -->
               <rect x="404" y="232" width="300" height="102" rx="4" fill="#eef4fa" stroke="#2a5b8f" stroke-width="1.2" />
@@ -540,27 +546,27 @@
           <h2>4. Threat Model y Backlog P0 (Bloqueantes obligatorios antes de recibir PII real)</h2>
           <div class="threat-grid">
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-1</span> Envelope Encryption y Fail-Fast (<code>src/security.js:11-14</code>)</strong>
+              <div class="threat-title"><span class="tag-p0">P0-1</span> Envelope Encryption y Fail-Fast (<code>src/security.js:11-14</code>)</div>
               Hoy existen fallbacks hardcodeados de dev para <code>PUI_JWT_SECRET</code> y <code>PUI_VAULT_KEY</code>, y una llave única compartida. En producción: fallar al arranque si faltan secretos, usar <strong>AWS KMS con DEK por hotel</strong> + columna <code>key_version</code> para rotación segura sin romper blind indexes, y desactivar <code>PORTICO_DEMO_MODE</code> + rutas <code>/api/demo/*</code>.
             </div>
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-2</span> Cableado real a PostgreSQL 16 + RLS + <code>SKIP LOCKED</code></strong>
+              <div class="threat-title"><span class="tag-p0">P0-2</span> Cableado real a PostgreSQL 16 + RLS + <code>SKIP LOCKED</code></div>
               <code>src/db.js</code> corre en <code>node:sqlite</code> (single-node); <code>db-adapter.js</code> ya define el wrapper RLS pero requiere migrar los queries a <code>pg.Pool</code> con rol <code>NOBYPASSRLS</code> + <code>FORCE ROW LEVEL SECURITY</code>, usar <code>FOR UPDATE SKIP LOCKED</code> en <code>segob_outbox</code> para multi-réplica ECS y particionar <code>guests</code> con <code>pg_partman</code>.
             </div>
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-3</span> Perímetro M2M exclusivo para SEGOB</strong>
+              <div class="threat-title"><span class="tag-p0">P0-3</span> Perímetro M2M exclusivo para SEGOB</div>
               Terminar TLS 1.2+/1.3 con <code>Strict-Transport-Security</code> (HSTS), colocar <code>/api/pui/*</code> detrás de <strong>AWS WAF + IP Allowlist de SEGOB/ATDT</strong> (y mTLS si lo soporta la autoridad) y validar que ningún endpoint administrativo quede expuesto en la misma superficie pública.
             </div>
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-4</span> AuthN Web, CSRF y Rate Limit distribuido</strong>
+              <div class="threat-title"><span class="tag-p0">P0-4</span> AuthN Web, CSRF y Rate Limit distribuido</div>
               <code>rateLimit.js</code> usa un <code>Map</code> local en memoria: migrar a <strong>Redis</strong> (ventana deslizante atómica). Agregar <strong>TOTP MFA + lockout</strong> en cuentas <code>ASOCIACION_ADMIN</code> / <code>HOTEL_ADMIN</code>, validación <code>Origin</code> + token CSRF en mutaciones por cookie y alojar fuentes localmente (sin CDNs externos en CSP).
             </div>
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-5</span> Hardening del Agente Local (<code>agent/pms-sync-agent.js</code>)</strong>
+              <div class="threat-title"><span class="tag-p0">P0-5</span> Hardening del Agente Local (<code>agent/pms-sync-agent.js</code>)</div>
               Actualmente permite <code>http://</code> por defecto (<code>:139</code>) y retiene CSV/XML en texto plano en <code>processed/</code> y <code>failed/</code> (<code>:99-111</code>). Exigir <code>https://</code> con verificación estricta de certificado, borrado seguro inmediato tras HTTP <code>200</code> (sin PII residual en PCs de mostrador) y rotación automática de API Keys.
             </div>
             <div class="threat-item">
-              <strong><span class="tag-p0">P0-6</span> Contrato exacto Sandbox ATDT (<code>SG_230126_VES_02.pdf</code>)</strong>
+              <div class="threat-title"><span class="tag-p0">P0-6</span> Contrato exacto Sandbox ATDT (<code>SG_230126_VES_02.pdf</code>)</div>
               Al obtener credenciales de Etapa 1 (Llave MX + e.firma del hotel piloto), validar campos exactos de payload, códigos HTTP, política de firma JWT (<code>HS256</code> vs <code>RS256</code>/JWKS) y endpoints de callback reales mediante <code>/activar-reporte-prueba</code>.
             </div>
           </div>
