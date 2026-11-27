@@ -336,13 +336,13 @@
             </div>
 
             <div class="col-box is-pending">
-              <h3>Falta activar al arrancar con hoteles reales (~10%)</h3>
+              <h3>Pendientes obligatorios antes de huéspedes reales (~10%)</h3>
               <ul class="clean-list">
-                <li><strong>Enlace real con SEGOB (ATDT):</strong> requiere que el primer hotel piloto haga su alta con <strong>Llave MX y e.firma</strong> para recibir llaves oficiales y aprobar pruebas (4 a 6 semanas).</li>
-                <li><strong>Servidor productivo en AWS:</strong> montar los contenedores Docker ya preparados dentro de la cuenta AWS de la Asociación y conectar dominio propio.</li>
-                <li><strong>Escaneo final de seguridad:</strong> correr las pruebas formales (SAST/DAST/SCA) sobre el servidor final antes de liberar a producción.</li>
-                <li><strong>Validación opcional SAT / RENAPO en vivo:</strong> agregar lectura de certificado .cer del SAT al dar de alta hoteles y consulta pagada a RENAPO solo si un hotel la solicita.</li>
-                <li><strong>Prueba de campo por perfil:</strong> validar 20 minutos en sitio con 1 cadena, 1 grupo local y 1 hotel centenario del piloto.</li>
+                <li><strong>Enlace real con SEGOB (ATDT):</strong> alta del hotel piloto con <strong>Llave MX y e.firma</strong>, llaves oficiales y prueba en sitio con 3 perfiles de PMS (4 a 6 semanas).</li>
+                <li><strong>Secretos y acceso seguro:</strong> quitar llaves por defecto y cargarlas en <strong>AWS KMS / Secrets Manager</strong>, apagar modo demo y exigir <strong>2FA / MFA</strong> en cuentas admin y TI.</li>
+                <li><strong>Blindaje de red y web:</strong> HTTPS/TLS 1.2+ con HSTS, <strong>WAF + lista blanca de IPs</strong> para SEGOB, protección CSRF y fuentes alojadas localmente.</li>
+                <li><strong>Base de datos y agente productivo:</strong> conectar <strong>PostgreSQL 16 + RLS cifrado</strong> y Redis en AWS; HTTPS estricto, rotación de llaves y cero CURPs en logs del agente local.</li>
+                <li><strong>Validación y auditoría formal:</strong> lectura de certificado .cer del SAT en altas, escaneo <strong>SAST/DAST/SCA</strong> (Sección 8) y contrato de privacidad <strong>LFPDPPP</strong> por hotel.</li>
               </ul>
             </div>
           </div>
