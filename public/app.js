@@ -1,8 +1,6 @@
 /**
- * Certeza ID — Motor de Enlace PUI
- * Frontend con autenticación RBAC real, terminal de recepción discreta,
- * importador CSV/PMS, configuración SEGOB Sandbox/Producción y cola Outbox.
- * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegado en CDN estático.
+ * Certeza ID — Consola de Cumplimiento PUI (1-Hotel Pilot Ready)
+ * Funciona tanto con el servidor Node.js/SQLite/PostgreSQL como desplegada en CDN estático.
  */
 
 import {
@@ -13,180 +11,42 @@ import {
   openConstancia
 } from './api-client.js';
 import { buildSamplePassportMrz, parseMrz } from './mrz.js';
-import {
-  buildLinuxInstallerScript,
-  buildWindowsInstallerScript,
-  estimateScaleInfrastructure
-} from './installer.js';
-
-const fmtMxn = new Intl.NumberFormat('es-MX', {
-  style: 'currency',
-  currency: 'MXN',
-  maximumFractionDigits: 0
-});
+import { buildLinuxInstallerScript, buildWindowsInstallerScript } from './installer.js';
 
 let currentUser = null;
 let appState = null;
 let usersList = [];
-let selectedHotelSlug = 'crowne-plaza-monterrey';
+let selectedHotelSlug = 'hotel-demo-monterrey';
 let revealApiKey = false;
 
 const ROLE_LABELS = {
-  ASOCIACION_ADMIN: 'Consejo Asociación (Admin)',
-  HOTEL_ADMIN: 'Gerencia TI / Hotel (Aislado por RFC)',
-  RECEPCION: 'Recepción Mostrador (Sigilo)'
+  ASOCIACION_ADMIN: 'Administración General',
+  HOTEL_ADMIN: 'Director / TI del Hotel',
+  RECEPCION: 'Recepción (Modo Sigilo)'
 };
 
 const VIEW_META = {
   resumen: {
-    title: 'Certeza ID — Resumen Ejecutivo y Retorno para la Asociación',
-    subtitle:
-      'Cumplimiento PUI (SEGOB / RENAPO) y protección hotelera sobre arquitectura propia multi-RFC con aislamiento RBAC.'
+    title: 'Panel del hotel',
+    subtitle: 'Estado de cumplimiento PUI SEGOB, huéspedes cifrados y pasos de activación.'
   },
   simulacion: {
-    title: 'Simulación en Vivo: SEGOB (PUI) ↔ PMS del Hotel',
-    subtitle:
-      'Demostración real de autenticación JWT, Fases 1 y 2 históricas, monitoreo silencioso Fase 3 y cola Outbox hacia SEGOB.'
+    title: 'Prueba en vivo SEGOB ↔ Hotel',
+    subtitle: 'Simula reportes oficiales de Gobernación y verifica el modo sigilo en recepción.'
   },
   recepcion: {
-    title: 'Modo Recepción — Terminal de Mostrador (Sigilo Activo)',
-    subtitle:
-      'Vista exclusiva del recepcionista: escaneo rápido de INE/CURP, control legal de menores y cero visibilidad de alertas SEGOB.'
+    title: 'Mostrador de recepción',
+    subtitle: 'Registro rápido por CURP/INE o pasaporte extranjero MRZ con cero alarmas en pantalla.'
   },
   conectores: {
-    title: 'Conectores PMS, Agente Local OPERA y Carga CSV',
-    subtitle:
-      'Integra Oracle OPERA, Cloudbeds, agente local sin puertos abiertos o archivos CSV con validación RENAPO automática.'
-  },
-  hoteles: {
-    title: 'Hoteles Afiliados y Constancias de Cumplimiento PDF',
-    subtitle:
-      'Cada razón social opera su bóveda aislada por RFC y emite evidencias auditables con sello criptográfico SHA-256.'
+    title: 'Conectar PMS y carga CSV / XML',
+    subtitle: 'Conecta Oracle OPERA, Cloudbeds o archivos diarios de llegadas sin cambiar tu sistema.'
   },
   tecnico: {
-    title: 'DOF, Conexión Real a SEGOB y Cola Outbox',
-    subtitle:
-      'Configura credenciales oficiales de SEGOB (Sandbox / Producción) y monitorea entregas confirmadas con backoff exponencial.'
+    title: 'Conexión SEGOB y equipo',
+    subtitle: 'Configura credenciales oficiales ATDT, revisa entregas Outbox y administra accesos del hotel.'
   }
 };
-
-function setupFormValidationAccessibility() {
-  const announcer = document.createElement('div');
-  announcer.setAttribute('aria-live', 'polite');
-  announcer.classList.add('visually-hidden');
-  document.body.append(announcer);
-
-  let announceTimer;
-  let announcedField;
-  const flagged = new WeakSet();
-  const announced = new WeakSet();
-  const supportsUserInvalid = CSS.supports('selector(:user-invalid)');
-  const dirtyMap = new WeakMap();
-
-  const linkError = (el, shown) => {
-    const errorId = el.dataset.error;
-    if (!errorId) return;
-    const ids = (el.getAttribute('aria-describedby') || '')
-      .split(/\s+/)
-      .filter((id) => id && id !== errorId);
-    if (shown) ids.push(errorId);
-    if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
-    else el.removeAttribute('aria-describedby');
-  };
-
-  const announceError = (el) => {
-    const error = document.getElementById(el.dataset.error);
-    if (!error) return;
-    const label = el.labels?.[0] ? `${el.labels[0].textContent.trim()}: ` : '';
-    clearTimeout(announceTimer);
-    announcer.textContent = '';
-    announcedField = el;
-    announceTimer = setTimeout(() => {
-      announcer.textContent = label + error.textContent.trim();
-    }, 450);
-  };
-
-  const syncAria = (el, shouldAnnounce = false) => {
-    if (!el?.matches?.('input:not([type="range"]):not([type="file"]), select, textarea')) return;
-    const invalid = supportsUserInvalid
-      ? el.matches(':user-invalid')
-      : el.classList.contains('user-invalid-fallback');
-    if (invalid) {
-      if (shouldAnnounce && !announced.has(el)) {
-        announceError(el);
-        announced.add(el);
-      }
-      el.setAttribute('aria-invalid', 'true');
-      linkError(el, true);
-      flagged.add(el);
-    } else if (flagged.has(el) || el.getAttribute('aria-invalid') !== 'true') {
-      el.setAttribute('aria-invalid', 'false');
-      linkError(el, false);
-      flagged.delete(el);
-      announced.delete(el);
-      if (announcedField === el) {
-        clearTimeout(announceTimer);
-        announcer.textContent = '';
-      }
-    }
-  };
-
-  document.querySelectorAll('input:not([type="range"]):not([type="file"]), select, textarea').forEach((el) =>
-    syncAria(el)
-  );
-
-  document.addEventListener(
-    'blur',
-    (e) => {
-      const el = e.target;
-      if (!supportsUserInvalid && el?.checkValidity) {
-        const st = dirtyMap.get(el) || { interacted: false, blurred: false };
-        st.blurred = true;
-        dirtyMap.set(el, st);
-        if (st.interacted) el.classList.toggle('user-invalid-fallback', !el.validity.valid);
-      }
-      syncAria(el, true);
-    },
-    true
-  );
-
-  document.addEventListener('input', (e) => {
-    const el = e.target;
-    if (!supportsUserInvalid && el?.checkValidity) {
-      const st = dirtyMap.get(el) || { interacted: false, blurred: false };
-      st.interacted = true;
-      dirtyMap.set(el, st);
-      if (st.blurred) el.classList.toggle('user-invalid-fallback', !el.validity.valid);
-    }
-    if (el?.hasAttribute?.('aria-invalid')) syncAria(el);
-  });
-
-  document.addEventListener(
-    'invalid',
-    (e) => {
-      if (!supportsUserInvalid && e.target?.classList) {
-        e.target.classList.add('user-invalid-fallback');
-      }
-      announced.add(e.target);
-      syncAria(e.target);
-    },
-    true
-  );
-
-  document.addEventListener(
-    'reset',
-    (e) => {
-      setTimeout(() => {
-        for (const el of e.target.elements || []) {
-          el.classList?.remove('user-invalid-fallback');
-          dirtyMap.delete(el);
-          syncAria(el);
-        }
-      });
-    },
-    true
-  );
-}
 
 function setupDialogClosedByFallback() {
   if ('closedBy' in HTMLDialogElement.prototype) return;
@@ -205,39 +65,19 @@ function setupDialogClosedByFallback() {
   }
 }
 
-function syncSliderValue(input, ariaText) {
-  input.style.setProperty('--attr-min', input.min || '0');
-  input.style.setProperty('--attr-max', input.max || '100');
-  input.style.setProperty('--control-value', input.value);
-  if (ariaText) input.setAttribute('aria-valuetext', ariaText);
-}
-
 function setupDeclarativeCopyButtons() {
   const timers = new WeakMap();
-  let lastMessage = '';
 
   function report(button, ok) {
     const tip = button.nextElementSibling;
-    if (!tip) return;
+    if (!tip || !tip.classList.contains('copy-tip')) return;
     clearTimeout(timers.get(button));
-    button.removeAttribute('data-copied');
-    button.removeAttribute('data-failed');
-    let message = ok ? 'Copiado' : 'Error al copiar';
-    if (message === lastMessage) message += '\u00A0';
-    lastMessage = message;
-    tip.textContent = '';
-    void button.offsetWidth;
-    button.setAttribute(ok ? 'data-copied' : 'data-failed', '');
-    requestAnimationFrame(() => {
-      tip.textContent = message;
-    });
+    tip.textContent = ok ? 'Copiado' : 'Error al copiar';
     timers.set(
       button,
       setTimeout(() => {
-        button.removeAttribute('data-copied');
-        button.removeAttribute('data-failed');
         tip.textContent = '';
-      }, 2000)
+      }, 1800)
     );
   }
 
@@ -266,7 +106,6 @@ function setupDeclarativeCopyButtons() {
     );
   } else {
     document.addEventListener('click', (event) => {
-      if (event.defaultPrevented) return;
       const button = event.target.closest('button[command="--copy"]');
       if (!button) return;
       const target = document.getElementById(button.getAttribute('commandfor'));
@@ -314,25 +153,21 @@ function switchView(viewId) {
 function applyRoleVisibility() {
   if (!currentUser) return;
   const role = currentUser.rol;
+  const isRec = role === 'RECEPCION';
 
   document.getElementById('session-user-name').textContent = currentUser.nombre;
   document.getElementById('session-user-role').textContent = ROLE_LABELS[role] || role;
 
-  let firstAllowedView = null;
   for (const btn of document.querySelectorAll('.nav-btn')) {
     const allowed = (btn.dataset.roles || '').split(',').includes(role);
     btn.hidden = !allowed;
-    if (allowed && !firstAllowedView) firstAllowedView = btn.dataset.view;
   }
 
-  document.getElementById('btn-open-add-hotel').hidden = role !== 'ASOCIACION_ADMIN';
-  document.getElementById('btn-add-hotel-table').hidden = role !== 'ASOCIACION_ADMIN';
-  document.getElementById('btn-quick-demo').hidden = role === 'RECEPCION';
-  document.getElementById('btn-reset-demo').hidden = role !== 'ASOCIACION_ADMIN';
+  document.getElementById('btn-topbar-constancia').hidden = isRec;
+  document.getElementById('btn-quick-demo').hidden = isRec;
+  document.getElementById('btn-reset-demo').hidden = isRec;
 
-  const defaultView =
-    role === 'RECEPCION' ? 'recepcion' : role === 'HOTEL_ADMIN' ? 'simulacion' : firstAllowedView || 'resumen';
-  switchView(defaultView);
+  switchView(isRec ? 'recepcion' : 'resumen');
 }
 
 function showAuthScreen(demoAccounts = []) {
@@ -341,19 +176,31 @@ function showAuthScreen(demoAccounts = []) {
 
   const box = document.getElementById('demo-roles-box');
   const list = document.getElementById('demo-roles-list');
+  const details = document.getElementById('auth-manual-details');
+
   if (demoAccounts.length > 0) {
     box.hidden = false;
     list.innerHTML = demoAccounts
       .map(
         (acc) => `
-        <button type="button" class="demo-role-btn" data-demo-email="${escapeHtml(acc.email)}" data-demo-pass="${escapeHtml(acc.passwordDemo)}">
-          <strong>${escapeHtml(acc.etiqueta)}</strong>
-          <span>${escapeHtml(acc.alcance)}</span>
+        <button
+          type="button"
+          class="demo-role-btn"
+          data-demo-email="${escapeHtml(acc.email)}"
+          data-demo-pass="${escapeHtml(acc.passwordDemo)}"
+        >
+          <span class="demo-role-head">
+            <strong>${escapeHtml(acc.etiqueta)}</strong>
+            <span class="demo-role-tag">${acc.rol === 'RECEPCION' ? 'Sigilo' : 'Control total'}</span>
+          </span>
+          <span class="demo-role-desc">${escapeHtml(acc.alcance)}</span>
         </button>`
       )
       .join('');
+    if (details) details.open = false;
   } else {
     box.hidden = true;
+    if (details) details.open = true;
   }
 }
 
@@ -402,161 +249,6 @@ async function bootstrapAuth() {
   }
 }
 
-function updateRoiCalculator() {
-  const hotelsEl = document.getElementById('roi-hotels');
-  const extEl = document.getElementById('roi-external');
-  const feeEl = document.getElementById('roi-assoc-fee');
-  const devEl = document.getElementById('roi-dev-cost');
-  const foundersEl = document.getElementById('roi-founders');
-
-  const hotels = Number(hotelsEl.value);
-  const extMonthly = Number(extEl.value);
-  const assocFee = Number(feeEl.value);
-  const devCost = Number(devEl.value);
-  const founders = Number(foundersEl.value);
-
-  syncSliderValue(hotelsEl, `${hotels} hoteles`);
-  syncSliderValue(extEl, `${fmtMxn.format(extMonthly)} pesos al mes por hotel`);
-  syncSliderValue(feeEl, `${fmtMxn.format(assocFee)} pesos al mes por hotel`);
-  syncSliderValue(devEl, `${fmtMxn.format(devCost)} pesos inversión única`);
-  syncSliderValue(foundersEl, `${founders} hoteles fundadores`);
-
-  for (const chip of document.querySelectorAll('.preset-chip[data-scale-hotels]')) {
-    chip.classList.toggle('is-active', Number(chip.dataset.scaleHotels) === hotels);
-  }
-
-  const infra = estimateScaleInfrastructure(hotels);
-  const sharedCloudMonthly = infra.monthlyAwsMxn;
-  const supportMonthly = infra.supportRetainerMxn;
-
-  const extMonthlyTotal = hotels * extMonthly;
-  const extY1 = hotels * extMonthly * 12;
-  const extY3 = hotels * extMonthly * 36;
-  const hotelsPayY3 = hotels * assocFee * 36;
-  const hotelsSavingsY3 = Math.max(0, extY3 - hotelsPayY3);
-  const cloudPerHotel = Math.max(1, Math.round(sharedCloudMonthly / hotels));
-  const assocNetAnnual = hotels * assocFee * 12 - sharedCloudMonthly * 12;
-  const gremioPaybackMonths = extMonthlyTotal > 0 ? (devCost / extMonthlyTotal).toFixed(1) : null;
-
-  const perFounder = Math.ceil(devCost / founders);
-  const monthlyNet = assocNetAnnual / 12;
-  const paybackMonths = monthlyNet > 0 ? Math.ceil(devCost / monthlyNet) : null;
-
-  document.getElementById('roi-hotels-out').textContent = `${hotels.toLocaleString('es-MX')} hoteles`;
-  document.getElementById('roi-external-out').textContent = `${fmtMxn.format(extMonthly)} MXN`;
-  document.getElementById('roi-assoc-fee-out').textContent = `${fmtMxn.format(assocFee)} MXN`;
-  document.getElementById('roi-dev-cost-out').textContent = `${fmtMxn.format(devCost)} MXN`;
-  document.getElementById('roi-founders-out').textContent = `${founders} hoteles`;
-
-  document.getElementById('roi-ext-y1').textContent = `${fmtMxn.format(extY1)} MXN / año`;
-  document.getElementById('roi-ext-y3').textContent = `${fmtMxn.format(extY3)} MXN`;
-  document.getElementById('roi-cloud-per-hotel').textContent = `${fmtMxn.format(cloudPerHotel)} MXN`;
-  document.getElementById('roi-hotels-savings').textContent = `${fmtMxn.format(hotelsSavingsY3)} MXN`;
-  document.getElementById('roi-assoc-net').textContent =
-    assocNetAnnual >= 0
-      ? `${fmtMxn.format(assocNetAnnual)} MXN / año`
-      : `Subsidiado (${fmtMxn.format(Math.abs(assocNetAnnual))} MXN / año)`;
-
-  const tierNote = document.getElementById('roi-aws-tier-note');
-  if (tierNote) {
-    tierNote.textContent = `${infra.tier}: ${infra.dbSpec} · ${infra.computeSpec} (${fmtMxn.format(sharedCloudMonthly)} MXN/mes total · ~${infra.dailyCheckins.toLocaleString('es-MX')} check-ins/día).`;
-  }
-  const tierBadge = document.getElementById('scale-tier-badge');
-  if (tierBadge) {
-    tierBadge.textContent = `${infra.tier.split('·')[0].trim()} · SLA ${infra.sla}`;
-  }
-  const benchSub = document.getElementById('scale-bench-subtitle');
-  if (benchSub) {
-    benchSub.textContent = `Cálculo dinámico a 3 años para ${hotels.toLocaleString('es-MX')} hoteles (antes de IVA), incluyendo nube AWS real (${fmtMxn.format(sharedCloudMonthly)}/mes) y póliza opcional 24/7.`;
-  }
-
-  const benchBody = document.getElementById('scale-bench-tbody');
-  if (benchBody) {
-    const puiHoteles3y = hotels * (4350 + 930 * 36);
-    const puiMexicoAnual3y = hotels * (8500 * 3);
-    const tarifaGrupal3y = hotels * (450 * 36);
-    const porticoAws3y = devCost + sharedCloudMonthly * 36;
-    const porticoManaged3y = devCost + (sharedCloudMonthly + supportMonthly) * 36;
-    const porticoManagedPerHotel = Math.max(1, Math.round((sharedCloudMonthly + supportMonthly) / hotels));
-
-    const rows = [
-      {
-        name: 'PUIhoteles (Rotamundos)',
-        sub: '$930/mes + $4,350 setup por hotel',
-        perHotel: '$1,051 MXN',
-        total3y: puiHoteles3y,
-        savings: '— (Referencia alta)',
-        owner: 'Tercero SaaS (0% Asociación)',
-        portico: false
-      },
-      {
-        name: 'PUI México (Plan Anual)',
-        sub: '$8,500 + IVA/año por propiedad',
-        perHotel: '$708 MXN',
-        total3y: puiMexicoAnual3y,
-        savings: fmtMxn.format(Math.max(0, puiHoteles3y - puiMexicoAnual3y)),
-        owner: 'PROLOG S.A. de C.V. (0% Asociación)',
-        portico: false
-      },
-      {
-        name: 'Tarifa Grupal Externa (-50%)',
-        sub: 'Descuento por volumen negociado ($450/mes)',
-        perHotel: '$450 MXN',
-        total3y: tarifaGrupal3y,
-        savings: fmtMxn.format(Math.max(0, puiHoteles3y - tarifaGrupal3y)),
-        owner: 'Proveedor externo (0% Asociación)',
-        portico: false
-      },
-      {
-        name: 'Certeza ID (Nube AWS propia)',
-        sub: `Pago único ${fmtMxn.format(devCost)} + AWS ${fmtMxn.format(sharedCloudMonthly)}/mes`,
-        perHotel: `${fmtMxn.format(cloudPerHotel)} MXN`,
-        total3y: porticoAws3y,
-        savings: `${fmtMxn.format(Math.max(0, tarifaGrupal3y - porticoAws3y))} menos que -50%`,
-        owner: '100% Asociación en su propio AWS',
-        portico: true
-      },
-      {
-        name: 'Certeza ID (Todo Incluido 24/7)',
-        sub: `Incluye AWS + Póliza 24/7 y cambios DOF (${fmtMxn.format(supportMonthly)}/mes)`,
-        perHotel: `${fmtMxn.format(porticoManagedPerHotel)} MXN`,
-        total3y: porticoManaged3y,
-        savings: `${fmtMxn.format(Math.max(0, tarifaGrupal3y - porticoManaged3y))} menos que -50%`,
-        owner: '100% Asociación · Cero lock-in',
-        portico: true
-      }
-    ];
-
-    benchBody.innerHTML = rows
-      .map(
-        (r) => `
-        <tr class="${r.portico ? 'row-portico' : ''}">
-          <th scope="row">
-            ${escapeHtml(r.name)}
-            <span class="cell-sub">${escapeHtml(r.sub)}</span>
-          </th>
-          <td>${escapeHtml(r.perHotel)}</td>
-          <td><strong>${escapeHtml(fmtMxn.format(r.total3y))} MXN</strong></td>
-          <td>${escapeHtml(r.savings)}</td>
-          <td>${escapeHtml(r.owner)}</td>
-        </tr>`
-      )
-      .join('');
-  }
-
-  const gremioPaybackEl = document.getElementById('roi-gremio-payback');
-  if (gremioPaybackEl) {
-    gremioPaybackEl.textContent = gremioPaybackMonths
-      ? `${gremioPaybackMonths} meses`
-      : 'Inmediato';
-  }
-
-  document.getElementById('roi-per-founder').textContent = `${fmtMxn.format(perFounder)} MXN`;
-  document.getElementById('roi-payback-months').textContent = paybackMonths
-    ? `${paybackMonths} meses`
-    : 'Membresía incluida';
-}
-
 async function fetchUsers() {
   if (!currentUser || currentUser.rol === 'RECEPCION') {
     usersList = [];
@@ -593,69 +285,97 @@ function populateHotelSelect(selectId) {
         `<option value="${escapeHtml(h.slug)}" ${h.slug === selectedHotelSlug ? 'selected' : ''}>${escapeHtml(h.nombre)} (${escapeHtml(h.rfc)})</option>`
     )
     .join('');
-  sel.disabled = appState.hotels.length <= 1;
+  if (selectId === 'global-hotel-select') {
+    sel.hidden = appState.hotels.length <= 1;
+  }
 }
 
 function renderAll() {
   if (!appState) return;
-  const activeAlerts = appState.alerts.filter((a) => a.activa);
-  const deliveredOutbox = appState.outbox.filter((o) => o.estado === 'ENTREGADO');
+  const hotel = appState.hotels.find((h) => h.slug === selectedHotelSlug) || appState.hotels[0];
+  const hotelGuests = appState.guests.filter((g) => !hotel || g.hotelSlug === hotel.slug);
+  const activeAlerts = appState.alerts.filter((a) => a.activa && (!hotel || a.hotelSlug === hotel.slug));
+  const deliveredOutbox = appState.outbox.filter((o) => o.estado === 'ENTREGADO' && (!hotel || o.hotelSlug === hotel.slug));
+  const hotelAudit = appState.auditLog.filter((e) => !hotel || e.hotelSlug === hotel.slug);
   const cadenaOk = appState.integridadCadena?.integra !== false;
   const isStatic = getRuntimeMode() === 'static-pages';
 
-  document.getElementById('kpi-hotels-count').textContent = String(appState.hotels.length);
+  document.getElementById('kpi-guests-count').textContent = String(hotelGuests.length);
   document.getElementById('kpi-alerts-count').textContent = String(activeAlerts.length);
   document.getElementById('kpi-outbox-count').textContent = String(deliveredOutbox.length);
-  document.getElementById('kpi-audit-count').textContent = String(appState.auditLog.length);
+  document.getElementById('kpi-audit-count').textContent = String(hotelAudit.length);
   document.getElementById('kpi-chain-meta').textContent = cadenaOk
     ? 'Cadena SHA-256 íntegra'
-    : 'Revisar integridad de bitácora';
+    : 'Revisar integridad';
   document.getElementById('sidebar-chain-status').textContent = isStatic
-    ? 'Cloud CDN 24/7 · SHA-256 íntegro'
-    : cadenaOk
-      ? 'SQLite ACID · SHA-256 íntegro'
-      : 'SQLite ACID · Revisar cadena';
+    ? 'Demo interactiva · SHA-256 íntegro'
+    : 'Servidor activo · SHA-256 íntegro';
 
-  const storageDesc = document.getElementById('storage-engine-desc');
-  if (storageDesc && appState.storage?.engineLabel) {
-    storageDesc.textContent = `${appState.storage.engineLabel} · ${appState.storage.encryptionStandard}`;
-  }
-
-  populateHotelSelect('sim-hotel-select');
-  populateHotelSelect('desk-hotel-select');
-  populateHotelSelect('conn-hotel-select');
+  populateHotelSelect('global-hotel-select');
   populateHotelSelect('new-user-hotel');
 
-  const currentHotel = appState.hotels.find((h) => h.slug === selectedHotelSlug) || appState.hotels[0];
-  if (currentHotel) {
-    document.getElementById('pms-panel-title').textContent = `2. Recepción PMS — ${currentHotel.nombre}`;
-    document.getElementById('desk-hotel-title').textContent = `Terminal de Mostrador — ${currentHotel.nombre}`;
+  if (hotel) {
+    document.getElementById('sidebar-hotel-name').textContent = hotel.nombre;
+    document.getElementById('hero-hotel-status').textContent = hotel.estatus || 'Activo';
+    document.getElementById('hero-hotel-name').textContent = hotel.nombre;
+    document.getElementById('hero-hotel-meta').textContent = `RFC ${hotel.rfc} · ${hotel.ciudad} · ${hotel.habitaciones} habitaciones · ${hotel.pms}`;
+    document.getElementById('hero-segob-mode').textContent = hotel.segobMode || 'SANDBOX_SIMULADO';
+    document.getElementById('hero-llave-status').textContent = hotel.llaveMxStatus || 'Certificado Sandbox';
+
+    document.getElementById('pms-panel-title').textContent = `2. Mostrador ${hotel.nombre} (Sigilo)`;
+    document.getElementById('desk-hotel-title').textContent = `Terminal de Mostrador — ${hotel.nombre}`;
+
     const dlLink = document.getElementById('btn-download-csv-template');
     if (isStatic) {
-      dlLink.href = buildDemoCsvBlobUrl(currentHotel.slug);
-      dlLink.download = `plantilla_huespedes_${currentHotel.slug}.csv`;
+      dlLink.href = buildDemoCsvBlobUrl();
+      dlLink.download = `plantilla_huespedes_${hotel.slug}.csv`;
     } else {
-      dlLink.href = `./api/pms/${currentHotel.slug}/csv-template`;
+      dlLink.href = `./api/pms/${hotel.slug}/csv-template`;
       dlLink.removeAttribute('download');
     }
+
     if (currentUser?.rol !== 'RECEPCION') {
-      renderConnectorPanel(currentHotel);
-      renderDofSpec(currentHotel);
-      populateSegobConfigForm(currentHotel);
+      renderConnectorPanel(hotel);
+      renderDofSpec(hotel);
+      populateSegobConfigForm(hotel);
     }
   }
 
+  renderOverviewAudit(hotelAudit);
   renderActiveAlerts();
   renderHotelGuests('hotel-guests-list');
   renderHotelGuests('desk-guests-list');
-  renderAuditFeed();
-  renderOutboxFeed();
-  renderHotelsTable();
+  renderAuditFeed(hotelAudit);
+  renderOutboxFeed(hotel);
+}
+
+function renderOverviewAudit(logs) {
+  const container = document.getElementById('overview-audit-list');
+  if (!container) return;
+  const recent = logs.slice(0, 5);
+  if (!recent.length) {
+    container.innerHTML = '<div class="empty-state">Aún no hay eventos registrados.</div>';
+    return;
+  }
+  container.innerHTML = recent
+    .map(
+      (entry) => `
+      <div class="mini-item">
+        <div class="mini-item-head">
+          <span class="badge ${entry.critico ? 'badge-danger' : entry.direccion === 'HOTEL → SEGOB' ? 'badge-active' : 'badge-neutral'}">
+            ${escapeHtml(entry.fase || entry.direccion)}
+          </span>
+          <span class="audit-time">${escapeHtml(formatTime(entry.timestamp))}</span>
+        </div>
+        <div class="mini-item-meta">${escapeHtml(entry.resumen)}</div>
+      </div>`
+    )
+    .join('');
 }
 
 function populateSegobConfigForm(hotel) {
   document.getElementById('cfg-segob-mode').value = hotel.segobMode || 'SANDBOX_SIMULADO';
-  document.getElementById('cfg-llave-mx').value = hotel.llaveMxStatus || 'Pendiente';
+  document.getElementById('cfg-llave-mx').value = hotel.llaveMxStatus || 'Certificado Sandbox';
   document.getElementById('cfg-segob-url').value = hotel.segobBaseUrl || '';
   document.getElementById('cfg-segob-user').value = hotel.segobUsuario || '';
   document.getElementById('cfg-segob-pass').value = '';
@@ -664,14 +384,15 @@ function populateSegobConfigForm(hotel) {
 function renderConnectorPanel(hotel) {
   document.getElementById('conn-hotel-rfc').textContent = `RFC: ${hotel.rfc}`;
   const key = hotel.pmsApiKey || '';
-  const masked = key ? `${key.slice(0, 16)}••••••••••••••••` : 'Sin llave';
+  const masked = key ? `${key.slice(0, 14)}••••••••••••••••` : 'Sin llave';
   const keyEl = document.getElementById('conn-api-key');
   keyEl.textContent = revealApiKey ? key : masked;
   keyEl.dataset.copyValue = key;
-  document.getElementById('btn-toggle-key').textContent = revealApiKey ? 'Ocultar llave' : 'Mostrar llave';
+  document.getElementById('btn-toggle-key').textContent = revealApiKey ? 'Ocultar' : 'Mostrar';
 
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.hospitalitypui.id' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.certezaid.mx' : window.location.origin;
   const shownKey = revealApiKey ? key : '<TU_LLAVE_PMS>';
+  const sampleCurp = appState.escenariosDemo?.huespedSinAlerta?.curp || 'TEGC850910HNLVRN05';
 
   document.getElementById('pms-agent-snippet').textContent = `# Ejecutar en servidor local de ${hotel.nombre} (Windows / Linux)
 node agent/pms-sync-agent.js \\
@@ -686,7 +407,7 @@ curl -s -X POST "${origin}/api/pms/${hotel.slug}/checkin" \\
   -H "X-Portico-PMS-Key: ${shownKey}" \\
   -d '{
     "nombre": "SOFIA MARTINEZ GARZA",
-    "curp": "${appState.escenariosDemo.huespedSinAlerta.curp}",
+    "curp": "${sampleCurp}",
     "habitacion": "0804"
   }'`;
 }
@@ -697,7 +418,7 @@ function renderActiveAlerts() {
 
   if (!list.length) {
     container.innerHTML =
-      '<div class="empty-state">No hay reportes de búsqueda cargados para este hotel. Usa un escenario rápido arriba para probar.</div>';
+      '<div class="empty-state">No hay reportes de búsqueda activos. Usa un escenario rápido arriba para probar.</div>';
     return;
   }
 
@@ -709,18 +430,18 @@ function renderActiveAlerts() {
           <code>${escapeHtml(a.reporteId)}</code>
           ${
             a.activa
-              ? `<span class="badge badge-danger">Fase 3 activa</span>`
-              : `<span class="badge badge-neutral">Desactivada</span>`
+              ? '<span class="badge badge-danger">Fase 3 activa</span>'
+              : '<span class="badge badge-neutral">Cerrado</span>'
           }
         </div>
         <div class="mini-item-meta">
-          CURP: <code>${escapeHtml(a.curpEnmascarada)}</code> · ${escapeHtml(a.tipoAlerta)} · ${escapeHtml(a.cifrado)}
+          CURP: <code>${escapeHtml(a.curpEnmascarada)}</code> · ${escapeHtml(a.tipoAlerta)}
         </div>
-        <div class="mini-item-head" style="margin-top: 0.35rem; margin-bottom: 0;">
-          <span class="mini-item-meta">Coincidencias enviadas a SEGOB: <strong>${a.coincidenciasReportadas}</strong></span>
+        <div class="mini-item-head" style="margin-top: 0.4rem">
+          <span class="mini-item-meta" style="margin-top: 0">Coincidencias enviadas: <strong>${a.coincidenciasReportadas}</strong></span>
           ${
             a.activa
-              ? `<button type="button" class="btn-link-danger" data-deactivate="${escapeHtml(a.reporteId)}">Desactivar reporte</button>`
+              ? `<button type="button" class="btn-link-danger" data-deactivate="${escapeHtml(a.reporteId)}">Desactivar</button>`
               : ''
           }
         </div>
@@ -745,34 +466,32 @@ function renderHotelGuests(targetId) {
       <div class="mini-item">
         <div class="mini-item-head">
           <strong>${escapeHtml(g.nombre)}</strong>
-          <span class="badge ${g.esMenor ? 'badge-pending' : 'badge-neutral'}">${g.esMenor ? 'Menor de edad' : `Hab. ${escapeHtml(g.habitacion)}`}</span>
+          <span class="badge badge-neutral">Hab. ${escapeHtml(g.habitacion)}</span>
         </div>
         <div class="mini-item-meta">
-          CURP: <code>${escapeHtml(g.curpEnmascarada)}</code> · ${escapeHtml(g.tipo)}
+          ID: <code>${escapeHtml(g.curpEnmascarada)}</code> · ${escapeHtml(g.tipo)}
         </div>
       </div>`
     )
     .join('');
 }
 
-function renderAuditFeed() {
+function renderAuditFeed(logs) {
   const container = document.getElementById('audit-feed');
-  const logs = appState.auditLog.slice(0, 40);
+  const slice = logs.slice(0, 30);
 
-  if (!logs.length) {
+  if (!slice.length) {
     container.innerHTML = '<div class="empty-state">Sin eventos registrados.</div>';
     return;
   }
 
-  container.innerHTML = logs
+  container.innerHTML = slice
     .map((entry) => {
       const badgeClass = entry.critico
         ? 'badge-danger'
-        : entry.fase === 'PROTOCOLO MENORES LGT'
-          ? 'badge-pending'
-          : entry.direccion === 'HOTEL → SEGOB'
-            ? 'badge-active'
-            : 'badge-neutral';
+        : entry.direccion === 'HOTEL → SEGOB'
+          ? 'badge-active'
+          : 'badge-neutral';
 
       return `
         <article class="audit-entry ${entry.critico ? 'critico' : ''}">
@@ -785,7 +504,7 @@ function renderAuditFeed() {
             ${escapeHtml(entry.direccion)} · ${escapeHtml(entry.endpoint)} · SHA-256: ${escapeHtml((entry.hash || '').slice(0, 14))}…
           </div>
           <details>
-            <summary>Ver trama JSON y evidencia auditable</summary>
+            <summary>Ver evidencia JSON</summary>
             <pre>${escapeHtml(JSON.stringify(entry.payload, null, 2))}</pre>
           </details>
         </article>`;
@@ -793,14 +512,14 @@ function renderAuditFeed() {
     .join('');
 }
 
-function renderOutboxFeed() {
+function renderOutboxFeed(hotel) {
   const container = document.getElementById('outbox-feed');
   if (!container) return;
-  const items = (appState.outbox || []).slice(0, 25);
+  const items = (appState.outbox || []).filter((o) => !hotel || o.hotelSlug === hotel.slug).slice(0, 20);
 
   if (!items.length) {
     container.innerHTML =
-      '<div class="empty-state">Aún no se han encolado notificaciones salientes hacia SEGOB. Ejecuta una simulación para ver la entrega y acuse.</div>';
+      '<div class="empty-state">Aún no hay envíos salientes hacia SEGOB. Ejecuta una prueba en vivo para ver el acuse.</div>';
     return;
   }
 
@@ -819,61 +538,15 @@ function renderOutboxFeed() {
             <span class="audit-time">${escapeHtml(formatTime(job.entregadoEn || job.creadoEn))}</span>
           </div>
           <p class="audit-summary">
-            ${escapeHtml(job.endpoint)} · Reporte <code>${escapeHtml(job.reporteId)}</code> (${escapeHtml(job.hotelSlug)})
+            ${escapeHtml(job.endpoint)} · Folio <code>${escapeHtml(job.reporteId)}</code>
           </p>
           <div class="audit-meta">
             Intentos: ${job.intentos}/${job.maxIntentos}
             ${job.ultimoHttp ? ` · HTTP ${job.ultimoHttp}` : ''}
             ${job.latenciaMs ? ` · ${job.latenciaMs} ms` : ''}
             ${job.acuseSegob ? ` · Acuse: ${escapeHtml(job.acuseSegob)}` : ''}
-            ${job.ultimoError ? ` · Error: ${escapeHtml(job.ultimoError)}` : ''}
           </div>
         </article>`;
-    })
-    .join('');
-}
-
-function renderHotelsTable() {
-  const tbody = document.getElementById('hotels-tbody');
-  tbody.innerHTML = appState.hotels
-    .map((h) => {
-      const statusClass =
-        h.estatus === 'Piloto Activo' || h.estatus === 'Activo'
-          ? 'badge-active'
-          : h.estatus === 'Siguiente Fase'
-            ? 'badge-pending'
-            : 'badge-neutral';
-      return `
-        <tr>
-          <th scope="row">
-            ${escapeHtml(h.nombre)}
-            <span class="cell-sub">${escapeHtml(h.ciudad)}</span>
-          </th>
-          <td>
-            ${escapeHtml(h.grupo)}
-            <span class="cell-sub">RFC: ${escapeHtml(h.rfc)}</span>
-          </td>
-          <td>${escapeHtml(h.habitaciones)}</td>
-          <td>
-            ${escapeHtml(h.pms)}
-            <span class="cell-sub">${escapeHtml(h.modoIntegracion)}</span>
-          </td>
-          <td>
-            ${escapeHtml(h.segobMode || 'SANDBOX_SIMULADO')}
-            <span class="cell-sub">${escapeHtml(h.llaveMxStatus)}</span>
-          </td>
-          <td><span class="badge ${statusClass}">${escapeHtml(h.estatus)}</span></td>
-          <td>
-            <div class="row-actions">
-              <button type="button" class="btn-secondary btn-sm" data-open-cert="${escapeHtml(h.slug)}">
-                Constancia PDF
-              </button>
-              <button type="button" class="btn-secondary btn-sm" data-open-conn="${escapeHtml(h.slug)}">
-                CSV / API
-              </button>
-            </div>
-          </td>
-        </tr>`;
     })
     .join('');
 }
@@ -882,13 +555,13 @@ function renderUsersTable() {
   const tbody = document.getElementById('users-tbody');
   if (!tbody) return;
   if (!usersList.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="cell-sub">Sin cuentas registradas en este alcance.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="cell-sub">Sin cuentas registradas.</td></tr>';
     return;
   }
   tbody.innerHTML = usersList
     .map((u) => {
       const hotelObj = appState?.hotels?.find((h) => h.slug === u.hotelSlug);
-      const scopeLabel = u.rol === 'ASOCIACION_ADMIN' ? 'Red completa Asociación' : hotelObj ? hotelObj.nombre : u.hotelSlug || '—';
+      const scopeLabel = hotelObj ? hotelObj.nombre : u.hotelSlug || 'Hotel Demo Monterrey';
       const isSelf = currentUser && u.email === currentUser.email;
       const roleClass = u.rol === 'RECEPCION' ? 'badge-neutral' : 'badge-active';
       const statusBadge = u.activo
@@ -915,16 +588,20 @@ function renderUsersTable() {
 
 function renderDofSpec(hotel) {
   if (!hotel) return;
-  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.hospitalitypui.id' : window.location.origin;
+  const origin = getRuntimeMode() === 'static-pages' ? 'https://api.certezaid.mx' : window.location.origin;
   const slug = hotel.slug;
+  const sampleCurp =
+    appState.escenariosDemo?.alertaEnTiempoReal?.curp ||
+    appState.escenariosDemo?.menorEnTiempoReal?.curp ||
+    'GASR880514HNLRLZ08';
+
   const endpoints = [
-    { method: 'POST', path: `/api/pui/${slug}/login`, desc: 'Emite token Bearer JWT (HS256)' },
-    { method: 'POST', path: `/api/pui/${slug}/activar-reporte`, desc: 'Recibe alerta SEGOB y ejecuta Fases 1, 2 y 3' },
-    { method: 'POST', path: `/api/pui/${slug}/activar-reporte-prueba`, desc: 'Validación oficial en entorno Sandbox' },
-    { method: 'POST', path: `/api/pui/${slug}/desactivar-reporte`, desc: 'Detiene monitoreo continuo Fase 3' },
-    { method: 'POST', path: `/api/pms/${slug}/checkin`, desc: 'Webhook PMS (X-Portico-PMS-Key) — Fase 3 silenciosa' },
-    { method: 'POST', path: `/api/pms/${slug}/import-csv`, desc: 'Carga masiva CSV / Agente local OPERA' },
-    { method: 'GET', path: `/constancia/${slug}`, desc: 'Constancia Oficial imprimible / PDF con sello SHA-256' }
+    { method: 'POST', path: `/api/pui/${slug}/login`, desc: 'Emite token Bearer JWT para SEGOB' },
+    { method: 'POST', path: `/api/pui/${slug}/activar-reporte`, desc: 'Recibe reporte oficial y ejecuta Fases 1, 2 y 3' },
+    { method: 'POST', path: `/api/pui/${slug}/activar-reporte-prueba`, desc: 'Validación oficial en Sandbox ATDT' },
+    { method: 'POST', path: `/api/pui/${slug}/desactivar-reporte`, desc: 'Cierra monitoreo continuo Fase 3' },
+    { method: 'POST', path: `/api/pms/${slug}/checkin`, desc: 'Webhook PMS (cruce silencioso Fase 3)' },
+    { method: 'POST', path: `/api/pms/${slug}/import-csv`, desc: 'Carga masiva CSV / XML de Oracle OPERA' }
   ];
 
   document.getElementById('dof-endpoints-list').innerHTML = endpoints
@@ -947,54 +624,39 @@ TOKEN=$(curl -s -X POST "${origin}/api/pui/${slug}/login" \\
 curl -s -X POST "${origin}/api/pui/${slug}/activar-reporte-prueba" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
-  -d '{"id":"FUB-SANDBOX-001","curp":"${appState.escenariosDemo.menorEnTiempoReal.curp}"}'`;
+  -d '{"id":"FUB-SANDBOX-001","curp":"${sampleCurp}"}'`;
 }
 
-async function checkCurpLive(raw, metaElId, minorBoxId) {
+async function checkCurpLive(raw, metaElId) {
   const box = document.getElementById(metaElId);
-  const minorBox = document.getElementById(minorBoxId);
+  if (!box) return;
   const val = raw.trim().toUpperCase();
   if (val.length < 18) {
     box.textContent = '';
     box.className = 'curp-meta';
-    if (minorBox) minorBox.hidden = true;
     return;
   }
   const { data } = await apiRequest(`/api/curp/validar?curp=${encodeURIComponent(val)}`);
   if (data.valida) {
     box.className = 'curp-meta valid';
-    box.textContent = `CURP válida · ${data.entidad} · Edad estimada: ${data.edad} años${data.esMenor ? ' (Menor de edad — Ley General de Turismo)' : ''}`;
-    if (minorBox) minorBox.hidden = !data.esMenor;
+    box.textContent = `CURP válida RENAPO · ${data.entidad} · ${data.edad} años`;
   } else {
     box.className = 'curp-meta invalid';
     box.textContent = data.error;
-    if (minorBox) minorBox.hidden = true;
   }
 }
 
-async function submitCheckinForm({
-  form,
-  nombreId,
-  curpId,
-  habId,
-  acompId,
-  parentescoId,
-  feedbackId,
-  submitBtnId
-}) {
+async function submitCheckinForm({ form, nombreId, curpId, habId, feedbackId, submitBtnId }) {
   if (!form.reportValidity()) return;
   const fb = document.getElementById(feedbackId);
   const btn = document.getElementById(submitBtnId);
   btn.disabled = true;
   try {
-    const parentescoEl = document.getElementById(parentescoId);
     const docTypeEl = form.querySelector('[name="docType"]');
     const isPassport = docTypeEl && docTypeEl.value === 'PASAPORTE';
     const body = {
       nombre: document.getElementById(nombreId).value.trim(),
-      habitacion: document.getElementById(habId).value.trim(),
-      acompanante: document.getElementById(acompId).value.trim(),
-      parentescoDocumento: parentescoEl?.value || null
+      habitacion: document.getElementById(habId).value.trim()
     };
     if (isPassport) {
       body.esExtranjero = true;
@@ -1004,6 +666,7 @@ async function submitCheckinForm({
     } else {
       body.curp = document.getElementById(curpId).value.trim().toUpperCase();
     }
+
     const { ok, data } = await apiRequest(`/api/pms/${selectedHotelSlug}/checkin`, {
       method: 'POST',
       body
@@ -1012,12 +675,8 @@ async function submitCheckinForm({
       fb.className = 'inline-feedback err';
       fb.textContent = data.error || 'Error al registrar huésped.';
     } else {
-      fb.className = data.verificacion_menor_turismo
-        ? 'inline-feedback warn'
-        : 'inline-feedback ok';
-      fb.textContent = data.verificacion_menor_turismo
-        ? `${data.mensaje_recepcion} ${data.verificacion_menor_turismo}`
-        : data.mensaje_recepcion;
+      fb.className = 'inline-feedback ok';
+      fb.textContent = data.mensaje_recepcion || 'Check-in completado correctamente.';
       await fetchState();
     }
   } finally {
@@ -1039,13 +698,13 @@ async function runCsvImport(csvText, origen) {
     });
     if (!ok) {
       fb.className = 'inline-feedback err';
-      fb.textContent = data.error || 'No se pudo procesar el archivo CSV.';
+      fb.textContent = data.error || 'No se pudo procesar el archivo.';
       errBox.hidden = true;
       return;
     }
 
     fb.className = data.rechazados > 0 ? 'inline-feedback warn' : 'inline-feedback ok';
-    fb.textContent = `Importación completada en ${data.hotel}: ${data.insertados} huéspedes válidos cargados y cifrados en bóveda (con cruce silencioso Fase 3) y ${data.rechazados} fila(s) rechazada(s) por CURP inválida.`;
+    fb.textContent = `Lote procesado en ${data.hotel}: ${data.insertados} huéspedes cifrados en bóveda (con cruce silencioso Fase 3) y ${data.rechazados} fila(s) rechazada(s) por CURP inválida.`;
 
     if (data.errores?.length) {
       errBox.hidden = false;
@@ -1118,95 +777,34 @@ function bindEvents() {
     btn.addEventListener('click', () => switchView(btn.dataset.view));
   }
 
+  for (const btn of document.querySelectorAll('[data-goto]')) {
+    btn.addEventListener('click', () => switchView(btn.dataset.goto));
+  }
+
   document.getElementById('btn-quick-demo').addEventListener('click', () => switchView('simulacion'));
+  document.getElementById('btn-hero-sim').addEventListener('click', () => switchView('simulacion'));
+  document.getElementById('btn-topbar-constancia').addEventListener('click', () => openConstancia(selectedHotelSlug));
+  document.getElementById('btn-hero-constancia').addEventListener('click', () => openConstancia(selectedHotelSlug));
 
-  for (const id of ['roi-hotels', 'roi-external', 'roi-assoc-fee', 'roi-dev-cost', 'roi-founders']) {
-    document.getElementById(id).addEventListener('input', updateRoiCalculator);
-  }
+  document.getElementById('global-hotel-select').addEventListener('change', (e) => syncHotelChange(e.target.value));
 
-  for (const chip of document.querySelectorAll('.preset-chip[data-scale-hotels]')) {
-    chip.addEventListener('click', () => {
-      document.getElementById('roi-hotels').value = chip.dataset.scaleHotels;
-      updateRoiCalculator();
-    });
-  }
-
-  const benchBtn = document.getElementById('btn-run-scale-bench');
-  if (benchBtn) {
-    benchBtn.addEventListener('click', async () => {
-      const box = document.getElementById('scale-bench-result');
-      const targetHotels = Number(document.getElementById('roi-hotels')?.value || 1000);
-      const effectiveHotels = targetHotels < 1000 ? 1000 : targetHotels;
-      benchBtn.disabled = true;
-      benchBtn.textContent = 'Midiendo cifrado y aislamiento…';
-      try {
-        const { ok, data } = await apiRequest('/api/demo/scale-benchmark', {
-          method: 'POST',
-          body: { hotels: effectiveHotels }
-        });
-        if (!ok) {
-          box.hidden = false;
-          box.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'No se pudo ejecutar la prueba.')}</span>`;
-          return;
-        }
-        box.hidden = false;
-        box.innerHTML = `
-          <strong>Prueba criptográfica en vivo completada (${data.hotelesObjetivo.toLocaleString('es-MX')} hoteles objetivo)</strong>
-          <div class="bench-grid">
-            <div class="bench-stat">
-              <span>Capacidad medida (CURP + AES-256 + HMAC)</span>
-              <strong>${data.capacidadEstimadaCheckinsPorSegundo.toLocaleString('es-MX')} check-ins/seg</strong>
-            </div>
-            <div class="bench-stat">
-              <span>Latencia promedio por validación</span>
-              <strong>${escapeHtml(data.latenciaPromedioMs)} ms (${escapeHtml(data.tiempoTotalMs)} ms total)</strong>
-            </div>
-            <div class="bench-stat">
-              <span>Aislamiento multi-RFC (RLS / HMAC único)</span>
-              <strong class="text-accent">${data.fugasEntreRfc} fugas · ${data.hashesUnicosPorHotel}/${data.operacionesRealesEjecutadas} únicos</strong>
-            </div>
-            <div class="bench-stat">
-              <span>Costo nube AWS estimado por hotel</span>
-              <strong>${escapeHtml(fmtMxn.format(Math.round(data.infra.monthlyAwsMxn / data.hotelesObjetivo)))} MXN/mes (${escapeHtml(data.infra.sla)})</strong>
-            </div>
-          </div>`;
-      } finally {
-        benchBtn.disabled = false;
-        benchBtn.textContent = 'Probar carga (1,000 hoteles)';
-      }
-    });
-  }
-
-  for (const selId of ['sim-hotel-select', 'desk-hotel-select', 'conn-hotel-select']) {
-    document.getElementById(selId).addEventListener('change', (e) => syncHotelChange(e.target.value));
-  }
-
-  document.getElementById('btn-scenario-menor').addEventListener('click', () => {
-    const sc = appState.escenariosDemo.menorEnTiempoReal;
-    if (appState.hotels.some((h) => h.slug === 'crowne-plaza-monterrey')) {
-      selectedHotelSlug = 'crowne-plaza-monterrey';
-    }
+  // Escenarios rápidos PUI
+  document.getElementById('btn-scenario-alerta').addEventListener('click', () => {
+    const sc = appState.escenariosDemo.alertaEnTiempoReal || appState.escenariosDemo.menorEnTiempoReal;
     document.getElementById('segob-reporte-id').value = sc.reporteId;
     document.getElementById('segob-curp').value = sc.curp;
-    document.getElementById('segob-tipo').value = sc.tipoAlerta;
+    document.getElementById('segob-tipo').value = 'Reporte PUI Activo';
     document.getElementById('pms-nombre').value = sc.nombre;
     document.getElementById('pms-curp').value = sc.curp;
     document.getElementById('pms-habitacion').value = sc.habitacion;
-    document.getElementById('pms-acompanante').value = sc.acompanante;
-    document.getElementById('pms-parentesco').value = sc.parentescoDocumento || 'NO_ACREDITO';
-    checkCurpLive(sc.curp, 'pms-curp-live', 'pms-minor-box');
-    renderAll();
+    checkCurpLive(sc.curp, 'pms-curp-live');
   });
 
   document.getElementById('btn-scenario-historico').addEventListener('click', () => {
     const sc = appState.escenariosDemo.coincidenciaHistorica;
-    if (appState.hotels.some((h) => h.slug === 'crowne-plaza-monterrey')) {
-      selectedHotelSlug = 'crowne-plaza-monterrey';
-    }
     document.getElementById('segob-reporte-id').value = sc.reporteId;
     document.getElementById('segob-curp').value = sc.curp;
-    document.getElementById('segob-tipo').value = sc.tipoAlerta;
-    renderAll();
+    document.getElementById('segob-tipo').value = 'Búsqueda Histórica PUI (Fases 1 y 2)';
   });
 
   document.getElementById('btn-scenario-normal').addEventListener('click', () => {
@@ -1214,11 +812,10 @@ function bindEvents() {
     document.getElementById('pms-nombre').value = sc.nombre;
     document.getElementById('pms-curp').value = sc.curp;
     document.getElementById('pms-habitacion').value = sc.habitacion;
-    document.getElementById('pms-acompanante').value = '';
-    document.getElementById('pms-parentesco').value = '';
-    checkCurpLive(sc.curp, 'pms-curp-live', 'pms-minor-box');
+    checkCurpLive(sc.curp, 'pms-curp-live');
   });
 
+  // Mostrador recepción
   const syncDeskDocType = (mode) => {
     const sel = document.getElementById('desk-doc-type');
     if (mode) sel.value = mode;
@@ -1228,19 +825,7 @@ function bindEvents() {
     document.getElementById('desk-curp').required = !isPass;
     document.getElementById('desk-pasaporte').required = isPass;
   };
-
   document.getElementById('desk-doc-type').addEventListener('change', () => syncDeskDocType());
-
-  const checkForeignBirthMinor = () => {
-    const fnac = document.getElementById('desk-fnac').value;
-    if (!fnac) return;
-    const [y, m, d] = fnac.split('-').map(Number);
-    const now = new Date();
-    let age = now.getFullYear() - y;
-    if (now.getMonth() + 1 < m || (now.getMonth() + 1 === m && now.getDate() < d)) age--;
-    document.getElementById('desk-minor-box').hidden = !(age >= 0 && age < 18);
-  };
-  document.getElementById('desk-fnac').addEventListener('change', checkForeignBirthMinor);
 
   const applyMrzScan = (raw) => {
     const meta = document.getElementById('desk-mrz-meta');
@@ -1251,27 +836,20 @@ function bindEvents() {
       return;
     }
     meta.className = 'curp-meta valid';
-    meta.textContent = `MRZ ICAO válido (${parsed.formato}) · ${parsed.nacionalidad} · Doc: ${parsed.numeroDocumento} · Edad: ${parsed.edad} años${parsed.esMenor ? ' · MENOR DETECTADO (LGT)' : ''}`;
+    meta.textContent = `MRZ ICAO válido (${parsed.formato}) · ${parsed.nacionalidad} · Pasaporte: ${parsed.numeroDocumento}`;
     document.getElementById('desk-nombre').value = parsed.nombreCompleto;
-    if (parsed.nacionalidad !== 'MEX' || parsed.formato === 'TD3_PASAPORTE') {
-      syncDeskDocType('PASAPORTE');
-      document.getElementById('desk-pasaporte').value = parsed.numeroDocumento;
-      document.getElementById('desk-nacionalidad').value = parsed.nacionalidad;
-      document.getElementById('desk-fnac').value = parsed.fechaNacimiento;
-      document.getElementById('desk-minor-box').hidden = !parsed.esMenor;
-    }
+    syncDeskDocType('PASAPORTE');
+    document.getElementById('desk-pasaporte').value = parsed.numeroDocumento;
+    document.getElementById('desk-nacionalidad').value = parsed.nacionalidad;
+    document.getElementById('desk-fnac').value = parsed.fechaNacimiento;
   };
-
   document.getElementById('desk-mrz-input').addEventListener('input', (e) => applyMrzScan(e.target.value));
 
   document.getElementById('btn-scan-passport').addEventListener('click', () => {
-    const box = document.getElementById('desk-mrz-box');
-    box.hidden = false;
+    document.getElementById('desk-mrz-box').hidden = false;
     const mrz = buildSamplePassportMrz();
     document.getElementById('desk-mrz-input').value = mrz;
     document.getElementById('desk-habitacion').value = '1810';
-    document.getElementById('desk-acompanante').value = '';
-    document.getElementById('desk-parentesco').value = '';
     applyMrzScan(mrz);
   });
 
@@ -1282,39 +860,24 @@ function bindEvents() {
     document.getElementById('desk-nombre').value = sc.nombre;
     document.getElementById('desk-curp').value = sc.curp;
     document.getElementById('desk-habitacion').value = sc.habitacion;
-    document.getElementById('desk-acompanante').value = '';
-    document.getElementById('desk-parentesco').value = '';
-    checkCurpLive(sc.curp, 'desk-curp-live', 'desk-minor-box');
-  });
-
-  document.getElementById('btn-scan-minor').addEventListener('click', () => {
-    syncDeskDocType('CURP');
-    document.getElementById('desk-mrz-box').hidden = true;
-    const sc = appState.escenariosDemo.menorEnTiempoReal;
-    document.getElementById('desk-nombre').value = sc.nombre;
-    document.getElementById('desk-curp').value = sc.curp;
-    document.getElementById('desk-habitacion').value = sc.habitacion;
-    document.getElementById('desk-acompanante').value = sc.acompanante;
-    document.getElementById('desk-parentesco').value = 'NO_ACREDITO';
-    checkCurpLive(sc.curp, 'desk-curp-live', 'desk-minor-box');
+    checkCurpLive(sc.curp, 'desk-curp-live');
   });
 
   let curpTimer1;
   document.getElementById('pms-curp').addEventListener('input', (e) => {
     clearTimeout(curpTimer1);
-    curpTimer1 = setTimeout(() => checkCurpLive(e.target.value, 'pms-curp-live', 'pms-minor-box'), 160);
+    curpTimer1 = setTimeout(() => checkCurpLive(e.target.value, 'pms-curp-live'), 160);
   });
 
   let curpTimer2;
   document.getElementById('desk-curp').addEventListener('input', (e) => {
     clearTimeout(curpTimer2);
-    curpTimer2 = setTimeout(() => checkCurpLive(e.target.value, 'desk-curp-live', 'desk-minor-box'), 160);
+    curpTimer2 = setTimeout(() => checkCurpLive(e.target.value, 'desk-curp-live'), 160);
   });
 
   document.getElementById('form-segob-alert').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!e.currentTarget.reportValidity()) return;
-
     const fb = document.getElementById('segob-feedback');
     const btn = document.getElementById('btn-activar-alerta');
     btn.disabled = true;
@@ -1334,7 +897,7 @@ function bindEvents() {
         fb.textContent = data.error || 'No se pudo activar el reporte.';
       } else {
         fb.className = 'inline-feedback ok';
-        fb.textContent = `Reporte ${data.id} activo en ${data.hotel}. Coincidencias históricas (Fases 1–2): ${data.coincidencias_historicas}. Fase 3 encendida y cola Outbox procesada.`;
+        fb.textContent = `Reporte ${data.id} activo en ${data.hotel}. Coincidencias históricas (Fases 1–2): ${data.coincidencias_historicas}. Monitoreo silencioso Fase 3 encendido.`;
         await fetchState();
       }
     } finally {
@@ -1360,8 +923,6 @@ function bindEvents() {
       nombreId: 'pms-nombre',
       curpId: 'pms-curp',
       habId: 'pms-habitacion',
-      acompId: 'pms-acompanante',
-      parentescoId: 'pms-parentesco',
       feedbackId: 'pms-feedback',
       submitBtnId: 'btn-submit-checkin'
     });
@@ -1374,13 +935,12 @@ function bindEvents() {
       nombreId: 'desk-nombre',
       curpId: 'desk-curp',
       habId: 'desk-habitacion',
-      acompId: 'desk-acompanante',
-      parentescoId: 'desk-parentesco',
       feedbackId: 'desk-feedback',
       submitBtnId: 'btn-desk-submit'
     });
   });
 
+  // Conectores CSV / XML / Instaladores
   document.getElementById('csv-file-input').addEventListener('change', async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -1395,11 +955,11 @@ function bindEvents() {
   document.getElementById('btn-import-demo-batch').addEventListener('click', async () => {
     const { data: csvText } = await apiRequest(`/api/pms/${selectedHotelSlug}/csv-template?demo=1`);
     document.getElementById('csv-raw-text').value = csvText;
-    await runCsvImport(csvText, 'Lote demo exportación OPERA/CSV');
+    await runCsvImport(csvText, 'Lote demo CSV');
   });
 
   document.getElementById('btn-import-demo-xml').addEventListener('click', async () => {
-    const sampleCurp = appState?.escenariosDemo?.huespedSinAlerta?.curp || '';
+    const sampleCurp = appState?.escenariosDemo?.huespedSinAlerta?.curp || 'TEGC850910HNLVRN05';
     const xmlSample = `<?xml version="1.0" encoding="UTF-8"?>
 <OPERA_INHOUSE_EXPORT hotel="${selectedHotelSlug}">
   <G_RESERVATION>
@@ -1418,13 +978,19 @@ function bindEvents() {
   </G_RESERVATION>
 </OPERA_INHOUSE_EXPORT>`;
     document.getElementById('csv-raw-text').value = xmlSample;
-    await runCsvImport(xmlSample, 'Exportación XML nativa Oracle OPERA 5');
+    await runCsvImport(xmlSample, 'Exportación XML Oracle OPERA 5');
   });
 
   document.getElementById('btn-toggle-key').addEventListener('click', () => {
     revealApiKey = !revealApiKey;
     const hotel = appState.hotels.find((h) => h.slug === selectedHotelSlug);
     if (hotel) renderConnectorPanel(hotel);
+  });
+
+  document.getElementById('btn-rotate-key').addEventListener('click', async () => {
+    await apiRequest(`/api/pms/${selectedHotelSlug}/rotate-key`, { method: 'POST' });
+    revealApiKey = true;
+    await fetchState();
   });
 
   const downloadInstaller = (os) => {
@@ -1434,7 +1000,7 @@ function bindEvents() {
       window.location.href = `./api/pms/${encodeURIComponent(hotel.slug)}/installer?os=${os}`;
       return;
     }
-    const origin = 'https://api.hospitalitypui.id';
+    const origin = 'https://api.certezaid.mx';
     const isLinux = os === 'linux';
     const content = isLinux
       ? buildLinuxInstallerScript({
@@ -1456,23 +1022,18 @@ function bindEvents() {
     const a = document.createElement('a');
     a.href = url;
     a.download = isLinux
-      ? `instalar-portico-agent-${hotel.slug}.sh`
-      : `Instalar-Portico-Agent-${hotel.slug}.ps1`;
+      ? `instalar-certeza-agent-${hotel.slug}.sh`
+      : `Instalar-Certeza-Agent-${hotel.slug}.ps1`;
     document.body.append(a);
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  document.getElementById('btn-dl-installer-win')?.addEventListener('click', () => downloadInstaller('windows'));
-  document.getElementById('btn-dl-installer-linux')?.addEventListener('click', () => downloadInstaller('linux'));
+  document.getElementById('btn-dl-installer-win').addEventListener('click', () => downloadInstaller('windows'));
+  document.getElementById('btn-dl-installer-linux').addEventListener('click', () => downloadInstaller('linux'));
 
-  document.getElementById('btn-rotate-key').addEventListener('click', async () => {
-    await apiRequest(`/api/pms/${selectedHotelSlug}/rotate-key`, { method: 'POST' });
-    revealApiKey = true;
-    await fetchState();
-  });
-
+  // Configuración SEGOB y Outbox
   document.getElementById('form-segob-config').addEventListener('submit', async (e) => {
     e.preventDefault();
     const fb = document.getElementById('segob-cfg-feedback');
@@ -1494,7 +1055,7 @@ function bindEvents() {
         fb.textContent = data.error || 'Error al guardar configuración.';
       } else {
         fb.className = 'inline-feedback ok';
-        fb.textContent = `Configuración guardada para ${data.hotel.nombre} (modo: ${data.hotel.segobMode}).`;
+        fb.textContent = `Configuración guardada para ${data.hotel.nombre} (${data.hotel.segobMode}).`;
         await fetchState();
       }
     } finally {
@@ -1513,27 +1074,11 @@ function bindEvents() {
     }
   });
 
-  document.getElementById('btn-export-audit-sim').addEventListener('click', () => {
-    downloadAuditCsv(selectedHotelSlug);
-  });
+  document.getElementById('btn-export-audit-sim').addEventListener('click', () => downloadAuditCsv(selectedHotelSlug));
+  document.getElementById('btn-export-audit-tech').addEventListener('click', () => downloadAuditCsv(selectedHotelSlug));
 
-  document.getElementById('btn-export-audit-tech').addEventListener('click', () => {
-    downloadAuditCsv(currentUser?.rol === 'ASOCIACION_ADMIN' ? 'all' : selectedHotelSlug);
-  });
-
-  // Gestión de usuarios RBAC
+  // Modal crear usuario
   const userDialog = document.getElementById('add-user-dialog');
-  const rolSelect = document.getElementById('new-user-rol');
-  const hotelWrap = document.getElementById('new-user-hotel-wrap');
-  const syncUserFormScope = () => {
-    const isHotelAdmin = currentUser?.rol === 'HOTEL_ADMIN';
-    const assocOpt = rolSelect.querySelector('option[value="ASOCIACION_ADMIN"]');
-    if (assocOpt) assocOpt.hidden = isHotelAdmin;
-    if (isHotelAdmin && rolSelect.value === 'ASOCIACION_ADMIN') rolSelect.value = 'RECEPCION';
-    hotelWrap.hidden = rolSelect.value === 'ASOCIACION_ADMIN';
-  };
-  rolSelect.addEventListener('change', syncUserFormScope);
-
   document.getElementById('btn-toggle-new-user-pass').addEventListener('click', () => {
     const input = document.getElementById('new-user-password');
     const btn = document.getElementById('btn-toggle-new-user-pass');
@@ -1547,7 +1092,6 @@ function bindEvents() {
     const fb = document.getElementById('add-user-feedback');
     fb.textContent = '';
     fb.className = 'inline-feedback';
-    syncUserFormScope();
     userDialog.showModal();
   });
 
@@ -1557,15 +1101,14 @@ function bindEvents() {
     e.preventDefault();
     if (!e.currentTarget.reportValidity()) return;
     const fb = document.getElementById('add-user-feedback');
-    const rol = rolSelect.value;
     const { ok, data } = await apiRequest('/api/users', {
       method: 'POST',
       body: {
         nombre: document.getElementById('new-user-nombre').value.trim(),
         email: document.getElementById('new-user-email').value.trim(),
         password: document.getElementById('new-user-password').value,
-        rol,
-        hotelSlug: rol === 'ASOCIACION_ADMIN' ? null : document.getElementById('new-user-hotel').value
+        rol: document.getElementById('new-user-rol').value,
+        hotelSlug: document.getElementById('new-user-hotel').value || selectedHotelSlug
       }
     });
     if (!ok) {
@@ -1592,79 +1135,54 @@ function bindEvents() {
     }
   });
 
-  document.getElementById('hotels-tbody').addEventListener('click', (e) => {
-    const certBtn = e.target.closest('[data-open-cert]');
-    if (certBtn) {
-      openConstancia(certBtn.dataset.openCert);
-      return;
-    }
-    const connBtn = e.target.closest('[data-open-conn]');
-    if (connBtn) {
-      syncHotelChange(connBtn.dataset.openConn);
-      switchView('conectores');
-    }
-  });
-
-  const dialog = document.getElementById('add-hotel-dialog');
-  const openDialog = () => {
+  // Modal agregar otra propiedad
+  const hotelDialog = document.getElementById('add-hotel-dialog');
+  document.getElementById('btn-open-add-hotel').addEventListener('click', () => {
     document.getElementById('form-add-hotel').reset();
     const fb = document.getElementById('add-hotel-feedback');
     fb.textContent = '';
     fb.className = 'inline-feedback';
-    dialog.showModal();
-  };
-
-  document.getElementById('btn-open-add-hotel').addEventListener('click', openDialog);
-  document.getElementById('btn-add-hotel-table').addEventListener('click', openDialog);
-  document.getElementById('btn-cancel-add-hotel').addEventListener('click', () => dialog.close('cancel'));
-  dialog.addEventListener('close', () => {
-    dialog.returnValue = '';
+    hotelDialog.showModal();
   });
+  document.getElementById('btn-cancel-add-hotel').addEventListener('click', () => hotelDialog.close('cancel'));
 
   document.getElementById('form-add-hotel').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!e.currentTarget.reportValidity()) return;
     const fb = document.getElementById('add-hotel-feedback');
-
+    const pms = document.getElementById('new-hotel-pms').value;
     const { ok, data } = await apiRequest('/api/hotels', {
       method: 'POST',
       body: {
         nombre: document.getElementById('new-hotel-nombre').value.trim(),
         rfc: document.getElementById('new-hotel-rfc').value.trim().toUpperCase(),
         habitaciones: Number(document.getElementById('new-hotel-hab').value),
-        grupo: document.getElementById('new-hotel-grupo').value.trim() || 'Hotel Afiliado',
         ciudad: document.getElementById('new-hotel-ciudad').value.trim() || 'Monterrey, N.L.',
-        pms: document.getElementById('new-hotel-pms').value,
-        modoIntegracion: document.getElementById('new-hotel-pms').value.includes('CSV')
-          ? 'Portal Web / CSV'
-          : 'API / Conector PMS'
+        pms,
+        modoIntegracion: pms.includes('CSV') ? 'Portal Web / CSV' : 'Conector PMS'
       }
     });
     if (!ok) {
       fb.className = 'inline-feedback err';
-      fb.textContent = data.error || 'No se pudo registrar el hotel.';
+      fb.textContent = data.error || 'No se pudo registrar la propiedad.';
       return;
     }
     selectedHotelSlug = data.hotel.slug;
-    dialog.close('created');
+    hotelDialog.close('created');
     await fetchState();
-    switchView('hoteles');
+    switchView('resumen');
   });
 
   document.getElementById('btn-reset-demo').addEventListener('click', async () => {
     await apiRequest('/api/demo/reset', { method: 'POST' });
-    selectedHotelSlug = 'crowne-plaza-monterrey';
+    selectedHotelSlug = 'hotel-demo-monterrey';
     document.getElementById('csv-errors-box').hidden = true;
     document.getElementById('csv-raw-text').value = '';
-    document.getElementById('pms-minor-box').hidden = true;
-    document.getElementById('desk-minor-box').hidden = true;
     await fetchState();
   });
 }
 
-setupFormValidationAccessibility();
 setupDialogClosedByFallback();
 setupDeclarativeCopyButtons();
 bindEvents();
-updateRoiCalculator();
 bootstrapAuth();

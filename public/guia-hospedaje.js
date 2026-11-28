@@ -200,15 +200,15 @@
       setQuickChipActive(match.id);
       guestName = match.nombre;
       esMenor = Boolean(match.esMenor);
-      needsLgtBlock = esMenor && match.parentesco === 'NO_ACREDITO';
+      needsLgtBlock = false;
       isValidDoc = true;
       if (match.documento === 'PASAPORTE') {
         docLabel = `Pasaporte válido (${match.nacionalidad})`;
-        edadLabel = `${match.edad} años, ${esMenor ? (needsLgtBlock ? 'menor sin documento de tutela' : 'menor con tutela verificada') : 'adulto'}`;
+        edadLabel = `${match.edad} años · Pasaporte extranjero`;
       } else {
         curpInfo = reg.validarCurpRenapo(match.curp);
         docLabel = `CURP válida (${match.estado})`;
-        edadLabel = `${match.edad} años, ${esMenor ? (needsLgtBlock ? 'menor sin documento de tutela' : 'menor con tutela verificada') : 'adulto'}`;
+        edadLabel = `${match.edad} años · Registro nacional RENAPO`;
       }
     } else if (/^[A-Z0-9]{18}$/.test(query)) {
       setQuickChipActive('');
@@ -246,9 +246,9 @@
       }
       isValidDoc = true;
       esMenor = curpInfo.esMenor;
-      needsLgtBlock = esMenor;
+      needsLgtBlock = false;
       docLabel = `CURP válida (${curpInfo.entidad})`;
-      edadLabel = `${curpInfo.edad} años, ${esMenor ? 'menor de edad (verificar parentesco)' : 'adulto'}`;
+      edadLabel = `${curpInfo.edad} años · Registro nacional RENAPO`;
     } else {
       setQuickChipActive('');
       isValidDoc = query.length >= 6;
@@ -256,29 +256,19 @@
       edadLabel = 'No especificada';
     }
 
-    // Monitor izquierdo: Recepción
+    // Monitor izquierdo: Recepción (100% Sigilo PUI)
     deskName.textContent = guestName;
     deskId.textContent = match ? match.identificador : query;
     deskValidation.textContent = docLabel;
     deskMinor.textContent = edadLabel;
 
-    if (needsLgtBlock) {
-      deskPill.className = 'status-pill status-warn';
-      deskPill.textContent = 'Verificar menor';
-      deskBanner.className = 'desk-banner is-lgt';
-      deskBanner.innerHTML =
-        '<strong>Pedir documento de parentesco (Ley de Turismo)</strong>' +
-        'El huésped es menor de edad y no acredita vínculo con el adulto acompañante. El hotel debe negar el hospedaje y avisar a la autoridad.';
-      deskRoom.textContent = 'Habitación retenida';
-    } else {
-      deskPill.className = 'status-pill status-ok';
-      deskPill.textContent = 'Registro normal';
-      deskBanner.className = 'desk-banner is-ok';
-      deskBanner.innerHTML =
-        '<strong>Registro completado sin alarmas en pantalla</strong>' +
-        'El recepcionista atiende con total normalidad y sin ponerse en riesgo.';
-      deskRoom.textContent = `Habitación asignada: ${roomNum}`;
-    }
+    deskPill.className = 'status-pill status-ok';
+    deskPill.textContent = 'Registro normal';
+    deskBanner.className = 'desk-banner is-ok';
+    deskBanner.innerHTML =
+      '<strong>Registro completado sin alarmas en pantalla</strong>' +
+      'El recepcionista atiende con total normalidad y sin ponerse en riesgo.';
+    deskRoom.textContent = `Habitación asignada: ${roomNum}`;
 
     // Monitor derecho: Aviso silencioso a SEGOB
     const isHit = Boolean(match && match.tieneAlertaPui);
@@ -293,7 +283,6 @@
           tipo_documento: match.documento,
           tipo_alerta: match.tipo,
           alerta_visible_en_recepcion: false,
-          protocolo_menores_activado: needsLgtBlock,
           estatus_entrega_segob: 'Recibido por SEGOB',
           timestamp_utc: nowIso
         }
@@ -305,7 +294,6 @@
           identificador_validado: match ? match.identificador : query,
           datos_enviados_a_segob: 0,
           privacidad: 'Guardado exclusivamente dentro de la bóveda privada del hotel',
-          protocolo_menores_activado: needsLgtBlock,
           timestamp_utc: nowIso
         };
 
@@ -352,7 +340,7 @@
     };
     setPipe('pipe-step-1', 'pipe-s1', 'is-ok', 'Verificada');
     setPipe('pipe-step-2', 'pipe-s2', 'is-ok', 'Aislada por RFC');
-    setPipe('pipe-step-3', 'pipe-s3', needsLgtBlock ? 'is-warn' : 'is-ok', needsLgtBlock ? 'Pedir parentesco' : 'Sin alarmas');
+    setPipe('pipe-step-3', 'pipe-s3', 'is-ok', 'Sin alarmas');
     setPipe('pipe-step-4', 'pipe-s4', isHit ? 'is-alert' : 'is-ok', isHit ? 'Enviado en silencio' : 'No requerido');
   }
 
@@ -392,8 +380,7 @@
   function getFilteredRecords() {
     const q = String(searchInput?.value || '').trim().toLowerCase();
     return reg.records.filter((r) => {
-      if (activeFilter === 'MENOR_PUI' && r.categoria !== 'MENOR_PUI') return false;
-      if (activeFilter === 'ADULTO_PUI' && r.categoria !== 'ADULTO_PUI') return false;
+      if (activeFilter === 'PUI_ACTIVA' && !r.tieneAlertaPui) return false;
       if (activeFilter === 'EXTRANJERO' && r.documento !== 'PASAPORTE') return false;
       if (activeFilter === 'CONTROL' && r.tieneAlertaPui) return false;
       if (!q) return true;
@@ -416,8 +403,8 @@
     tbody.innerHTML = '';
     for (const r of slice) {
       const tr = document.createElement('tr');
-      const badgeClass = r.tieneAlertaPui ? (r.esMenor ? 'status-warn' : 'status-alert') : 'status-ok';
-      const badgeText = r.tieneAlertaPui ? (r.esMenor ? 'Aviso + menores' : 'Aviso silencioso') : 'Sin alerta';
+      const badgeClass = r.tieneAlertaPui ? 'status-alert' : 'status-ok';
+      const badgeText = r.tieneAlertaPui ? 'Aviso silencioso' : 'Sin alerta';
 
       tr.innerHTML = `
         <th scope="row">${r.nombre}<span class="cell-note">${r.edad} años (${r.documento === 'PASAPORTE' ? 'Pasaporte' : 'CURP'})</span></th>
@@ -465,7 +452,7 @@
   });
 
   renderSandboxTable();
-  const initialCase = reg.buscarPorIdentificador('SBX-001');
+  const initialCase = reg.buscarPorIdentificador('SBX-013');
   if (initialCase && simInput) {
     simInput.value = initialCase.identificador;
     runLiveCheckin(initialCase.identificador);

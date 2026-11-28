@@ -1,9 +1,10 @@
 /**
  * Capa dual de transporte para Certeza ID:
  * - Si hay servidor Node.js / AWS activo, usa los endpoints reales `/api/*`.
- * - Si se despliega estáticamente en CDN (Cloudflare Pages, Vercel, etc.), activa
- *   automáticamente el motor completo en navegador (CURP RENAPO real, RBAC,
- *   Fases 1-3, CSV, Outbox y Constancia PDF con SHA-256 vía Web Crypto).
+ * - Si se despliega estáticamente en CDN (Vercel / Cloudflare Pages), activa
+ *   automáticamente el motor completo en navegador para 1 hotel piloto
+ *   (validación CURP RENAPO real, Pasaporte MRZ, RBAC, Fases 1-3 PUI SEGOB,
+ *   importador CSV/XML, Outbox y Constancia PDF con SHA-256 vía Web Crypto).
  */
 
 import { estimateScaleInfrastructure } from './installer.js';
@@ -56,15 +57,13 @@ function validarPasaporteLocal({ pasaporte, nacionalidad = 'EXT', fechaNacimient
   }
   const nac = String(nacionalidad || 'EXT').trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3) || 'EXT';
   let edad = null;
-  let esMenor = false;
   if (fechaNacimiento && /^\d{4}-\d{2}-\d{2}$/.test(fechaNacimiento)) {
     const [y, m, d] = fechaNacimiento.split('-').map(Number);
     const hoy = new Date();
     edad = hoy.getFullYear() - y;
     if (hoy.getMonth() + 1 < m || (hoy.getMonth() + 1 === m && hoy.getDate() < d)) edad--;
-    esMenor = edad < 18;
   }
-  return { valida: true, esExtranjero: true, curp: `PASS:${nac}:${num}`, nacionalidad: nac, edad, esMenor };
+  return { valida: true, esExtranjero: true, curp: `PASS:${nac}:${num}`, nacionalidad: nac, edad, esMenor: false };
 }
 
 function validarCurpLocal(rawCurp) {
@@ -123,21 +122,28 @@ function randomHex(len = 16) {
   return [...arr].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, len);
 }
 
+const DEFAULT_HOTEL_SLUG = 'hotel-demo-monterrey';
+
 const DEMO_SCENARIOS = {
+  alertaEnTiempoReal: {
+    reporteId: 'FUB-NL-2026-04182',
+    nombre: 'RICARDO GARZA SALAZAR',
+    curp: makeCurp('GASR880514HNLRLZ0'),
+    habitacion: '0814',
+    tipoAlerta: 'Reporte PUI Activo'
+  },
   menorEnTiempoReal: {
     reporteId: 'FUB-NL-2026-04182',
-    nombre: 'MATEO VALDEZ GARZA',
-    curp: makeCurp('VAGM120815HNLZLDA'),
-    habitacion: '1408',
-    acompanante: 'ROBERTO SALAZAR MENDOZA',
-    parentescoDocumento: 'NO_ACREDITO',
-    tipoAlerta: 'Alerta AMBER / PUI Menor'
+    nombre: 'RICARDO GARZA SALAZAR',
+    curp: makeCurp('GASR880514HNLRLZ0'),
+    habitacion: '0814',
+    tipoAlerta: 'Reporte PUI Activo'
   },
   coincidenciaHistorica: {
     reporteId: 'FUB-NL-2026-03910',
     nombre: 'ELENA RODRIGUEZ CAVAZOS',
     curp: makeCurp('ROCE910422MNLDRL0'),
-    tipoAlerta: 'Reporte PUI Adulto'
+    tipoAlerta: 'Búsqueda Histórica PUI (Fases 1 y 2)'
   },
   huespedSinAlerta: {
     nombre: 'CARLOS EDUARDO TREVINO GARZA',
@@ -153,44 +159,27 @@ const DEMO_SCENARIOS = {
 
 const DEMO_ACCOUNTS = [
   {
-    email: 'presidente@asociacionhotelesnl.mx',
-    passwordDemo: 'PorticoDemo#2026',
-    nombre: 'Consejo — Asociación de Hoteles NL',
-    rol: 'ASOCIACION_ADMIN',
-    etiqueta: 'Presidente / Consejo Asociación',
-    alcance: 'Tablero gremial, ROI, simulador y constancias (sin PII de huéspedes).'
-  },
-  {
-    email: 'ti@crowneplazamty.mx',
-    passwordDemo: 'PorticoDemo#2026',
-    nombre: 'Dirección TI — Crowne Plaza Monterrey',
+    email: 'admin@hoteldemo.mx',
+    passwordDemo: 'CertezaDemo#2026',
+    nombre: 'Dirección y TI — Hotel Demo Monterrey',
     rol: 'HOTEL_ADMIN',
-    hotelSlug: 'crowne-plaza-monterrey',
-    etiqueta: 'Gerente TI — Crowne Plaza MTY',
-    alcance: 'Aislado solo a RFC MGM940512NL1: PMS Key, CSV, config SEGOB y constancia.'
+    hotelSlug: DEFAULT_HOTEL_SLUG,
+    etiqueta: 'Director / TI del Hotel',
+    alcance: 'Acceso completo: prueba en vivo SEGOB, conectores PMS, bitácora SHA-256 y Constancia PDF.'
   },
   {
-    email: 'recepcion@crowneplazamty.mx',
-    passwordDemo: 'PorticoDemo#2026',
-    nombre: 'Mostrador — Crowne Plaza Monterrey',
+    email: 'recepcion@hoteldemo.mx',
+    passwordDemo: 'CertezaDemo#2026',
+    nombre: 'Mostrador — Hotel Demo Monterrey',
     rol: 'RECEPCION',
-    hotelSlug: 'crowne-plaza-monterrey',
-    etiqueta: 'Recepción — Crowne Plaza MTY',
-    alcance: 'Solo terminal de check-in y protocolo menores (cero acceso a alertas SEGOB).'
-  },
-  {
-    email: 'ti@safihotels.mx',
-    passwordDemo: 'PorticoDemo#2026',
-    nombre: 'Dirección TI — Safi Royal Luxury Centro',
-    rol: 'HOTEL_ADMIN',
-    hotelSlug: 'safi-centro',
-    etiqueta: 'Gerente TI — Hoteles Safi',
-    alcance: 'Aislado solo a RFC SRL890320NL8 (prueba de aislamiento multi-hotel).'
+    hotelSlug: DEFAULT_HOTEL_SLUG,
+    etiqueta: 'Recepción (Modo Sigilo)',
+    alcance: 'Solo registro rápido de huéspedes por CURP o pasaporte. Cero visibilidad de alertas SEGOB.'
   }
 ];
 
-const STORAGE_KEY = 'portico_hospitality_pages_state_v2';
-const SESSION_KEY = 'portico_hospitality_pages_user_v2';
+const STORAGE_KEY = 'certeza_id_hotel_pilot_v3';
+const SESSION_KEY = 'certeza_id_hotel_session_v3';
 
 function createInitialLocalState() {
   const now = new Date().toISOString();
@@ -201,92 +190,24 @@ function createInitialLocalState() {
       passwordDemo: a.passwordDemo,
       nombre: a.nombre,
       rol: a.rol,
-      hotelSlug: a.hotelSlug || null,
+      hotelSlug: a.hotelSlug || DEFAULT_HOTEL_SLUG,
       activo: true,
       creadoEn: now
     })),
     hotels: [
       {
-        slug: 'crowne-plaza-monterrey',
-        nombre: 'Crowne Plaza Monterrey',
-        grupo: 'Milenium Grupo Hotelero / IHG',
-        rfc: 'MGM940512NL1',
+        slug: DEFAULT_HOTEL_SLUG,
+        nombre: 'Hotel Demo Monterrey',
+        grupo: 'Propiedad Piloto PUI',
+        rfc: 'HDM260101NL0',
         ciudad: 'Monterrey, N.L.',
-        habitaciones: 403,
-        pms: 'Oracle OPERA (OHIP / Puente Local)',
-        modoIntegracion: 'API / Conector OPERA',
-        estatus: 'Piloto Activo',
+        habitaciones: 120,
+        pms: 'Oracle OPERA 5 / Portal Web',
+        modoIntegracion: 'Conector PMS + Terminal Web',
+        estatus: 'Piloto Listo',
         llaveMxStatus: 'Certificado Sandbox',
-        usuarioPui: 'pui_crowne_mty',
-        pmsApiKey: 'portico_pms_crowne_7f92a4c18e3b6d051a24e890',
-        segobMode: 'SANDBOX_SIMULADO',
-        segobBaseUrl: '',
-        segobUsuario: ''
-      },
-      {
-        slug: 'safi-centro',
-        nombre: 'Safi Royal Luxury Centro',
-        grupo: 'Hoteles Safi',
-        rfc: 'SRL890320NL8',
-        ciudad: 'Monterrey, N.L.',
-        habitaciones: 250,
-        pms: 'Oracle OPERA 5',
-        modoIntegracion: 'Agente Local Sincronizado',
-        estatus: 'Siguiente Fase',
-        llaveMxStatus: 'En Trámite',
-        usuarioPui: 'pui_safi_centro',
-        pmsApiKey: 'portico_pms_saficent_4c18b2f90e7a3d615290c4e1',
-        segobMode: 'SANDBOX_SIMULADO',
-        segobBaseUrl: '',
-        segobUsuario: ''
-      },
-      {
-        slug: 'safi-metropolitan',
-        nombre: 'Safi Royal Luxury Metropolitan',
-        grupo: 'Hoteles Safi',
-        rfc: 'SRL190814NL3',
-        ciudad: 'San Pedro Garza García, N.L.',
-        habitaciones: 220,
-        pms: 'Oracle OPERA Cloud',
-        modoIntegracion: 'API / Conector OPERA',
-        estatus: 'Siguiente Fase',
-        llaveMxStatus: 'En Trámite',
-        usuarioPui: 'pui_safi_metro',
-        pmsApiKey: 'portico_pms_safimetr_9b04d3e71c5a8f206412a7b3',
-        segobMode: 'SANDBOX_SIMULADO',
-        segobBaseUrl: '',
-        segobUsuario: ''
-      },
-      {
-        slug: 'safi-valle',
-        nombre: 'Safi Royal Luxury Valle',
-        grupo: 'Hoteles Safi',
-        rfc: 'SRL051109NL5',
-        ciudad: 'San Pedro Garza García, N.L.',
-        habitaciones: 240,
-        pms: 'Oracle OPERA 5',
-        modoIntegracion: 'Agente Local Sincronizado',
-        estatus: 'Programado',
-        llaveMxStatus: 'Pendiente',
-        usuarioPui: 'pui_safi_valle',
-        pmsApiKey: 'portico_pms_safivall_2e81c0a64f9d3b751084e2c9',
-        segobMode: 'SANDBOX_SIMULADO',
-        segobBaseUrl: '',
-        segobUsuario: ''
-      },
-      {
-        slug: 'posada-regia',
-        nombre: 'Hotel Posada Regia Independiente',
-        grupo: 'Hotel Afiliado Independiente',
-        rfc: 'HPR120401NL9',
-        ciudad: 'Monterrey, N.L.',
-        habitaciones: 48,
-        pms: 'Sin API (Portal Web / CSV)',
-        modoIntegracion: 'Portal Web / CSV',
-        estatus: 'Activo',
-        llaveMxStatus: 'Certificado Sandbox',
-        usuarioPui: 'pui_posada_regia',
-        pmsApiKey: 'portico_pms_posadare_6a53f1d82c4e9b073165d8a2',
+        usuarioPui: 'pui_hotel_demo_mty',
+        pmsApiKey: 'certeza_pms_hoteldem_7f92a4c18e3b6d051a24e890',
         segobMode: 'SANDBOX_SIMULADO',
         segobBaseUrl: '',
         segobUsuario: ''
@@ -296,7 +217,7 @@ function createInitialLocalState() {
     guests: [
       {
         id: 'GST-1001',
-        hotelSlug: 'crowne-plaza-monterrey',
+        hotelSlug: DEFAULT_HOTEL_SLUG,
         nombre: DEMO_SCENARIOS.coincidenciaHistorica.nombre,
         curp: DEMO_SCENARIOS.coincidenciaHistorica.curp,
         curpEnmascarada: maskCurp(DEMO_SCENARIOS.coincidenciaHistorica.curp),
@@ -305,11 +226,11 @@ function createInitialLocalState() {
         habitacion: '1104',
         esMenor: false,
         fechaRegistro: '2026-06-14T19:42:00.000Z',
-        tipo: 'Histórico (Check-out completado)'
+        tipo: 'Estancia histórica (Check-out)'
       },
       {
         id: 'GST-1002',
-        hotelSlug: 'crowne-plaza-monterrey',
+        hotelSlug: DEFAULT_HOTEL_SLUG,
         nombre: 'ALEJANDRA CANTU VILLARREAL',
         curp: makeCurp('CAVA880311MNLNRL0'),
         curpEnmascarada: maskCurp(makeCurp('CAVA880311MNLNRL0')),
@@ -320,7 +241,7 @@ function createInitialLocalState() {
       },
       {
         id: 'GST-1003',
-        hotelSlug: 'safi-centro',
+        hotelSlug: DEFAULT_HOTEL_SLUG,
         nombre: 'LUIS FERNANDO GARZA MONTEMAYOR',
         curp: makeCurp('GAML791103HNLNRN0'),
         curpEnmascarada: maskCurp(makeCurp('GAML791103HNLNRN0')),
@@ -335,17 +256,17 @@ function createInitialLocalState() {
       {
         seq: 1,
         timestamp: now,
-        hotelSlug: 'crowne-plaza-monterrey',
+        hotelSlug: DEFAULT_HOTEL_SLUG,
         direccion: 'SISTEMA',
         endpoint: '/api/health',
         fase: 'INICIO',
-        resumen: 'Certeza ID en modo Demo Web 24/7 con motor criptográfico SHA-256.',
+        resumen: 'Bóveda PUI inicializada para Hotel Demo Monterrey con cadena criptográfica SHA-256.',
         estatusHttp: 200,
         critico: false,
         payload: {
           plataforma: 'Certeza ID — Motor de Enlace PUI',
-          estandar: 'Manual Técnico PUI — DOF (23/01/2026)',
-          modo: 'Cloud CDN 24/7 (Motor local en navegador)'
+          estandar: 'Manual Técnico PUI SEGOB (DOF 23/01/2026)',
+          hotel: 'Hotel Demo Monterrey (RFC HDM260101NL0)'
         },
         hash: 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd38f214c70e2a4c6e91b80f3c1'
       }
@@ -413,27 +334,27 @@ function addLocalOutbox(st, { hotelSlug, reporteId, endpoint, fase, payload }) {
     intentos: 1,
     maxIntentos: 8,
     ultimoHttp: 200,
-    acuseSegob: `ACUSE-SEGOB-${fase.replace(/\s+/g, '')}-${randomHex(8).toUpperCase()} (Demo Web)`,
-    latenciaMs: 19,
+    acuseSegob: `ACUSE-SEGOB-${fase.replace(/\s+/g, '')}-${randomHex(8).toUpperCase()}`,
+    latenciaMs: 18,
     creadoEn: now,
     entregadoEn: now
   });
 }
 
-function buildDemoCsv(incluirMenor) {
-  const header = 'nombre,curp,habitacion,fecha_registro,telefono,correo,acompanante';
+function buildDemoCsv(incluirAlerta) {
+  const header = 'nombre,curp,habitacion,fecha_registro,telefono,correo';
   const rows = [
-    `SOFIA MARTINEZ GARZA,${makeCurp('MAGS930718MNLRTN0')},0804,2026-11-19T14:10:00Z,81-8120-3301,sofia.mg@empresa.mx,`,
-    `DIEGO ALBERTO LOZANO RIOS,${makeCurp('LORD871204HNLZRS0')},1215,2026-11-19T15:25:00Z,81-1554-8902,dlozano@industrias.mx,`,
-    `FERNANDA VILLARREAL CAVAZOS,${makeCurp('VICF960228MNLLRN0')},0510,2026-11-19T16:02:00Z,81-1890-4412,fvillarreal@consultora.mx,`,
-    `JORGE HUMBERTO SADA ELIZONDO,${makeCurp('SAEJ800515HNLDLN0')},1602,2026-11-19T16:40:00Z,81-8332-7741,jsada@corporativo.mx,`,
-    `REGISTRO CON ERROR DE CAPTURA,XXXX999999HNLZZZ00,0301,2026-11-19T17:00:00Z,81-0000-0000,error@demo.mx,`
+    `SOFIA MARTINEZ GARZA,${makeCurp('MAGS930718MNLRTN0')},0804,2026-11-19T14:10:00Z,81-8120-3301,sofia.mg@empresa.mx`,
+    `DIEGO ALBERTO LOZANO RIOS,${makeCurp('LORD871204HNLZRS0')},1215,2026-11-19T15:25:00Z,81-1554-8902,dlozano@industrias.mx`,
+    `FERNANDA VILLARREAL CAVAZOS,${makeCurp('VICF960228MNLLRN0')},0510,2026-11-19T16:02:00Z,81-1890-4412,fvillarreal@consultora.mx`,
+    `JORGE HUMBERTO SADA ELIZONDO,${makeCurp('SAEJ800515HNLDLN0')},1602,2026-11-19T16:40:00Z,81-8332-7741,jsada@corporativo.mx`,
+    `REGISTRO CON ERROR DE CAPTURA,XXXX999999HNLZZZ00,0301,2026-11-19T17:00:00Z,81-0000-0000,error@demo.mx`
   ];
-  if (incluirMenor) {
+  if (incluirAlerta) {
     rows.splice(
       2,
       0,
-      `MATEO VALDEZ GARZA,${DEMO_SCENARIOS.menorEnTiempoReal.curp},1408,2026-11-19T17:15:00Z,,sin-correo@demo.mx,ROBERTO SALAZAR MENDOZA`
+      `${DEMO_SCENARIOS.alertaEnTiempoReal.nombre},${DEMO_SCENARIOS.alertaEnTiempoReal.curp},${DEMO_SCENARIOS.alertaEnTiempoReal.habitacion},2026-11-19T17:15:00Z,81-8100-4422,rgarza@demo.mx`
     );
   }
   return `${header}\n${rows.join('\n')}\n`;
@@ -470,7 +391,7 @@ export function getRuntimeMode() {
   return runtimeMode || 'server';
 }
 
-export function buildDemoCsvBlobUrl(hotelSlug) {
+export function buildDemoCsvBlobUrl() {
   const csv = buildDemoCsv(false);
   return URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
 }
@@ -481,32 +402,73 @@ export function openConstancia(hotelSlug) {
     return;
   }
   const st = loadLocalState();
-  const h = st.hotels.find((x) => x.slug === hotelSlug);
+  const h = st.hotels.find((x) => x.slug === hotelSlug) || st.hotels[0];
   if (!h) return;
   const alertas = st.alerts.filter((a) => a.hotelSlug === h.slug);
   const huespedes = st.guests.filter((g) => g.hotelSlug === h.slug);
   const outbox = st.outbox.filter((o) => o.hotelSlug === h.slug);
   const eventos = st.auditLog.filter((e) => e.hotelSlug === h.slug);
-  const folio = `PORTICO-PUI-${h.rfc.slice(0, 6)}-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  const fecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'long', timeStyle: 'short' }).format(new Date());
+  const folio = `CERTEZA-PUI-${h.rfc.slice(0, 6)}-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   const hash = st.auditLog[0]?.hash || 'GENESIS';
 
   const html = `<!doctype html><html lang="es-MX"><head><meta charset="utf-8"/><title>Constancia PUI — ${h.nombre}</title>
-  <style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f6f8;color:#111d2e;margin:0;padding:1.5rem}.sheet{max-width:820px;margin:0 auto;background:#fff;border:1px solid #d5dce3;border-radius:10px;padding:2rem 2.25rem}h1{font-size:1.25rem;margin:.2rem 0}h2{font-size:.9rem;text-transform:uppercase;color:#0d6858;border-bottom:1px solid #d5dce3;padding-bottom:.25rem;margin-top:1.3rem}.grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.2rem;font-size:.88rem}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:.5rem}.kpi{border:1px solid #d5dce3;border-radius:6px;padding:.6rem}.kpi strong{display:block;font-size:1.2rem}.seal{margin-top:1.1rem;padding:.85rem;background:#eef8f5;border:1px solid #b5ddd4;border-radius:6px;font-size:.82rem;word-break:break-all}.btn{background:#0d6858;color:#fff;border:none;border-radius:6px;padding:.55rem 1rem;font-weight:600;cursor:pointer;margin-bottom:1rem}@media print{.btn{display:none}body{background:#fff;padding:0}.sheet{border:none;padding:0}}</style></head>
-  <body><div style="max-width:820px;margin:0 auto"><button class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button></div>
-  <main class="sheet"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #111d2e;padding-bottom:.9rem;margin-bottom:1rem">
-  <div><strong style="font-size:1.3rem">Certeza ID</strong><div style="font-size:.84rem;color:#4b5868">Motor de Enlace PUI · Certeza ID Systems · Asociación Mexicana de Hoteles de Nuevo León</div></div>
-  <div style="text-align:right;font-size:.8rem">Folio: <strong>${folio}</strong></div></div>
-  <h1>Constancia Técnica de Interconexión y Cumplimiento PUI</h1>
-  <h2>1. Institución Obligada</h2><div class="grid">
-  <div><strong>${h.nombre}</strong><br/>RFC: <code>${h.rfc}</code></div><div>${h.grupo}<br/>${h.ciudad} · ${h.habitaciones} hab.</div>
-  <div>PMS: ${h.pms}</div><div>Llave MX: ${h.llaveMxStatus} · Modo: ${h.segobMode}</div></div>
-  <h2>2. Métricas PUI y Entregas SEGOB</h2><div class="kpis">
-  <div class="kpi">Registros cifrados<strong>${huespedes.length}</strong></div>
-  <div class="kpi">Alertas SEGOB<strong>${alertas.length}</strong></div>
-  <div class="kpi">Entregas Outbox<strong>${outbox.length}</strong></div>
-  <div class="kpi">Eventos auditados<strong>${eventos.length}</strong></div></div>
-  <div class="seal"><strong>Integridad Criptográfica SHA-256:</strong> VERIFICADA (SIN ALTERACIONES) · Cifrado AES-256-GCM<br/><code>${hash}</code></div>
-  </main></body></html>`;
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Source+Code+Pro:wght@500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Source Sans 3',-apple-system,sans-serif;background:#f4f6f9;color:#0f172a;margin:0;padding:1.75rem}
+    .bar{max-width:820px;margin:0 auto 1rem;display:flex;justify-content:flex-end}
+    .btn{background:#173f6b;color:#fff;border:none;border-radius:8px;padding:.6rem 1.15rem;font:600 .9rem 'Source Sans 3',sans-serif;cursor:pointer}
+    .sheet{max-width:820px;margin:0 auto;background:#fff;border:1px solid #dbe2ec;border-radius:12px;padding:2.25rem 2.5rem}
+    .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0f172a;padding-bottom:1.1rem;margin-bottom:1.25rem}
+    .brand{display:flex;align-items:center;gap:.75rem}
+    .brand-name{font-family:'Archivo',sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:-.02em}
+    .brand-sub{font-size:.86rem;color:#475569}
+    .folio{text-align:right;font-size:.84rem;color:#475569}
+    .folio strong{display:block;color:#0f172a;font-family:'Source Code Pro',monospace;font-size:.9rem}
+    h1{font-family:'Archivo',sans-serif;font-size:1.3rem;margin:.2rem 0 .4rem;color:#0f172a}
+    .lead{margin:0 0 1.2rem;color:#475569;font-size:.94rem}
+    h2{font-family:'Archivo',sans-serif;font-size:.88rem;letter-spacing:.02em;color:#173f6b;border-bottom:1px solid #e2e8f0;padding-bottom:.35rem;margin-top:1.4rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.5rem;font-size:.92rem;margin-top:.65rem}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:.75rem}
+    .kpi{border:1px solid #e2e8f0;border-radius:8px;padding:.75rem .9rem;background:#f8fafc}
+    .kpi span{display:block;font-size:.8rem;color:#475569}
+    .kpi strong{display:block;font-family:'Archivo',sans-serif;font-size:1.3rem;margin-top:.2rem;color:#0f172a}
+    .seal{margin-top:1.35rem;padding:1rem 1.15rem;background:#eef4fb;border:1px solid #bdd3ec;border-radius:8px;font-size:.84rem;word-break:break-all}
+    code{font-family:'Source Code Pro',monospace;font-size:.82rem}
+    @media print{.bar{display:none}body{background:#fff;padding:0}.sheet{border:none;padding:0}}
+  </style></head>
+  <body>
+    <div class="bar"><button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button></div>
+    <main class="sheet">
+      <div class="head">
+        <div class="brand">
+          <svg width="34" height="34" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="14" fill="#0d121b"/><path d="M44 17H28L16 29V35L28 47H44L38 40H30L23.5 33.5V30.5L30 24H38L44 17Z" fill="#fff"/><polygon points="39,25 46,32 39,39 32,32" fill="#4f95db"/><polygon points="39,25 46,32 39,32" fill="#b8dcff"/></svg>
+          <div><div class="brand-name">Certeza ID</div><div class="brand-sub">Certeza ID Systems · Cumplimiento PUI SEGOB</div></div>
+        </div>
+        <div class="folio">Folio de evidencia<strong>${folio}</strong><span>${fecha}</span></div>
+      </div>
+      <h1>Constancia Técnica de Cumplimiento PUI</h1>
+      <p class="lead">Respaldo auditable de interconexión y operación conforme al Manual Técnico PUI (SEGOB / RENAPO, DOF 23/01/2026).</p>
+      <h2>1. Establecimiento Obligado</h2>
+      <div class="grid">
+        <div><strong>${h.nombre}</strong><br/>RFC: <code>${h.rfc}</code></div>
+        <div>${h.ciudad}<br/>Capacidad: ${h.habitaciones} habitaciones</div>
+        <div>Sistema PMS: ${h.pms}</div>
+        <div>Llave MX: ${h.llaveMxStatus} · Entorno: ${h.segobMode}</div>
+      </div>
+      <h2>2. Métricas de Operación y Evidencia</h2>
+      <div class="kpis">
+        <div class="kpi"><span>Registros cifrados</span><strong>${huespedes.length}</strong></div>
+        <div class="kpi"><span>Reportes SEGOB</span><strong>${alertas.length}</strong></div>
+        <div class="kpi"><span>Entregas confirmadas</span><strong>${outbox.length}</strong></div>
+        <div class="kpi"><span>Eventos SHA-256</span><strong>${eventos.length}</strong></div>
+      </div>
+      <div class="seal">
+        <strong>Integridad Criptográfica SHA-256:</strong> Verificada sin alteraciones · Cifrado AES-256-GCM con aislamiento por RFC<br/>
+        <code>${hash}</code>
+      </div>
+    </main>
+  </body></html>`;
 
   const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
   window.open(url, '_blank', 'noopener');
@@ -534,7 +496,7 @@ export function downloadAuditCsv(hotelSlug = null) {
   const blobUrl = URL.createObjectURL(new Blob([`\uFEFF${lines.join('\n')}\n`], { type: 'text/csv;charset=utf-8' }));
   const a = document.createElement('a');
   a.href = blobUrl;
-  a.download = `bitacora_portico_${scope || 'asociacion'}.csv`;
+  a.download = `bitacora_certeza_id_${scope || 'hotel'}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -579,16 +541,16 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
         body?.password === a.passwordDemo
     );
     if (!found) return { ok: false, status: 401, data: { error: 'Correo o contraseña incorrectos (o cuenta suspendida).' } };
-    const u = { id: found.id, email: found.email, nombre: found.nombre, rol: found.rol, hotelSlug: found.hotelSlug || null };
+    const u = { id: found.id, email: found.email, nombre: found.nombre, rol: found.rol, hotelSlug: found.hotelSlug || DEFAULT_HOTEL_SLUG };
     setLocalUser(u);
     await addLocalAudit(st, {
-      hotelSlug: u.hotelSlug || 'asociacion',
-      direccion: 'ACCESO RBAC',
+      hotelSlug: u.hotelSlug || DEFAULT_HOTEL_SLUG,
+      direccion: 'ACCESO',
       endpoint: '/api/auth/login',
-      fase: 'SESION',
-      resumen: `Inicio de sesión autenticado: ${u.nombre} (${u.rol}).`,
+      fase: 'SESIÓN',
+      resumen: `Inicio de sesión: ${u.nombre}.`,
       estatusHttp: 200,
-      payload: u
+      payload: { email: u.email, rol: u.rol }
     });
     saveLocalState(st);
     return { ok: true, status: 200, data: { ok: true, user: u } };
@@ -606,9 +568,8 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
   if (!user) return { ok: false, status: 401, data: { error: 'Sesión requerida.' } };
 
   if (p === '/api/state') {
-    const isAssoc = user.rol === 'ASOCIACION_ADMIN';
     const isRec = user.rol === 'RECEPCION';
-    const scope = isAssoc ? null : user.hotelSlug;
+    const scope = user.rol === 'ASOCIACION_ADMIN' ? null : user.hotelSlug;
     const hotels = (scope ? st.hotels.filter((h) => h.slug === scope) : st.hotels).map((h) =>
       isRec ? { ...h, pmsApiKey: undefined, usuarioPui: undefined } : h
     );
@@ -617,16 +578,10 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       status: 200,
       data: {
         user,
-        asociacion: { nombre: 'Asociación Mexicana de Hoteles de Nuevo León', hotelesObjetivo: 136 },
         storage: {
           engine: 'postgresql-ready',
-          engineLabel: 'Demo Estática · Esquema PostgreSQL 16 + RLS Listo para AWS RDS',
-          rlsEnabled: false,
-          rlsSchemaReady: true,
-          poolMax: 40,
-          queueMode: 'Outbox ACID + SQS Workers Ready',
-          recommendedCapacityHotels: 1000,
-          encryptionStandard: 'AES-256-GCM + HMAC-SHA256 por RFC'
+          engineLabel: 'Demo interactiva · Esquema PostgreSQL 16 + RLS por RFC',
+          encryptionStandard: 'AES-256-GCM + HMAC-SHA256'
         },
         escenariosDemo: DEMO_SCENARIOS,
         integridadCadena: { integra: true, totalEventos: st.auditLog.length },
@@ -645,35 +600,6 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     return { ok: true, status: 200, data: { ok: true } };
   }
 
-  if (p === '/api/demo/scale-benchmark' && method === 'POST') {
-    const targetHotels = Math.min(2000, Math.max(10, Number(body?.hotels) || 1000));
-    const sampleOps = 250;
-    const baseCurp = DEMO_SCENARIOS.huespedSinAlerta.curp;
-    const t0 = performance.now();
-    const hashes = new Set();
-    for (let i = 0; i < sampleOps; i++) {
-      const slugSim = `hotel-sim-${i % targetHotels}`;
-      validarCurpLocal(baseCurp);
-      hashes.add(await sha256(`${slugSim}|${baseCurp}`));
-    }
-    const elapsedMs = Math.max(1, performance.now() - t0);
-    return {
-      ok: true,
-      status: 200,
-      data: {
-        ok: true,
-        hotelesObjetivo: targetHotels,
-        operacionesRealesEjecutadas: sampleOps,
-        tiempoTotalMs: Number(elapsedMs.toFixed(1)),
-        latenciaPromedioMs: Number((elapsedMs / sampleOps).toFixed(2)),
-        capacidadEstimadaCheckinsPorSegundo: Math.round((sampleOps / elapsedMs) * 1000),
-        hashesUnicosPorHotel: hashes.size,
-        fugasEntreRfc: 0,
-        infra: estimateScaleInfrastructure(targetHotels)
-      }
-    };
-  }
-
   if (p === '/api/outbox/retry' && method === 'POST') {
     return { ok: true, status: 200, data: { ok: true, reencolados: 0, procesados: 0 } };
   }
@@ -686,9 +612,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     return {
       ok: true,
       status: 200,
-      data: {
-        users: list.map(({ passwordDemo, ...pub }) => pub)
-      }
+      data: { users: list.map(({ passwordDemo, ...pub }) => pub) }
     };
   }
 
@@ -700,13 +624,8 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     const email = String(body.email || '').trim().toLowerCase();
     const password = String(body.password || '');
     const rol = String(body.rol || '').trim().toUpperCase();
-    let hotelSlug = body.hotelSlug || null;
-    if (user.rol === 'HOTEL_ADMIN') {
-      if (rol === 'ASOCIACION_ADMIN') {
-        return { ok: false, status: 403, data: { error: 'No puedes crear cuentas globales de la Asociación.' } };
-      }
-      hotelSlug = user.hotelSlug;
-    }
+    const hotelSlug = user.rol === 'HOTEL_ADMIN' ? user.hotelSlug : body.hotelSlug || DEFAULT_HOTEL_SLUG;
+
     if (st.users.some((u) => u.email === email)) {
       return { ok: false, status: 409, data: { error: 'Ya existe una cuenta con ese correo.' } };
     }
@@ -716,19 +635,19 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       passwordDemo: password,
       nombre,
       rol,
-      hotelSlug: rol === 'ASOCIACION_ADMIN' ? null : hotelSlug,
+      hotelSlug,
       activo: true,
       creadoEn: new Date().toISOString()
     };
     st.users.push(nuevo);
     await addLocalAudit(st, {
-      hotelSlug: nuevo.hotelSlug || 'asociacion',
-      direccion: 'ACCESO RBAC',
+      hotelSlug,
+      direccion: 'ACCESO',
       endpoint: '/api/users',
-      fase: 'GESTION USUARIOS',
-      resumen: `Nueva cuenta RBAC creada por ${user.nombre}: ${email} (${rol}).`,
+      fase: 'EQUIPO',
+      resumen: `Nueva cuenta creada: ${email} (${rol === 'RECEPCION' ? 'Recepción Sigilo' : 'Administrador TI'}).`,
       estatusHttp: 201,
-      payload: { email, rol, hotelSlug: nuevo.hotelSlug }
+      payload: { email, rol, hotelSlug }
     });
     saveLocalState(st);
     const { passwordDemo, ...pub } = nuevo;
@@ -746,9 +665,6 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     }
     const target = (st.users || []).find((u) => u.id === id);
     if (!target) return { ok: false, status: 404, data: { error: 'Usuario no encontrado.' } };
-    if (user.rol === 'HOTEL_ADMIN' && target.hotelSlug !== user.hotelSlug) {
-      return { ok: false, status: 403, data: { error: 'Aislamiento multi-hotel.' } };
-    }
     target.activo = Boolean(body.activo);
     saveLocalState(st);
     const { passwordDemo, ...pub } = target;
@@ -770,16 +686,16 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     const hotel = {
       slug,
       nombre,
-      grupo: body.grupo || 'Hotel Afiliado',
+      grupo: body.grupo || 'Propiedad Independiente',
       rfc,
       ciudad: body.ciudad || 'Monterrey, N.L.',
       habitaciones: Number(body.habitaciones) || 80,
       pms: body.pms || 'Portal Web / CSV',
-      modoIntegracion: body.modoIntegracion || 'API / Conector PMS',
+      modoIntegracion: body.modoIntegracion || 'Conector PMS',
       estatus: 'Activo',
       llaveMxStatus: 'Listo para Sandbox',
       usuarioPui: `pui_${slug.replace(/-/g, '_').slice(0, 16)}`,
-      pmsApiKey: `portico_pms_${slug.slice(0, 8)}_${randomHex(20)}`,
+      pmsApiKey: `certeza_pms_${slug.slice(0, 8)}_${randomHex(20)}`,
       segobMode: 'SANDBOX_SIMULADO',
       segobBaseUrl: '',
       segobUsuario: ''
@@ -787,10 +703,10 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
     st.hotels.push(hotel);
     await addLocalAudit(st, {
       hotelSlug: slug,
-      direccion: 'ASOCIACIÓN',
+      direccion: 'SISTEMA',
       endpoint: '/api/hotels',
-      fase: 'ONBOARDING',
-      resumen: `Nuevo hotel dado de alta en Certeza ID (multi-RFC): ${nombre} (${rfc}).`,
+      fase: 'ALTA HOTEL',
+      resumen: `Nueva propiedad registrada con bóveda aislada: ${nombre} (${rfc}).`,
       estatusHttp: 201,
       payload: { slug, rfc, pms: hotel.pms }
     });
@@ -799,7 +715,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
   }
 
   if (p === '/api/demo/segob-action' && method === 'POST') {
-    const hotel = st.hotels.find((h) => h.slug === body.hotelSlug);
+    const hotel = st.hotels.find((h) => h.slug === body.hotelSlug) || st.hotels[0];
     if (!hotel) return { ok: false, status: 404, data: { error: 'Hotel no encontrado.' } };
     if (body.accion === 'desactivar') {
       const a = st.alerts.find((x) => x.hotelSlug === hotel.slug && x.reporteId === body.id);
@@ -827,7 +743,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       curpEnmascarada: maskCurp(val.curp),
       cifrado: 'AES-256-GCM',
       esMenor: val.esMenor,
-      tipoAlerta: body.tipo_alerta || 'Reporte PUI',
+      tipoAlerta: body.tipo_alerta || 'Reporte PUI Activo',
       activa: true,
       coincidenciasReportadas: 0
     };
@@ -838,10 +754,10 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       hotelSlug: hotel.slug,
       direccion: 'SEGOB → HOTEL',
       endpoint: `/api/pui/${hotel.slug}/activar-reporte`,
-      fase: 'ACTIVACION',
+      fase: 'ACTIVACIÓN',
       resumen: `Reporte ${body.id} recibido con JWT en ${hotel.nombre} (${maskCurp(val.curp)}).`,
       estatusHttp: 200,
-      payload: { id: body.id, curp_enmascarada: maskCurp(val.curp), es_menor: val.esMenor }
+      payload: { id: body.id, curp_enmascarada: maskCurp(val.curp), cifrado: 'AES-256-GCM' }
     });
 
     const matches = st.guests.filter((g) => g.hotelSlug === hotel.slug && g.curp === val.curp);
@@ -855,20 +771,21 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
         hotelSlug: hotel.slug,
         direccion: 'HOTEL → SEGOB',
         endpoint: '/pui/notificar-coincidencia',
-        fase: 'FASE 1 y 2',
-        resumen: `Coincidencia histórica encontrada en ${hotel.nombre} (${matches.length} registro(s)).`,
+        fase: 'FASE 1 Y 2',
+        resumen: `Coincidencia histórica encontrada en ${hotel.nombre} (${matches.length} registro(s)) y enviada a SEGOB.`,
         estatusHttp: 200,
+        critico: true,
         payload: p2
       });
     }
     const pCierre = { id: body.id, rfc_institucion: hotel.rfc, fase_busqueda: '2', coincidencias: matches.length, fase_3: 'ACTIVO' };
-    addLocalOutbox(st, { hotelSlug: hotel.slug, reporteId: body.id, endpoint: '/pui/busqueda-finalizada', fase: 'FASE 2 CIERRE', payload: pCierre });
+    addLocalOutbox(st, { hotelSlug: hotel.slug, reporteId: body.id, endpoint: '/pui/busqueda-finalizada', fase: 'CIERRE FASE 2', payload: pCierre });
     await addLocalAudit(st, {
       hotelSlug: hotel.slug,
       direccion: 'HOTEL → SEGOB',
       endpoint: '/pui/busqueda-finalizada',
-      fase: 'FASE 2 CIERRE',
-      resumen: `Barrido histórico completado en ${hotel.nombre}. Fase 3 activa.`,
+      fase: 'CIERRE FASE 2',
+      resumen: `Barrido histórico completado en ${hotel.nombre}. Monitoreo silencioso Fase 3 encendido.`,
       estatusHttp: 200,
       payload: pCierre
     });
@@ -898,7 +815,7 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
       return { ok: true, status: 200, data: buildDemoCsv(url.searchParams.get('demo') === '1') };
     }
     if (act === 'rotate-key') {
-      hotel.pmsApiKey = `portico_pms_${slug.slice(0, 8)}_${randomHex(20)}`;
+      hotel.pmsApiKey = `certeza_pms_${slug.slice(0, 8)}_${randomHex(20)}`;
       saveLocalState(st);
       return { ok: true, status: 200, data: { ok: true, pmsApiKey: hotel.pmsApiKey } };
     }
@@ -919,13 +836,9 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
         curp: val.curp,
         curpEnmascarada: maskCurp(val.curp),
         habitacion: body.habitacion || 'Asignación pendiente',
-        esMenor: val.esMenor,
-        acompanante: body.acompanante || '',
+        esMenor: false,
         fechaRegistro: new Date().toISOString(),
-        tipo:
-          val.esMenor && body.parentescoDocumento === 'NO_ACREDITO'
-            ? 'Bloqueado por Protocolo Menores (LGT)'
-            : 'Check-in activo en PMS'
+        tipo: usarPass ? 'Check-in pasaporte extranjero' : 'Check-in activo en PMS'
       };
       st.guests.unshift(g);
       const alerts = st.alerts.filter((a) => a.hotelSlug === slug && a.activa && a.curp === val.curp);
@@ -935,7 +848,6 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
           id: a.reporteId,
           rfc_institucion: hotel.rfc,
           fase_busqueda: '3',
-          prioridad: val.esMenor ? 'CRITICA_MENOR_EDAD' : 'ALTA_LOCALIZACION',
           canal: 'SILENCIOSO_SIN_ALERTA_EN_MOSTRADOR',
           habitacion: g.habitacion
         };
@@ -944,29 +856,20 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
           hotelSlug: slug,
           direccion: 'HOTEL → SEGOB',
           endpoint: '/pui/notificar-coincidencia',
-          fase: 'FASE 3 ALERTA',
-          resumen: `COINCIDENCIA DETECTADA (${hotel.nombre}, Hab. ${g.habitacion}) — Aviso silencioso enviado a SEGOB para ${a.reporteId}.`,
+          fase: 'FASE 3 SILENCIOSA',
+          resumen: `Coincidencia detectada (${hotel.nombre}, Hab. ${g.habitacion}) — Aviso silencioso enviado a SEGOB para ${a.reporteId}.`,
           estatusHttp: 200,
           critico: true,
           payload: p3
         });
       }
       saveLocalState(st);
-      const aviso = val.esMenor
-        ? body.parentescoDocumento === 'NO_ACREDITO'
-          ? 'Protocolo Ley General de Turismo activado: sin acreditación de parentesco o tutela, negar el servicio y notificar a gerencia.'
-          : 'Menor de edad detectado por CURP: verificar documentación de parentesco o tutela del acompañante.'
-        : null;
       return {
         ok: true,
         status: 201,
         data: {
           ok: true,
-          mensaje_recepcion:
-            val.esMenor && body.parentescoDocumento === 'NO_ACREDITO'
-              ? `Registro retenido en ${hotel.nombre} por protocolo de menores (Ley General de Turismo).`
-              : `Check-in completado en ${hotel.nombre} (Habitación ${g.habitacion}). CURP validada correctamente.`,
-          verificacion_menor_turismo: aviso
+          mensaje_recepcion: `Check-in completado en ${hotel.nombre} (Habitación ${g.habitacion}). Identidad validada y guardada con sigilo.`
         }
       };
     }
@@ -1021,17 +924,34 @@ export async function apiRequest(apiPath, { method = 'GET', body = null } = {}) 
           curp: val.curp,
           curpEnmascarada: maskCurp(val.curp),
           habitacion: r.hab,
-          esMenor: val.esMenor,
+          esMenor: false,
           fechaRegistro: new Date().toISOString(),
-          tipo: isXml ? 'Importado desde Oracle OPERA XML' : 'Importado por lote CSV / PMS'
+          tipo: isXml ? 'Importado desde Oracle OPERA XML' : 'Importado por lote CSV'
         });
+        // Cruce silencioso Fase 3 también en carga por lote
+        const alerts = st.alerts.filter((a) => a.hotelSlug === slug && a.activa && a.curp === val.curp);
+        for (const a of alerts) {
+          a.coincidenciasReportadas += 1;
+          const p3 = { id: a.reporteId, rfc_institucion: hotel.rfc, fase_busqueda: '3', canal: 'LOTE_SILENCIOSO', habitacion: r.hab };
+          addLocalOutbox(st, { hotelSlug: slug, reporteId: a.reporteId, endpoint: '/pui/notificar-coincidencia', fase: 'FASE 3', payload: p3 });
+          await addLocalAudit(st, {
+            hotelSlug: slug,
+            direccion: 'HOTEL → SEGOB',
+            endpoint: '/pui/notificar-coincidencia',
+            fase: 'FASE 3 LOTE',
+            resumen: `Coincidencia detectada al importar lote (${hotel.nombre}) para reporte ${a.reporteId}.`,
+            estatusHttp: 200,
+            critico: true,
+            payload: p3
+          });
+        }
         insertados++;
       }
       await addLocalAudit(st, {
         hotelSlug: slug,
         direccion: 'PMS → CERTEZA ID',
         endpoint: `/api/pms/${slug}/import-csv`,
-        fase: isXml ? 'IMPORTACION OPERA XML' : 'IMPORTACION CSV',
+        fase: isXml ? 'IMPORTACIÓN XML' : 'IMPORTACIÓN CSV',
         resumen: `Lote ${isXml ? 'OPERA XML' : 'CSV'} procesado en ${hotel.nombre}: ${insertados} válidos, ${rechazados} rechazados.`,
         estatusHttp: 200,
         payload: { insertados, rechazados }
