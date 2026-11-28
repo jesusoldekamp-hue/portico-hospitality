@@ -178,6 +178,19 @@
               </svg>
               <span>Conexión SEGOB y equipo</span>
             </button>
+
+            <button
+              type="button"
+              class="nav-btn"
+              data-view="pendientes"
+              data-roles="ASOCIACION_ADMIN,HOTEL_ADMIN"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+              </svg>
+              <span>Pendientes PUI</span>
+            </button>
           </nav>
         </div>
 
@@ -289,8 +302,18 @@
                 <div class="card-head">
                   <div>
                     <h2>Ruta para activar tu hotel en producción</h2>
-                    <p class="card-sub">Tres pasos concretos para cumplir al 100% con el Manual Técnico PUI.</p>
+                    <p class="card-sub">Avance actual para conectar con el PUI real de SEGOB y operar en vivo.</p>
                   </div>
+                  <button type="button" class="btn-primary btn-sm" data-goto="pendientes">
+                    Gestionar pendientes (<span id="overview-checklist-count">0/11</span>)
+                  </button>
+                </div>
+
+                <div class="progress-summary-bar" aria-label="Progreso de salida a producción">
+                  <div class="progress-track">
+                    <div class="progress-fill" id="overview-checklist-bar" style="width: 0%"></div>
+                  </div>
+                  <span class="progress-pct" id="overview-checklist-pct">0% listo</span>
                 </div>
 
                 <ol class="onboarding-list">
@@ -833,6 +856,66 @@
                 </div>
               </details>
             </article>
+          </section>
+
+          <!-- VISTA 6: GESTOR DE PENDIENTES PARA CONECTAR AL PUI -->
+          <section id="view-pendientes" class="view-section" hidden>
+            <article class="card checklist-hero">
+              <div class="checklist-hero-top">
+                <div>
+                  <h2>Lista de pendientes para conectar al PUI real (Hotel #1)</h2>
+                  <p class="card-sub">
+                    Marca cada paso conforme avancen tú, el hotel y tu técnico. El progreso se guarda automáticamente en este navegador.
+                  </p>
+                </div>
+                <div class="button-row">
+                  <button type="button" class="btn-primary btn-sm" id="btn-copy-checklist">
+                    Copiar resumen para WhatsApp
+                  </button>
+                  <button type="button" class="btn-secondary btn-sm" id="btn-reset-checklist">
+                    Limpiar marcas
+                  </button>
+                </div>
+              </div>
+
+              <div class="checklist-progress-row">
+                <div class="progress-track">
+                  <div class="progress-fill" id="checklist-progress-bar" style="width: 0%"></div>
+                </div>
+                <strong id="checklist-progress-label">0 de 11 completados (0%)</strong>
+              </div>
+
+              <div class="checklist-meta-row">
+                <div class="filter-pills" role="group" aria-label="Filtrar pendientes">
+                  <button type="button" class="filter-pill is-active" data-cl-filter="ALL">Todos (11)</button>
+                  <button type="button" class="filter-pill" data-cl-filter="TRAMITE">1. Trámites SEGOB y Hotel (4)</button>
+                  <button type="button" class="filter-pill" data-cl-filter="TECNICO">2. Técnico y Seguridad (5)</button>
+                  <button type="button" class="filter-pill" data-cl-filter="SALIDA">3. Certificación y Salida (2)</button>
+                  <button type="button" class="filter-pill" data-cl-filter="PENDIENTES">Solo faltantes</button>
+                </div>
+                <span id="checklist-copy-feedback" class="copy-tip" aria-live="polite"></span>
+              </div>
+            </article>
+
+            <div class="checklist-summary-grid">
+              <article class="card checklist-mini-stat">
+                <span class="kpi-label">Lo que ya está construido</span>
+                <strong>Motor PUI + Consola + Sigilo + PDF</strong>
+                <span class="kpi-note">Endpoints Anexo 2, CURP RENAPO, Pasaporte MRZ, CSV/XML, Outbox y SHA-256.</span>
+              </article>
+              <article class="card checklist-mini-stat">
+                <span class="kpi-label">Faltante crítico de gobierno</span>
+                <strong id="stat-tramite-left">4 pasos pendientes</strong>
+                <span class="kpi-note">Llave MX con e.firma del hotel, Sandbox ATDT y padrón histórico.</span>
+              </article>
+              <article class="card checklist-mini-stat">
+                <span class="kpi-label">Faltante crítico técnico</span>
+                <strong id="stat-tecnico-left">5 pasos pendientes</strong>
+                <span class="kpi-note">AWS HTTPS + IP fija, PostgreSQL RLS, KMS, Redis/WAF y reporte SAST/DAST.</span>
+              </article>
+            </div>
+
+            <div id="checklist-groups" class="checklist-groups"></div>
           </section>
         </main>
       </div>

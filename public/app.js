@@ -45,8 +45,250 @@ const VIEW_META = {
   tecnico: {
     title: 'Conexión SEGOB y equipo',
     subtitle: 'Configura credenciales oficiales ATDT, revisa entregas Outbox y administra accesos del hotel.'
+  },
+  pendientes: {
+    title: 'Pendientes para conectar al PUI',
+    subtitle: 'Checklist vivo de trámites ante gobierno, infraestructura técnica y certificación para salir en vivo con el hotel #1.'
   }
 };
+
+const CHECKLIST_STORAGE_KEY = 'certeza_id_pui_rollout_checklist_v1';
+let activeChecklistFilter = 'ALL';
+
+const ROLLOUT_TASKS = [
+  {
+    id: 'tramite-llave-mx',
+    group: 'TRAMITE',
+    groupTitle: '1. Trámites ante SEGOB / ATDT y datos del hotel',
+    title: 'Dar de alta al hotel en Llave MX con e.firma vigente',
+    desc: 'El representante legal registra el RFC del hotel en el portal oficial sin costo ($0) y designa al responsable técnico.',
+    owner: 'Tú + Hotel',
+    eta: '15 min · $0',
+    linkLabel: 'Abrir portal oficial',
+    linkUrl: 'https://www.plataformadebusqueda.gob.mx/inscripcion'
+  },
+  {
+    id: 'tramite-sandbox-creds',
+    group: 'TRAMITE',
+    groupTitle: '1. Trámites ante SEGOB / ATDT y datos del hotel',
+    title: 'Recibir credenciales oficiales del entorno Sandbox ATDT',
+    desc: 'Gobernación entrega la URL oficial, usuario/contraseña PUI y rangos de IP autorizados para pruebas de conexión.',
+    owner: 'SEGOB / ATDT',
+    eta: '1 a 3 días'
+  },
+  {
+    id: 'tramite-pms-elegido',
+    group: 'TRAMITE',
+    groupTitle: '1. Trámites ante SEGOB / ATDT y datos del hotel',
+    title: 'Definir método de conexión del PMS del hotel #1',
+    desc: 'Confirmar si conectaremos por agente local para Oracle OPERA/CSV/XML, webhook API o Mostrador Web directo.',
+    owner: 'Tú + Hotel',
+    eta: '30 min',
+    gotoView: 'conectores',
+    gotoLabel: 'Ver conectores'
+  },
+  {
+    id: 'tramite-historico-12y',
+    group: 'TRAMITE',
+    groupTitle: '1. Trámites ante SEGOB / ATDT y datos del hotel',
+    title: 'Importar histórico de huéspedes disponible (hasta 12 años)',
+    desc: 'Cargar el historial del hotel para poder responder de inmediato las Fases 1 y 2 que exige el Manual Técnico PUI.',
+    owner: 'Hotel + Técnico',
+    eta: '1 día'
+  },
+  {
+    id: 'tec-aws-https-ip',
+    group: 'TECNICO',
+    groupTitle: '2. Infraestructura y seguridad en servidor real (Tu técnico)',
+    title: 'Desplegar backend real en AWS con dominio HTTPS e IP fija',
+    desc: 'Subir src/server.js fuera de la demo estática con certificado TLS 1.2+, cabecera HSTS e IP saliente fija (NAT Gateway) para lista blanca de SEGOB.',
+    owner: 'Técnico',
+    eta: '1 a 2 días'
+  },
+  {
+    id: 'tec-postgres-rls',
+    group: 'TECNICO',
+    groupTitle: '2. Infraestructura y seguridad en servidor real (Tu técnico)',
+    title: 'Conectar PostgreSQL 16 + aislamiento RLS por RFC',
+    desc: 'Sustituir SQLite de pruebas por pg.Pool usando sql/schema.postgres.sql, FORCE ROW LEVEL SECURITY y cola Outbox con FOR UPDATE SKIP LOCKED.',
+    owner: 'Técnico',
+    eta: '1 a 2 días'
+  },
+  {
+    id: 'tec-kms-secretos',
+    group: 'TECNICO',
+    groupTitle: '2. Infraestructura y seguridad en servidor real (Tu técnico)',
+    title: 'Migrar secretos y cifrado AES-256-GCM a AWS KMS',
+    desc: 'Eliminar valores por defecto en src/security.js, activar arranque fail-fast y usar llaves dedicadas por hotel desde AWS Secrets Manager / KMS.',
+    owner: 'Técnico',
+    eta: '1 día'
+  },
+  {
+    id: 'tec-waf-redis-2fa',
+    group: 'TECNICO',
+    groupTitle: '2. Infraestructura y seguridad en servidor real (Tu técnico)',
+    title: 'Activar Redis rate limit, 2FA/TOTP y lista blanca WAF',
+    desc: 'Migrar src/rateLimit.js a Redis, activar doble factor para administradores y restringir /api/pui/* exclusivamente a las IPs oficiales de SEGOB.',
+    owner: 'Técnico',
+    eta: '1 día'
+  },
+  {
+    id: 'tec-sast-dast-agente',
+    group: 'TECNICO',
+    groupTitle: '2. Infraestructura y seguridad en servidor real (Tu técnico)',
+    title: 'Endurecer agente PMS y generar reporte SAST / DAST / SCA',
+    desc: 'Forzar HTTPS estricto y borrado seguro de archivos procesados en agent/pms-sync-agent.js, más escaneo de vulnerabilidades exigido por Anexo 2 DOF.',
+    owner: 'Técnico',
+    eta: '1 día'
+  },
+  {
+    id: 'salida-sandbox-test',
+    group: 'SALIDA',
+    groupTitle: '3. Certificación oficial y arranque comercial',
+    title: 'Aprobar pruebas oficiales en Sandbox (/activar-reporte-prueba)',
+    desc: 'Ejecutar autenticación JWT, barrido histórico Fases 1–2, monitoreo silencioso Fase 3 y confirmar acuse HTTP 200 real desde SEGOB.',
+    owner: 'Técnico + SEGOB',
+    eta: '1 día',
+    gotoView: 'tecnico',
+    gotoLabel: 'Ir a conexión SEGOB'
+  },
+  {
+    id: 'salida-produccion-constancia',
+    group: 'SALIDA',
+    groupTitle: '3. Certificación oficial y arranque comercial',
+    title: 'Activar SEGOB_PRODUCCION y entregar Constancia Oficial PDF',
+    desc: 'Cargar credenciales productivas, emitir la Constancia PDF con sello SHA-256 para auditorías y arrancar facturación con el hotel #1.',
+    owner: 'Tú + Hotel',
+    eta: '30 min',
+    gotoView: 'tecnico',
+    gotoLabel: 'Configurar producción'
+  }
+];
+
+function loadChecklistState() {
+  try {
+    const raw = localStorage.getItem(CHECKLIST_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveChecklistState(map) {
+  try {
+    localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(map));
+  } catch {
+    // ignore
+  }
+}
+
+function renderRolloutChecklist() {
+  const doneMap = loadChecklistState();
+  const total = ROLLOUT_TASKS.length;
+  const doneCount = ROLLOUT_TASKS.filter((t) => doneMap[t.id]).length;
+  const pct = Math.round((doneCount / total) * 100);
+
+  const ovCount = document.getElementById('overview-checklist-count');
+  const ovBar = document.getElementById('overview-checklist-bar');
+  const ovPct = document.getElementById('overview-checklist-pct');
+  if (ovCount) ovCount.textContent = `${doneCount}/${total}`;
+  if (ovBar) ovBar.style.width = `${pct}%`;
+  if (ovPct) ovPct.textContent = `${pct}% listo`;
+
+  const bar = document.getElementById('checklist-progress-bar');
+  const lbl = document.getElementById('checklist-progress-label');
+  if (bar) bar.style.width = `${pct}%`;
+  if (lbl) lbl.textContent = `${doneCount} de ${total} completados (${pct}%)`;
+
+  const tramiteLeft = ROLLOUT_TASKS.filter((t) => t.group === 'TRAMITE' && !doneMap[t.id]).length;
+  const tecnicoLeft = ROLLOUT_TASKS.filter((t) => t.group === 'TECNICO' && !doneMap[t.id]).length;
+  const stTr = document.getElementById('stat-tramite-left');
+  const stTe = document.getElementById('stat-tecnico-left');
+  if (stTr) stTr.textContent = tramiteLeft === 0 ? 'Bloque completado' : `${tramiteLeft} pasos pendientes`;
+  if (stTe) stTe.textContent = tecnicoLeft === 0 ? 'Bloque completado' : `${tecnicoLeft} pasos pendientes`;
+
+  const container = document.getElementById('checklist-groups');
+  if (!container) return;
+
+  const filtered = ROLLOUT_TASKS.filter((t) => {
+    if (activeChecklistFilter === 'ALL') return true;
+    if (activeChecklistFilter === 'PENDIENTES') return !doneMap[t.id];
+    return t.group === activeChecklistFilter;
+  });
+
+  if (!filtered.length) {
+    container.innerHTML =
+      '<article class="card"><div class="empty-state">No hay pendientes en este filtro. Todos los pasos seleccionados están completados.</div></article>';
+    return;
+  }
+
+  const groupsOrder = ['TRAMITE', 'TECNICO', 'SALIDA'];
+  container.innerHTML = groupsOrder
+    .map((gKey) => {
+      const items = filtered.filter((t) => t.group === gKey);
+      if (!items.length) return '';
+      const groupDone = ROLLOUT_TASKS.filter((t) => t.group === gKey && doneMap[t.id]).length;
+      const groupTotal = ROLLOUT_TASKS.filter((t) => t.group === gKey).length;
+      return `
+        <article class="card">
+          <div class="checklist-group-head">
+            <h3>${escapeHtml(items[0].groupTitle)}</h3>
+            <span class="badge ${groupDone === groupTotal ? 'badge-active' : 'badge-neutral'}">${groupDone}/${groupTotal} listos</span>
+          </div>
+          <div class="checklist-items">
+            ${items
+              .map((t) => {
+                const isDone = Boolean(doneMap[t.id]);
+                const ownerClass = t.group === 'TECNICO' ? 'badge-pending' : t.group === 'SALIDA' ? 'badge-active' : 'badge-neutral';
+                return `
+                  <label class="checklist-row ${isDone ? 'is-done' : ''}">
+                    <input type="checkbox" data-cl-id="${escapeHtml(t.id)}" ${isDone ? 'checked' : ''} />
+                    <div class="checklist-row-body">
+                      <strong>${escapeHtml(t.title)}</strong>
+                      <p>
+                        ${escapeHtml(t.desc)}
+                        ${
+                          t.linkUrl
+                            ? ` <a href="${escapeHtml(t.linkUrl)}" target="_blank" rel="noopener">${escapeHtml(t.linkLabel)}</a>`
+                            : ''
+                        }
+                        ${
+                          t.gotoView
+                            ? ` <button type="button" class="btn-link-inline" data-goto="${escapeHtml(t.gotoView)}">${escapeHtml(t.gotoLabel)}</button>`
+                            : ''
+                        }
+                      </p>
+                    </div>
+                    <div class="checklist-row-tags">
+                      <span class="badge ${ownerClass}">${escapeHtml(t.owner)}</span>
+                      <span class="checklist-eta">${escapeHtml(t.eta)}</span>
+                    </div>
+                  </label>`;
+              })
+              .join('')}
+          </div>
+        </article>`;
+    })
+    .join('');
+}
+
+function buildChecklistWhatsAppSummary() {
+  const doneMap = loadChecklistState();
+  const doneCount = ROLLOUT_TASKS.filter((t) => doneMap[t.id]).length;
+  const lines = [
+    `Certeza ID — Avance para conectar al PUI (${doneCount}/${ROLLOUT_TASKS.length})`,
+    ''
+  ];
+  for (const gKey of ['TRAMITE', 'TECNICO', 'SALIDA']) {
+    const items = ROLLOUT_TASKS.filter((t) => t.group === gKey);
+    lines.push(items[0].groupTitle);
+    for (const t of items) {
+      lines.push(`${doneMap[t.id] ? '[x]' : '[ ]'} ${t.title} (${t.owner} · ${t.eta})`);
+    }
+    lines.push('');
+  }
+  return lines.join('\n').trim();
+}
 
 function setupDialogClosedByFallback() {
   if ('closedBy' in HTMLDialogElement.prototype) return;
@@ -347,6 +589,7 @@ function renderAll() {
   renderHotelGuests('desk-guests-list');
   renderAuditFeed(hotelAudit);
   renderOutboxFeed(hotel);
+  renderRolloutChecklist();
 }
 
 function renderOverviewAudit(logs) {
@@ -1179,6 +1422,51 @@ function bindEvents() {
     document.getElementById('csv-errors-box').hidden = true;
     document.getElementById('csv-raw-text').value = '';
     await fetchState();
+  });
+
+  // Gestor interactivo de pendientes PUI
+  document.getElementById('checklist-groups')?.addEventListener('change', (e) => {
+    const cb = e.target.closest('input[data-cl-id]');
+    if (!cb) return;
+    const map = loadChecklistState();
+    map[cb.dataset.clId] = cb.checked;
+    saveChecklistState(map);
+    renderRolloutChecklist();
+  });
+
+  document.getElementById('checklist-groups')?.addEventListener('click', (e) => {
+    const jump = e.target.closest('button[data-goto]');
+    if (!jump) return;
+    e.preventDefault();
+    switchView(jump.dataset.goto);
+  });
+
+  for (const pill of document.querySelectorAll('.filter-pill[data-cl-filter]')) {
+    pill.addEventListener('click', () => {
+      activeChecklistFilter = pill.dataset.clFilter;
+      for (const other of document.querySelectorAll('.filter-pill[data-cl-filter]')) {
+        other.classList.toggle('is-active', other === pill);
+      }
+      renderRolloutChecklist();
+    });
+  }
+
+  document.getElementById('btn-copy-checklist')?.addEventListener('click', async () => {
+    const fb = document.getElementById('checklist-copy-feedback');
+    try {
+      await navigator.clipboard.writeText(buildChecklistWhatsAppSummary());
+      if (fb) fb.textContent = 'Resumen copiado listo para WhatsApp o correo';
+      setTimeout(() => {
+        if (fb) fb.textContent = '';
+      }, 2400);
+    } catch {
+      if (fb) fb.textContent = 'No se pudo copiar automáticamente';
+    }
+  });
+
+  document.getElementById('btn-reset-checklist')?.addEventListener('click', () => {
+    saveChecklistState({});
+    renderRolloutChecklist();
   });
 }
 
